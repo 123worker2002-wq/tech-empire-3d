@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Empire 3D - إمبراطورية التقنية</title>
+    <meta name="description" content="لعبة استراتيجية ثلاثية الأبعاد لإدارة إمبراطورية تقنية متقدمة">
+    <meta name="theme-color" content="#1a1a2e">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            direction: rtl;
+        }
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6, #03a9f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .play-button {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 195, 247, 0.4);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .play-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(79, 195, 247, 0.6);
+        }
+        .features {
+            margin: 2rem 0;
+            text-align: right;
+        }
+        .feature {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        .emoji {
+            font-size: 1.5rem;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Tech Empire 3D</h1>
+        <p class="subtitle">إمبراطورية التقنية ثلاثية الأبعاد</p>
+        
+        <div class="features">
+            <div class="feature">
+                <span class="emoji">🌟</span>لعبة استراتيجية متقدمة
+            </div>
+            <div class="feature">
+                <span class="emoji">🎯</span>رسوميات ثلاثية الأبعاد
+            </div>
+            <div class="feature">
+                <span class="emoji">⚡</span>واجهة عربية كاملة
+            </div>
+            <div class="feature">
+                <span class="emoji">🏗️</span>بناء إمبراطورية تقنية
+            </div>
+        </div>
+
+        <a href="index-3d.html" class="play-button">
+            🚀 ابدأ اللعب الآن
+        </a>
+        
+        <div style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
+            <p>تم التطوير باستخدام HTML5, CSS3, JavaScript وThree.js</p>
+            <p>متوافق مع جميع الأجهزة والمتصفحات الحديثة</p>
+        </div>
+    </div>
+
+    <script>
+        // إضافة تأثيرات بصرية بسيطة
+        document.addEventListener('DOMContentLoaded', function() {
+            const title = document.querySelector('h1');
+            title.style.animation = 'fadeInUp 1s ease-out';
+            
+            const playButton = document.querySelector('.play-button');
+            playButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    window.location.href = 'index-3d.html';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
