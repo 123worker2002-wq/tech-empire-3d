@@ -713,7 +713,238 @@ class TechEmpire3D {
                     reward: 300,
                     nextEvent: Date.now() + (24 * 60 * 60 * 1000) // 1 day from now
                 }
+            },
+            // نظام حقول النخبة من الحرب والنظام
+            eliteFields: {
+                enabled: true,
+                fields: {
+                    food: {
+                        id: "elite_food",
+                        name: "حقل الطعام النخبة",
+                        type: "food",
+                        productionRate: 5000, // 5K food per hour
+                        bonusMultiplier: 3, // 3x إنتاج عادي
+                        gatherSpeed: 1.5, // 50% faster gathering
+                        loadBonus: 1.25, // 25% more capacity
+                        protection: true, // محمي داخل أراضي التحالف
+                        requiredAlliance: true,
+                        location: "territory",
+                        color: 0x90EE90 // أخضر فاتح
+                    },
+                    wood: {
+                        id: "elite_wood",
+                        name: "غابة الخشب النخبة", 
+                        type: "wood",
+                        productionRate: 5000, // 5K wood per hour
+                        bonusMultiplier: 3,
+                        gatherSpeed: 1.5,
+                        loadBonus: 1.25,
+                        protection: true,
+                        requiredAlliance: true,
+                        location: "territory",
+                        color: 0x228B22 // أخضر داكن
+                    },
+                    stone: {
+                        id: "elite_stone",
+                        name: "منجم الحجر النخبة",
+                        type: "stone", 
+                        productionRate: 3000, // 3K stone per hour
+                        bonusMultiplier: 3,
+                        gatherSpeed: 1.5,
+                        loadBonus: 1.25,
+                        protection: true,
+                        requiredAlliance: true,
+                        location: "territory",
+                        color: 0x696969 // رمادي
+                    },
+                    iron: {
+                        id: "elite_iron",
+                        name: "منجم الحديد النخبة",
+                        type: "iron",
+                        productionRate: 2000, // 2K iron per hour
+                        bonusMultiplier: 3,
+                        gatherSpeed: 1.5,
+                        loadBonus: 1.25,
+                        protection: true,
+                        requiredAlliance: true,
+                        location: "territory", 
+                        color: 0x2F4F4F // رمادي غامق
+                    }
+                },
+                activeFields: [],
+                currentGathering: {
+                    active: false,
+                    fieldId: null,
+                    troops: {},
+                    startTime: null,
+                    endTime: null,
+                    resources: {}
+                }
+            },
+            // نظام مزارع C15 المتخصصة
+            c15Farms: {
+                enabled: true,
+                farms: [
+                    {
+                        id: "food_farm_1",
+                        name: "مزرعة الطعام C15",
+                        specialization: "food",
+                        dailyProduction: 1200000, // 1.2M food daily
+                        troops: { T2_Cavalry: 5000 },
+                        requirement: "Alliance Member",
+                        active: true
+                    },
+                    {
+                        id: "wood_farm_1", 
+                        name: "مزرعة الخشب C15",
+                        specialization: "wood",
+                        dailyProduction: 1200000, // 1.2M wood daily
+                        troops: { T2_Cavalry: 5000 },
+                        requirement: "Alliance Member",
+                        active: true
+                    },
+                    {
+                        id: "stone_farm_1",
+                        name: "مزرعة الحجر C15", 
+                        specialization: "stone",
+                        dailyProduction: 600000, // 600K stone daily
+                        troops: { T2_Cavalry: 5000 },
+                        requirement: "Alliance Member",
+                        active: true
+                    },
+                    {
+                        id: "iron_farm_1",
+                        name: "مزرعة الحديد C15",
+                        specialization: "iron", 
+                        dailyProduction: 300000, // 300K iron daily
+                        troops: { T2_Cavalry: 5000 },
+                        requirement: "Alliance Member",
+                        active: true
+                    }
+                ],
+                totalDailyProduction: {
+                    food: 1200000,
+                    wood: 1200000,
+                    stone: 600000, 
+                    iron: 300000
+                }
+            },
+            // السفينة التجارية من الحرب والنظام
+            tradeShip: {
+                enabled: true,
+                level: 1,
+                maxLevel: 15,
+                name: "السفينة التجارية",
+                description: "تنقل الموارد والقطع النادرة بين الممالك",
+                upgradeCosts: {
+                    1: { gold: 1000, materials: 50 },
+                    2: { gold: 2500, materials: 100 },
+                    3: { gold: 5000, materials: 200 },
+                    4: { gold: 10000, materials: 400 },
+                    5: { gold: 20000, materials: 800 }
+                },
+                benefits: {
+                    1: { tradeSpeed: 1.1, maxLoad: 10000 },
+                    2: { tradeSpeed: 1.2, maxLoad: 15000 },
+                    3: { tradeSpeed: 1.3, maxLoad: 25000 },
+                    4: { tradeSpeed: 1.4, maxLoad: 40000 },
+                    5: { tradeSpeed: 1.5, maxLoad: 60000 }
+                },
+                currentTrade: {
+                    active: false,
+                    fromKingdom: null,
+                    toKingdom: null,
+                    resources: {},
+                    startTime: null,
+                    duration: 0,
+                    completionTime: null
+                },
+                rarePieces: {
+                    ancientScroll: { name: "لفيفة قديمة", tradeable: true, value: 10000 },
+                    crystalShard: { name: "شظية بلورية", tradeable: true, value: 5000 },
+                    royalSeal: { name: "ختم ملكي", tradeable: true, value: 8000 },
+                    empireRelic: { name: "أثر إمبراطوري", tradeable: true, value: 15000 }
+                }
+            },
+            // مركز الاستثمار من Mobile Strike
+            investmentCenter: {
+                enabled: true,
+                level: 1,
+                maxLevel: 25,
+                name: "مركز الاستثمار",
+                description: "يضاعف ذهبك ويحسن عوائدك الاستثمارية",
+                goldGeneration: 0, // الذهب الإضافي المولد
+                investmentTypes: {
+                    treasury: {
+                        id: "treasury",
+                        name: "مخزن الذهب",
+                        description: "يضاعف ذهبك كل ساعة",
+                        baseReturn: 0.05, // 5% من الذهب الحالي
+                        bonusMultiplier: 1.0,
+                        cost: 500, // تكلفة الاستثمار
+                        maxInvestment: 100000
+                    },
+                    enterprise: {
+                        id: "enterprise", 
+                        name: "مشروع تجاري",
+                        description: "يحسن العوائد العامة للمملكة",
+                        baseReturn: 100, // ذهب ثابت
+                        bonusMultiplier: 0.02, // 2% من الإنتاج
+                        cost: 1000,
+                        maxInvestment: 500000
+                    },
+                    empire: {
+                        id: "empire",
+                        name: "استثمار إمبراطوري", 
+                        description: "أعلى عوائد استثمار متقدمة",
+                        baseReturn: 0.1, // 10% من الإنتاج
+                        bonusMultiplier: 0.05, // 5% من الأرباح
+                        cost: 5000,
+                        maxInvestment: 2000000
+                    }
+                },
+                currentInvestments: {
+                    treasury: 0,
+                    enterprise: 0,
+                    empire: 0
+                },
+                totalReturnRate: 0,
+                updateRate: function() {
+                    // حساب العائد الإجمالي
+                    let totalReturn = 0;
+                    Object.keys(this.currentInvestments).forEach(type => {
+                        const investment = this.currentInvestments[type];
+                        const typeData = this.investmentTypes[type];
+                        totalReturn += investment * typeData.baseReturn;
+                    });
+                    
+                    this.totalReturnRate = totalReturn;
+                    return totalReturn;
+                },
+                canInvest: function(type, amount) {
+                    const typeData = this.investmentTypes[type];
+                    if (!typeData) return false;
+                    if (this.currentInvestments[type] + amount > typeData.maxInvestment) return false;
+                    if (game.resources.gold < amount * typeData.cost) return false;
+                    return true;
+                },
+                invest: function(type, amount) {
+                    if (!this.canInvest(type, amount)) return false;
+                    
+                    const typeData = this.investmentTypes[type];
+                    const cost = amount * typeData.cost;
+                    
+                    game.resources.gold -= cost;
+                    this.currentInvestments[type] += amount;
+                    
+                    // إضافة رسالة نجاح
+                    game.allianceChat.addSystemMessage(`تم استثمار ${amount} في "${typeData.name}" - كلفة: ${cost} ذهب`);
+                    
+                    this.updateRate();
+                    return true;
+                }
             }
+        };
         };
         
         // نظام حشد التحالف (الطرق الإمبراطورية)
@@ -906,6 +1137,143 @@ class TechEmpire3D {
                 
                 return true;
             }
+        };
+
+        // نظام حقول النخبة - الوظائف
+        this.allianceSystem.eliteFields.startGathering = function(fieldId, troops) {
+            if (this.currentGathering.active) return false;
+            
+            const field = this.fields[fieldId];
+            if (!field) return false;
+            
+            // التحقق من عضوية التحالف
+            if (!game.allianceSystem.activeAlliances.length) {
+                game.allianceChat.addSystemMessage('يجب أن تكون عضواً في التحالف للوصول لحقول النخبة');
+                return false;
+            }
+            
+            this.currentGathering = {
+                active: true,
+                fieldId: fieldId,
+                troops: troops || {},
+                startTime: Date.now(),
+                endTime: Date.now() + (3600000 / field.gatherSpeed), // ساعة واحدة / سرعة الجمع
+                resources: {
+                    total: 0,
+                    current: 0
+                }
+            };
+            
+            game.allianceChat.addSystemMessage(`بدأ الجمع من "${field.name}"`);
+            this.updateEliteFieldProgress();
+            return true;
+        };
+
+        this.allianceSystem.eliteFields.collectFromField = function() {
+            if (!this.currentGathering.active) return false;
+            
+            const field = this.fields[this.currentGathering.fieldId];
+            const elapsedTime = Date.now() - this.currentGathering.startTime;
+            const gatheringMultiplier = Math.min(elapsedTime / 3600000, 1); // maximum 1 hour
+            
+            // حساب الموارد المجمعة مع العائد المقلع
+            const baseProduction = field.productionRate * field.bonusMultiplier;
+            const gatheredResources = Math.floor(baseProduction * gatheringMultiplier);
+            
+            // إضافة الموارد إلى مخزون اللاعب
+            game.resources[field.type] += gatheredResources;
+            
+            // رسالة النجاح
+            game.allianceChat.addSystemMessage(`تم جمع ${gatheredResources} من ${field.name}`);
+            
+            // إنهاء التجميع
+            this.currentGathering.active = false;
+            this.currentGathering = {
+                active: false,
+                fieldId: null,
+                troops: {},
+                startTime: null,
+                endTime: null,
+                resources: {}
+            };
+            
+            game.updateResourceDisplay();
+            return true;
+        };
+
+        this.allianceSystem.eliteFields.updateEliteFieldProgress = function() {
+            if (!this.currentGathering.active) return;
+            
+            const field = this.fields[this.currentGathering.fieldId];
+            const elapsed = Date.now() - this.currentGathering.startTime;
+            const progress = Math.min(elapsed / (3600000 / field.gatherSpeed), 1);
+            
+            // تحديث شريط التقدم في الواجهة
+            const progressBar = document.getElementById('elite-field-progress');
+            if (progressBar) {
+                progressBar.style.width = (progress * 100) + '%';
+            }
+        };
+
+        // السفينة التجارية - الوظائف
+        this.allianceSystem.tradeShip.startTrade = function(toKingdom, resources) {
+            if (this.currentTrade.active) return false;
+            
+            const benefit = this.benefits[this.level];
+            const totalLoad = Object.values(resources).reduce((sum, amount) => sum + amount, 0);
+            
+            if (totalLoad > benefit.maxLoad) {
+                game.allianceChat.addSystemMessage(`الحمولة ${totalLoad} تتجاوز الحد الأقصى ${benefit.maxLoad}`);
+                return false;
+            }
+            
+            this.currentTrade = {
+                active: true,
+                fromKingdom: "current",
+                toKingdom: toKingdom,
+                resources: resources,
+                startTime: Date.now(),
+                duration: 300000, // 5 دقائق / سرعة التجارة
+                completionTime: Date.now() + (300000 / benefit.tradeSpeed)
+            };
+            
+            // خصم الموارد المرسلة
+            Object.keys(resources).forEach(res => {
+                game.resources[res] -= resources[res];
+            });
+            
+            game.updateResourceDisplay();
+            game.allianceChat.addSystemMessage(`بدأت عملية التجارة إلى ${toKingdom}`);
+            return true;
+        };
+
+        this.allianceSystem.tradeShip.completeTrade = function() {
+            if (!this.currentTrade.active) return false;
+            
+            // إضافة الموارد إلى الوجهة (محاكاة)
+            this.currentTrade = {
+                active: false,
+                fromKingdom: null,
+                toKingdom: null,
+                resources: {},
+                startTime: null,
+                duration: 0,
+                completionTime: null
+            };
+            
+            game.allianceChat.addSystemMessage('تمت عملية التجارة بنجاح');
+            return true;
+        };
+
+        // مركز الاستثمار - الوظائف
+        this.allianceSystem.investmentCenter.generateGold = function() {
+            if (this.totalReturnRate > 0) {
+                const goldGenerated = Math.floor(this.totalReturnRate * game.resources.gold);
+                game.resources.gold += goldGenerated;
+                game.updateResourceDisplay();
+                return goldGenerated;
+            }
+            return 0;
         };
 
         // نظام أراضي التحالف والأعلام
@@ -1501,6 +1869,9 @@ class TechEmpire3D {
         // Update resource display
         this.updateResourceDisplay();
         this.updateVIPDisplay();
+        
+        // Initialize Elite Systems Update Loop (from War and Order)
+        this.startEliteSystemsUpdate();
         
         // Check for new unlocks (Mystery Cave)
         this.checkNewUnlocks();
@@ -8517,6 +8888,353 @@ class TechEmpire3D {
         
         // تفعيل وضع توفير الطاقة
         this.renderer.powerPreference = 'low-power';
+    }
+
+    // دالة تنسيق الأرقام للعرض
+    formatNumber(num) {
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(1) + 'M';
+        } else if (num >= 1000) {
+            return (num / 1000).toFixed(1) + 'K';
+        }
+        return num.toLocaleString();
+    }
+
+    // دالة الحصول على اسم المورد بالعربية
+    getResourceName(resource) {
+        const names = {
+            gold: 'ذهب',
+            food: 'طعام',
+            wood: 'خشب',
+            stone: 'حجر',
+            iron: 'حديد',
+            intelligence: 'ذكاء',
+            royalGems: 'أنهار كريمة',
+            gems: 'أحجار كريمة',
+            crystals: 'بلورات',
+            sacredRelics: 'آثار مقدسة',
+            emperorCrowns: 'تياجير قياصرة',
+            diamonds: 'ألماس'
+        };
+        return names[resource] || resource;
+    }
+
+    // دالة بدء التحديث التلقائي لأنظمة حقول النخبة
+    startEliteSystemsUpdate() {
+        // تحديث سريع كل ثانية لحقول النخبة
+        setInterval(() => {
+            this.updateEliteSystems();
+        }, 1000);
+        
+        // تحديث مخصص للتطوير
+        console.log('🌟 تم تفعيل نظام حقول النخبة من الحرب والنظام');
+        console.log('🚢 تم تفعيل السفينة التجارية من الحرب والنظام');
+        console.log('💰 تم تفعيل مركز الاستثمار من Mobile Strike');
+    }
+
+    // دالة التحديث الرئيسية لجميع أنظمة حقول النخبة
+    updateEliteSystems() {
+        // تحديث حقول النخبة
+        if (this.allianceSystem?.eliteFields) {
+            this.allianceSystem.eliteFields.updateEliteFieldProgress();
+            
+            // إنهاء التجميع إذا انتهى الوقت
+            if (this.allianceSystem.eliteFields.currentGathering.active) {
+                const field = this.allianceSystem.eliteFields.fields[this.allianceSystem.eliteFields.currentGathering.fieldId];
+                if (Date.now() >= this.allianceSystem.eliteFields.currentGathering.endTime) {
+                    this.allianceSystem.eliteFields.collectFromField();
+                }
+            }
+        }
+        
+        // تحديث السفينة التجارية
+        if (this.allianceSystem?.tradeShip && this.allianceSystem.tradeShip.currentTrade.active) {
+            if (Date.now() >= this.allianceSystem.tradeShip.currentTrade.completionTime) {
+                this.allianceSystem.tradeShip.completeTrade();
+            }
+        }
+        
+        // تحديث مركز الاستثمار (كل دقيقة)
+        if (this.allianceSystem?.investmentCenter && Date.now() % 60000 === 0) {
+            this.allianceSystem.investmentCenter.generateGold();
+        }
+        
+        // تحديث مزارع C15 (كل 5 دقائق)
+        if (this.allianceSystem?.c15Farms && Date.now() % 300000 === 0) {
+            Object.keys(this.allianceSystem.c15Farms.totalDailyProduction).forEach(resource => {
+                this.resources[resource] += this.allianceSystem.c15Farms.totalDailyProduction[resource] / 288; // 288 = 24*12 (5 دقائق)
+            });
+        }
+    }
+
+    // دالة إنشاء واجهة حقول النخبة
+    createEliteFieldsInterface() {
+        const container = document.getElementById('elite-fields-container') || this.createEliteFieldsContainer();
+        
+        let html = `
+            <div class="elite-fields-panel">
+                <h3>🌟 حقول النخبة - الحرب والنظام</h3>
+                <div class="elite-fields-grid">
+        `;
+        
+        // عرض حقول النخبة المتاحة
+        Object.values(this.allianceSystem.eliteFields.fields).forEach(field => {
+            const isActive = this.allianceSystem.eliteFields.currentGathering.fieldId === field.id;
+            html += `
+                <div class="elite-field-card ${isActive ? 'active' : ''}">
+                    <h4>${field.name}</h4>
+                    <div class="field-stats">
+                        <div>📈 الإنتاج: ${field.productionRate}/ساعة</div>
+                        <div>⚡ السرعة: +${Math.round((field.gatherSpeed - 1) * 100)}%</div>
+                        <div>📦 الحمولة: +${Math.round((field.loadBonus - 1) * 100)}%</div>
+                        <div>🛡️ الحماية: ${field.protection ? '✅' : '❌'}</div>
+                    </div>
+                    <button onclick="game.startEliteFieldGathering('${field.id}')" ${isActive ? 'disabled' : ''}>
+                        ${isActive ? 'جاري التجميع...' : 'بدء التجميع'}
+                    </button>
+                </div>
+            `;
+        });
+        
+        // عرض مزارع C15
+        html += `
+                </div>
+                <h3>🚜 مزارع C15 المتخصصة</h3>
+                <div class="c15-farms-grid">
+        `;
+        
+        this.allianceSystem.c15Farms.farms.forEach(farm => {
+            const production = this.allianceSystem.c15Farms.totalDailyProduction[farm.specialization];
+            html += `
+                <div class="farm-card">
+                    <h4>${farm.name}</h4>
+                    <div>🎯 التخصص: ${this.getResourceName(farm.specialization)}</div>
+                    <div>📊 الإنتاج اليومي: ${this.formatNumber(production)}</div>
+                    <div>⚔️ القوات: T2 Cavalry (${farm.troops.T2_Cavalry})</div>
+                    <div>👥 الشرط: ${farm.requirement}</div>
+                </div>
+            `;
+        });
+        
+        html += `
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+    }
+
+    // دالة بدء التجميع من حقل نخبة
+    startEliteFieldGathering(fieldId) {
+        if (!this.allianceSystem.activeAlliances.length) {
+            alert('يجب أن تكون عضواً في التحالف للوصول لحقول النخبة');
+            return;
+        }
+        
+        const result = this.allianceSystem.eliteFields.startGathering(fieldId, { T2_Cavalry: 1000 });
+        if (result) {
+            this.updateResourceDisplay();
+            this.createEliteFieldsInterface(); // تحديث الواجهة
+        }
+    }
+
+    // دالة إنشاء حاوية حقول النخبة
+    createEliteFieldsContainer() {
+        const container = document.createElement('div');
+        container.id = 'elite-fields-container';
+        container.className = 'elite-fields-modal';
+        document.body.appendChild(container);
+        return container;
+    }
+
+    // دالة إنشاء واجهة السفينة التجارية
+    createTradeShipInterface() {
+        const container = document.getElementById('trade-ship-container') || this.createTradeShipContainer();
+        const tradeData = this.allianceSystem.tradeShip;
+        
+        let html = `
+            <div class="elite-fields-modal">
+                <div class="elite-fields-panel">
+                    <h3>🚢 السفينة التجارية - الحرب والنظام</h3>
+                    
+                    <div class="trade-ship-panel">
+                        <h4>السفينة التجارية - مستوى ${tradeData.level}</h4>
+                        <div>السرعة: ${Math.round(tradeData.benefits[tradeData.level].tradeSpeed * 100)}%</div>
+                        <div>الحمولة القصوى: ${tradeData.benefits[tradeData.level].maxLoad.toLocaleString()}</div>
+                        
+                        ${tradeData.currentTrade.active ? `
+                            <div class="trade-status">
+                                <h5>التجارة النشطة</h5>
+                                <div>الوجهة: ${tradeData.currentTrade.toKingdom}</div>
+                                <div class="trade-progress">
+                                    <div class="elite-field-progress-bar" style="width: ${this.getTradeProgress()}%"></div>
+                                </div>
+                                <button onclick="game.allianceSystem.tradeShip.completeTrade()">استكمال</button>
+                            </div>
+                        ` : `
+                            <div class="new-trade-form">
+                                <h5>بدء تجارة جديدة</h5>
+                                <div class="trade-resources-grid">
+                                    <div class="resource-input">
+                                        <label>ذهب</label>
+                                        <input type="number" id="trade-gold" min="0" max="${tradeData.benefits[tradeData.level].maxLoad}" placeholder="0">
+                                    </div>
+                                    <div class="resource-input">
+                                        <label>طعام</label>
+                                        <input type="number" id="trade-food" min="0" max="${tradeData.benefits[tradeData.level].maxLoad}" placeholder="0">
+                                    </div>
+                                    <div class="resource-input">
+                                        <label>خشب</label>
+                                        <input type="number" id="trade-wood" min="0" max="${tradeData.benefits[tradeData.level].maxLoad}" placeholder="0">
+                                    </div>
+                                    <div class="resource-input">
+                                        <label>حجر</label>
+                                        <input type="number" id="trade-stone" min="0" max="${tradeData.benefits[tradeData.level].maxLoad}" placeholder="0">
+                                    </div>
+                                </div>
+                                <button onclick="game.startTrade()">بدء التجارة</button>
+                            </div>
+                        `}
+                    </div>
+                    
+                    <div class="rare-pieces-panel">
+                        <h4>القطع النادرة القابلة للتجارة</h4>
+                        <div class="rare-pieces-grid">
+        `;
+        
+        Object.values(tradeData.rarePieces).forEach(piece => {
+            html += `
+                <div class="rare-piece-card">
+                    <h5>${piece.name}</h5>
+                    <div>القيمة: ${piece.value.toLocaleString()}</div>
+                    <div>${piece.tradeable ? '✅ قابل للتجارة' : '❌ غير قابل للتجارة'}</div>
+                </div>
+            `;
+        });
+        
+        html += `
+                        </div>
+                    </div>
+                    
+                    <button onclick="document.getElementById('trade-ship-container').remove()">إغلاق</button>
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+    }
+
+    // دالة إنشاء واجهة مركز الاستثمار
+    createInvestmentCenterInterface() {
+        const container = document.getElementById('investment-center-container') || this.createInvestmentCenterContainer();
+        const investmentData = this.allianceSystem.investmentCenter;
+        
+        let html = `
+            <div class="elite-fields-modal">
+                <div class="elite-fields-panel">
+                    <h3>💰 مركز الاستثمار - Mobile Strike</h3>
+                    
+                    <div class="investment-center-panel">
+                        <h4>مركز الاستثمار - مستوى ${investmentData.level}</h4>
+                        <div>العائد الإجمالي: ${this.formatNumber(investmentData.totalReturnRate)}</div>
+                        
+                        <div class="current-investments">
+                            <h5>الاستثمارات الحالية</h5>
+                            <div>مخزن الذهب: ${this.formatNumber(investmentData.currentInvestments.treasury)}</div>
+                            <div>مشروع تجاري: ${this.formatNumber(investmentData.currentInvestments.enterprise)}</div>
+                            <div>استثمار إمبراطوري: ${this.formatNumber(investmentData.currentInvestments.empire)}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="investment-types">
+        `;
+        
+        Object.values(investmentData.investmentTypes).forEach(type => {
+            html += `
+                <div class="investment-card">
+                    <h5>${type.name}</h5>
+                    <p>${type.description}</p>
+                    <div>العائد: ${(type.baseReturn * 100)}%</div>
+                    <div>التكلفة: ${type.cost} ذهب</div>
+                    <div>الحد الأقصى: ${this.formatNumber(type.maxInvestment)}</div>
+                    <div class="invest-controls">
+                        <input type="number" id="invest-${type.id}" min="0" max="${type.maxInvestment}" placeholder="الكمية">
+                        <button onclick="game.makeInvestment('${type.id}')">استثمار</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `
+                    </div>
+                    
+                    <button onclick="document.getElementById('investment-center-container').remove()">إغلاق</button>
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+    }
+
+    // دوال مساعدة للواجهات
+    startTrade() {
+        const gold = parseInt(document.getElementById('trade-gold')?.value || 0);
+        const food = parseInt(document.getElementById('trade-food')?.value || 0);
+        const wood = parseInt(document.getElementById('trade-wood')?.value || 0);
+        const stone = parseInt(document.getElementById('trade-stone')?.value || 0);
+        
+        const resources = { gold, food, wood, stone };
+        const total = Object.values(resources).reduce((sum, val) => sum + val, 0);
+        
+        if (total === 0) {
+            alert('يجب إدخال موارد للتجارة');
+            return;
+        }
+        
+        this.allianceSystem.tradeShip.startTrade("المملكة المجهولة", resources);
+        this.createTradeShipInterface(); // تحديث الواجهة
+    }
+
+    makeInvestment(type) {
+        const input = document.getElementById(`invest-${type}`);
+        const amount = parseInt(input?.value || 0);
+        
+        if (amount <= 0) {
+            alert('يجب إدخال كمية صحيحة للاستثمار');
+            return;
+        }
+        
+        const result = this.allianceSystem.investmentCenter.invest(type, amount);
+        if (result) {
+            this.createInvestmentCenterInterface(); // تحديث الواجهة
+            this.updateResourceDisplay();
+        }
+    }
+
+    getTradeProgress() {
+        if (!this.allianceSystem.tradeShip.currentTrade.active) return 0;
+        
+        const now = Date.now();
+        const start = this.allianceSystem.tradeShip.currentTrade.startTime;
+        const end = this.allianceSystem.tradeShip.currentTrade.completionTime;
+        
+        return Math.min(((now - start) / (end - start)) * 100, 100);
+    }
+
+    createTradeShipContainer() {
+        const container = document.createElement('div');
+        container.id = 'trade-ship-container';
+        container.className = 'trade-ship-modal';
+        document.body.appendChild(container);
+        return container;
+    }
+
+    createInvestmentCenterContainer() {
+        const container = document.createElement('div');
+        container.id = 'investment-center-container';
+        container.className = 'investment-center-modal';
+        document.body.appendChild(container);
+        return container;
     }
 }
 

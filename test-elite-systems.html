@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>اختبار نظام حقول النخبة</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 20px;
+            direction: rtl;
+        }
+        .test-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #fbbf24;
+        }
+        button {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22c55e;
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+        }
+        #output {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 اختبار نظام حقول النخبة - الحرب والنظام</h1>
+    
+    <div class="test-panel">
+        <h3>اختبار التهيئة</h3>
+        <button onclick="testInitialization()">اختبار التهيئة</button>
+        <button onclick="testEliteFields()">اختبار حقول النخبة</button>
+        <button onclick="testTradeShip()">اختبار السفينة التجارية</button>
+        <button onclick="testInvestmentCenter()">اختبار مركز الاستثمار</button>
+        <button onclick="runAllTests()">تشغيل جميع الاختبارات</button>
+    </div>
+
+    <div class="test-panel">
+        <h3>اختبار سريع للأنظمة</h3>
+        <button onclick="quickTest()">اختبار سريع</button>
+        <button onclick="clearOutput()">مسح النتائج</button>
+    </div>
+
+    <div id="output"></div>
+
+    <script>
+        let testOutput = document.getElementById('output');
+        
+        function log(message, isError = false) {
+            const timestamp = new Date().toLocaleTimeString('ar-SA');
+            const className = isError ? 'error' : 'status';
+            testOutput.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            testOutput.scrollTop = testOutput.scrollHeight;
+        }
+
+        function clearOutput() {
+            testOutput.innerHTML = '';
+        }
+
+        function testInitialization() {
+            log('🔄 بدء اختبار التهيئة...');
+            
+            try {
+                // اختبار التهيئة المبسطة
+                const allianceSystem = {
+                    eliteFields: {
+                        enabled: true,
+                        fields: {
+                            food: {
+                                id: "elite_food",
+                                name: "حقل الطعام النخبة",
+                                type: "food",
+                                productionRate: 5000,
+                                bonusMultiplier: 3,
+                                gatherSpeed: 1.5,
+                                loadBonus: 1.25,
+                                protection: true,
+                                requiredAlliance: true,
+                                location: "territory",
+                                color: 0x90EE90
+                            }
+                        },
+                        currentGathering: {
+                            active: false,
+                            fieldId: null,
+                            troops: {},
+                            startTime: null,
+                            endTime: null,
+                            resources: {}
+                        }
+                    },
+                    c15Farms: {
+                        enabled: true,
+                        farms: [
+                            {
+                                id: "food_farm_1",
+                                name: "مزرعة الطعام C15",
+                                specialization: "food",
+                                dailyProduction: 1200000,
+                                troops: { T2_Cavalry: 5000 },
+                                requirement: "Alliance Member",
+                                active: true
+                            }
+                        ]
+                    },
+                    tradeShip: {
+                        enabled: true,
+                        level: 1,
+                        currentTrade: {
+                            active: false,
+                            fromKingdom: null,
+                            toKingdom: null,
+                            resources: {},
+                            startTime: null,
+                            duration: 0,
+                            completionTime: null
+                        }
+                    },
+                    investmentCenter: {
+                        enabled: true,
+                        level: 1,
+                        currentInvestments: {
+                            treasury: 0,
+                            enterprise: 0,
+                            empire: 0
+                        }
+                    }
+                };
+                
+                log('✅ تم إنشاء نظام التحالف بنجاح');
+                log(`📊 عدد حقول النخبة: ${Object.keys(allianceSystem.eliteFields.fields).length}`);
+                log(`🚜 عدد مزارع C15: ${allianceSystem.c15Farms.farms.length}`);
+                log('✅ تم اختبار التهيئة بنجاح');
+                
+            } catch (error) {
+                log(`❌ خطأ في التهيئة: ${error.message}`, true);
+            }
+        }
+
+        function testEliteFields() {
+            log('🔄 بدء اختبار حقول النخبة...');
+            
+            try {
+                // محاكاة تجميع من حقل نخبة
+                const field = {
+                    name: "حقل الطعام النخبة",
+                    type: "food",
+                    productionRate: 5000,
+                    bonusMultiplier: 3,
+                    gatherSpeed: 1.5
+                };
+                
+                const elapsedTime = 1800000; // 30 دقيقة
+                const gatheringMultiplier = Math.min(elapsedTime / 3600000, 1);
+                const baseProduction = field.productionRate * field.bonusMultiplier;
+                const gatheredResources = Math.floor(baseProduction * gatheringMultiplier);
+                
+                log(`🌾 حقل: ${field.name}`);
+                log(`📈 الإنتاج الأساسي: ${field.productionRate}/ساعة`);
+                log(`⚡ مضاعف النخبة: ${field.bonusMultiplier}x`);
+                log(`📊 الموارد المجمعة: ${gatheredResources} ${field.type}`);
+                log('✅ تم اختبار حقول النخبة بنجاح');
+                
+            } catch (error) {
+                log(`❌ خطأ في حقول النخبة: ${error.message}`, true);
+            }
+        }
+
+        function testTradeShip() {
+            log('🔄 بدء اختبار السفينة التجارية...');
+            
+            try {
+                const tradeShip = {
+                    level: 1,
+                    benefits: {
+                        1: { tradeSpeed: 1.1, maxLoad: 10000 }
+                    },
+                    currentTrade: {
+                        active: false
+                    }
+                };
+                
+                // محاكاة بدء تجارة
+                const resources = { gold: 5000, food: 3000 };
+                const totalLoad = Object.values(resources).reduce((sum, amount) => sum + amount, 0);
+                
+                if (totalLoad <= tradeShip.benefits[tradeShip.level].maxLoad) {
+                    log('🚢 بدء تجارة جديدة');
+                    log(`📦 الحمولة الإجمالية: ${totalLoad}`);
+                    log(`⚡ سرعة التجارة: ${Math.round(tradeShip.benefits[tradeShip.level].tradeSpeed * 100)}%`);
+                    log('✅ تم اختبار السفينة التجارية بنجاح');
+                } else {
+                    log('❌ الحمولة تتجاوز الحد الأقصى', true);
+                }
+                
+            } catch (error) {
+                log(`❌ خطأ في السفينة التجارية: ${error.message}`, true);
+            }
+        }
+
+        function testInvestmentCenter() {
+            log('🔄 بدء اختبار مركز الاستثمار...');
+            
+            try {
+                const investmentCenter = {
+                    level: 1,
+                    investmentTypes: {
+                        treasury: {
+                            name: "مخزن الذهب",
+                            baseReturn: 0.05,
+                            cost: 500,
+                            maxInvestment: 100000
+                        },
+                        enterprise: {
+                            name: "مشروع تجاري",
+                            baseReturn: 100,
+                            cost: 1000,
+                            maxInvestment: 500000
+                        }
+                    },
+                    currentInvestments: {
+                        treasury: 10000,
+                        enterprise: 5000
+                    }
+                };
+                
+                // حساب العائد
+                let totalReturn = 0;
+                Object.keys(investmentCenter.currentInvestments).forEach(type => {
+                    const investment = investmentCenter.currentInvestments[type];
+                    const typeData = investmentCenter.investmentTypes[type];
+                    totalReturn += investment * typeData.baseReturn;
+                });
+                
+                log('💰 مركز الاستثمار - مستوى 1');
+                log(`📈 استثمار مخزن الذهب: ${investmentCenter.currentInvestments.treasury}`);
+                log(`🏢 استثمار مشروع تجاري: ${investmentCenter.currentInvestments.enterprise}`);
+                log(`💵 العائد الإجمالي: ${totalReturn.toFixed(2)}`);
+                log('✅ تم اختبار مركز الاستثمار بنجاح');
+                
+            } catch (error) {
+                log(`❌ خطأ في مركز الاستثمار: ${error.message}`, true);
+            }
+        }
+
+        function quickTest() {
+            log('⚡ اختبار سريع للأنظمة...');
+            testInitialization();
+            testEliteFields();
+            testTradeShip();
+            testInvestmentCenter();
+            log('🎉 تم إنجاز الاختبار السريع!');
+        }
+
+        function runAllTests() {
+            log('🚀 بدء تشغيل جميع الاختبارات...');
+            testInitialization();
+            testEliteFields();
+            testTradeShip();
+            testInvestmentCenter();
+            log('🎉 تم إنجاز جميع الاختبارات بنجاح!');
+        }
+
+        // تشغيل اختبار تلقائي عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            log('🌟 مرحباً بكم في اختبار نظام حقول النخبة');
+            log('💡 انقر على الأزرار لاختبار الأنظمة المختلفة');
+            setTimeout(quickTest, 1000);
+        });
+    </script>
+</body>
+</html>

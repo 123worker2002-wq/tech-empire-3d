@@ -751,3 +751,366 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ==========================================
+   نظام حقول النخبة - الحرب والنظام
+   ========================================== */
+
+.elite-fields-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.elite-fields-panel {
+    background: var(--bg-surface);
+    border: 2px solid var(--primary-500);
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 1200px;
+    width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    color: var(--text-primary);
+}
+
+.elite-fields-panel h3 {
+    color: var(--accent-500);
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--accent-500);
+}
+
+.elite-fields-grid,
+.c15-farms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.elite-field-card,
+.farm-card {
+    background: linear-gradient(135deg, var(--bg-page), var(--bg-surface));
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.elite-field-card:hover,
+.farm-card:hover {
+    border-color: var(--accent-500);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+    transform: translateY(-2px);
+}
+
+.elite-field-card.active {
+    border-color: var(--accent-500);
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.5);
+}
+
+.elite-field-card h4,
+.farm-card h4 {
+    color: var(--accent-500);
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.field-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.field-stats > div {
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.elite-field-card button {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent-500), var(--gold-700));
+    color: black;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.elite-field-card button:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--gold-700), var(--accent-500));
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4);
+}
+
+.elite-field-card button:disabled {
+    background: var(--border-color);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+.farm-card div {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* مؤشر التقدم لحقول النخبة */
+.elite-field-progress {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-page);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.elite-field-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+    width: 0%;
+    transition: width 0.1s ease;
+    border-radius: 4px;
+}
+
+/* السفينة التجارية - واجهة */
+.trade-ship-panel {
+    background: var(--bg-surface);
+    border: 2px solid var(--primary-500);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px;
+    color: var(--text-primary);
+}
+
+.trade-ship-panel h4 {
+    color: var(--accent-500);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.trade-resources-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.resource-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.resource-input input {
+    width: 60px;
+    padding: 5px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+/* مركز الاستثمار - واجهة */
+.investment-center-panel {
+    background: var(--bg-surface);
+    border: 2px solid var(--accent-500);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px;
+    color: var(--text-primary);
+}
+
+.investment-center-panel h4 {
+    color: var(--accent-500);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.investment-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.investment-card {
+    background: linear-gradient(135deg, var(--bg-page), var(--bg-surface));
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.investment-card:hover {
+    border-color: var(--accent-500);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+}
+
+.investment-card h5 {
+    color: var(--accent-500);
+    margin-bottom: 10px;
+}
+
+.investment-card p {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+}
+
+.invest-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.invest-controls input {
+    flex: 1;
+    padding: 5px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--text-primary);
+}
+
+.invest-controls button {
+    background: var(--accent-500);
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.invest-controls button:hover {
+    background: var(--gold-700);
+}
+
+/* ==========================================
+   أزرار أنظمة الحرب والنظام في الشريط العلوي
+   ========================================== */
+
+.elite-systems-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.elite-btn {
+    background: linear-gradient(135deg, var(--accent-500), var(--gold-700));
+    color: black;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.elite-btn:hover {
+    background: linear-gradient(135deg, var(--gold-700), var(--accent-500));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(251, 191, 36, 0.4);
+}
+
+.elite-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.elite-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.elite-btn:hover::before {
+    left: 100%;
+}
+
+/* Animation for new features */
+@keyframes glow {
+    0% { box-shadow: 0 0 5px var(--accent-500); }
+    50% { box-shadow: 0 0 20px var(--accent-500), 0 0 30px var(--gold-700); }
+    100% { box-shadow: 0 0 5px var(--accent-500); }
+}
+
+.elite-btn.new-feature {
+    animation: glow 2s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .elite-fields-grid,
+    .c15-farms-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .elite-fields-panel {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    .trade-resources-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .investment-types {
+        grid-template-columns: 1fr;
+    }
+    
+    .elite-systems-section {
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-left: 10px;
+    }
+    
+    .elite-btn {
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .elite-systems-section {
+        flex-direction: column;
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    .elite-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 11px;
+    }
+}
