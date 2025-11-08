@@ -251,6 +251,32 @@
 }
 
 /* ==========================================
+   Mobile Device Styles
+   ========================================== */
+.mobile-device {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-device * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+/* تحسين النصوص للموبايل */
+.mobile-device body {
+  font-size: 16px;
+}
+
+.mobile-device .resource-value,
+.mobile-device .nav-btn span {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--text-highlight);
+}
+
+/* ==========================================
    Full Screen Support للموبايل
    ========================================== */
 @supports (height: 100dvh) {
@@ -290,6 +316,123 @@
       height: calc(100dvh - 190px);
     }
   }
+}
+
+/* ==========================================
+   Radar System Effects - أنماط نظام الرادار
+   ========================================== */
+.radar-upgrade-effect {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  text-align: center;
+  font-family: var(--font-arabic);
+}
+
+.radar-wave {
+  width: 100px;
+  height: 100px;
+  border: 3px solid #00FFFF;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: radarWave 2s ease-out;
+  opacity: 0.7;
+}
+
+.radar-pulse {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle, #00FFFF 0%, transparent 70%);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: radarPulse 1.5s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+.upgrade-text {
+  position: relative;
+  top: 60px;
+  background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 8px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: textGlow 2s ease-in-out;
+}
+
+@keyframes radarWave {
+  0% {
+    width: 0px;
+    height: 0px;
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    width: 150px;
+    height: 150px;
+    opacity: 0;
+  }
+}
+
+@keyframes radarPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.3;
+  }
+}
+
+@keyframes textGlow {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-5px);
+    opacity: 1;
+    text-shadow: 0 0 10px #00FFFF, 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+}
+
+/* Radar Building Selection Effect */
+.radar-selected {
+  animation: radarSelected 1s ease-in-out infinite;
+}
+
+@keyframes radarSelected {
+  0%, 100% {
+    box-shadow: 0 0 0 #00FFFF;
+  }
+  50% {
+    box-shadow: 0 0 20px #00FFFF, 0 0 30px #00FFFF;
+  }
+}
+
+/* Intelligence Resource Display */
+.intelligence-display {
+  background: linear-gradient(135deg, #1A202C 0%, #2D3748 100%);
+  border: 2px solid #00FFFF;
+  color: #00FFFF;
+  font-weight: 700;
+  text-shadow: 0 0 5px currentColor;
 }
 
 /* ==========================================
@@ -484,6 +627,26 @@ body {
 .iron-icon {
   background: linear-gradient(145deg, var(--resource-iron) 0%, #4A4A4A 100%);
   border-radius: 2px;
+}
+
+.intelligence-icon {
+  background: radial-gradient(circle, #00FFFF 0%, #0066CC 100%);
+  border: 2px solid #00FFFF;
+  color: white;
+  font-size: var(--text-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: intelligenceGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes intelligenceGlow {
+  0% {
+    box-shadow: 0 0 5px #00FFFF;
+  }
+  100% {
+    box-shadow: 0 0 15px #00FFFF, 0 0 25px #00FFFF;
+  }
 }
 
 .resource-value {

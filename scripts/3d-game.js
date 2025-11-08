@@ -19,6 +19,7 @@ class TechEmpire3D {
             wood: 300,
             stone: 200,
             iron: 150,
+            intelligence: 0, // ذكاء من الرادار المتطور
             royalGems: 0, // الأنهار الكريمة - المبنى الجديد
             gems: 0, // الأحجار الكريمة العادية
             crystals: 0,
@@ -1400,6 +1401,82 @@ class TechEmpire3D {
     detectMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
+    
+    initializeMobileFeatures() {
+        // Mobile و Full Screen initialization
+        this.isMobile = this.detectMobile();
+        
+        // Enable mobile-specific features
+        if (this.isMobile) {
+            // Add mobile-specific CSS classes
+            document.body.classList.add('mobile-device');
+            
+            // Handle mobile orientation
+            window.addEventListener('orientationchange', () => {
+                setTimeout(() => {
+                    if (this.camera && this.renderer) {
+                        this.camera.aspect = window.innerWidth / window.innerHeight;
+                        this.camera.updateProjectionMatrix();
+                        this.renderer.setSize(window.innerWidth, window.innerHeight);
+                    }
+                }, 100);
+            });
+            
+            // Prevent zoom on double tap
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (event) => {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Enhanced mobile touch controls
+            this.setupMobileTouchControls();
+        }
+        
+        // Initialize radar system resources
+        this.resources.intelligence = this.resources.intelligence || 0;
+        
+        console.log('تم تهيئة المميزات الموبايل بنجاح');
+    }
+    
+    setupMobileTouchControls() {
+        // تحسين التحكم باللمس للموبايل
+        const canvas = this.renderer.domElement;
+        
+        // Pinch to zoom
+        let initialDistance = 0;
+        let currentZoom = 1;
+        
+        canvas.addEventListener('touchstart', (event) => {
+            if (event.touches.length === 2) {
+                event.preventDefault();
+                const dx = event.touches[0].clientX - event.touches[1].clientX;
+                const dy = event.touches[0].clientY - event.touches[1].clientY;
+                initialDistance = Math.sqrt(dx * dx + dy * dy);
+                currentZoom = this.cameraTargetPosition.length() / 15;
+            }
+        });
+        
+        canvas.addEventListener('touchmove', (event) => {
+            if (event.touches.length === 2) {
+                event.preventDefault();
+                const dx = event.touches[0].clientX - event.touches[1].clientX;
+                const dy = event.touches[0].clientY - event.touches[1].clientY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const delta = (initialDistance - distance) * 0.01;
+                const newZoom = Math.max(0.6, Math.min(2.0, currentZoom + delta));
+                
+                // Update camera position
+                const direction = new THREE.Vector3();
+                direction.copy(this.cameraTargetPosition).normalize();
+                const targetDistance = 15 * newZoom;
+                this.cameraTargetPosition.copy(direction.multiplyScalar(targetDistance));
+            }
+        });
+    }
 
     init() {
         this.setupControls();
@@ -1597,6 +1674,11 @@ class TechEmpire3D {
         // Create Mystery Cave (only for C30+)
         if (this.getCurrentLevelValue() >= 30) {
             this.createMysteryCave(-8, -8);
+        }
+        
+        // Create Advanced Radar System (مفتوح في C25+)
+        if (this.getCurrentLevelValue() >= 25) {
+            this.createRadar(-12, -12);
         }
         
         // Initialize Kingdom Wars System
@@ -2110,9 +2192,128 @@ class TechEmpire3D {
         this.buildings.push(building);
     }
     
+    createRadar(x, z) {
+        const building = new THREE.Group();
+        
+        // Central radar tower
+        const tower = new THREE.Mesh(
+            new THREE.CylinderGeometry(1, 1.5, 8, 8),
+            new THREE.MeshPhongMaterial({ 
+                color: 0x2C3E50,
+                emissive: 0x1A252F,
+                emissiveIntensity: 0.1
+            })
+        );
+        tower.position.y = 4;
+        building.add(tower);
+        
+        // Radar dish (rotating)
+        const dish = new THREE.Mesh(
+            new THREE.SphereGeometry(2, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2),
+            new THREE.MeshPhongMaterial({ 
+                color: 0x3498DB,
+                emissive: 0x2E86C1,
+                emissiveIntensity: 0.2,
+                transparent: true,
+                opacity: 0.8
+            })
+        );
+        dish.position.y = 8;
+        building.add(dish);
+        
+        // Rotating radar antenna
+        const antenna = new THREE.Mesh(
+            new THREE.BoxGeometry(0.2, 4, 0.2),
+            new THREE.MeshPhongMaterial({ 
+                color: 0xE74C3C,
+                emissive: 0xC0392B,
+                emissiveIntensity: 0.3
+            })
+        );
+        antenna.position.y = 10;
+        antenna.position.z = 1.5;
+        building.add(antenna);
+        
+        // Support structures
+        for (let i = 0; i < 4; i++) {
+            const support = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.3, 0.5, 6, 6),
+                new THREE.MeshPhongMaterial({ color: 0x34495E })
+            );
+            support.position.y = 3;
+            support.position.x = Math.cos(i * Math.PI / 2) * 2;
+            support.position.z = Math.sin(i * Math.PI / 2) * 2;
+            building.add(support);
+        }
+        
+        // Scanning circles (visual effects)
+        for (let i = 0; i < 3; i++) {
+            const scanCircle = new THREE.Mesh(
+                new THREE.RingGeometry(3 + i * 2, 3.2 + i * 2, 16),
+                new THREE.MeshBasicMaterial({ 
+                    color: 0x00FFFF,
+                    transparent: true,
+                    opacity: 0.3 - i * 0.1
+                })
+            );
+            scanCircle.position.y = 0.1;
+            building.add(scanCircle);
+        }
+        
+        building.position.set(x, 0, z);
+        building.userData = {
+            type: 'radar',
+            level: 1,
+            name: 'نظام الرادار المتطور',
+            production: { 
+                intelligence: 5,  // معلومات استخباراتية
+                detection_range: 50 + 10 * building.userData.level, // مدى كشف الأعداء
+                alert_accuracy: 80 + 5 * building.userData.level // دقة الإنذارات
+            },
+            cost: { 
+                gold: 1500, 
+                iron: 800, 
+                wood: 400, 
+                stone: 600,
+                royalGems: 10 // يحتاج أحجار كريمة للترقية
+            },
+            special: 'detects_enemy_movements_and_threats',
+            maxLevel: 10,
+            upgradeEffects: [
+                'increases detection range by 10% per level',
+                'improves alert accuracy by 5% per level',
+                'reduces false alarms',
+                'enables real-time enemy tracking',
+                'provides tactical advantages'
+            ]
+        };
+        
+        this.scene.add(building);
+        this.buildings.push(building);
+        
+        // Start radar rotation animation
+        this.animateRadarDish(dish, antenna);
+    }
+    
+    animateRadarDish(dish, antenna) {
+        // Radar rotation animation
+        const radarRotation = () => {
+            dish.rotation.y += 0.01;
+            antenna.rotation.y += 0.01;
+            requestAnimationFrame(radarRotation);
+        };
+        radarRotation();
+    }
+    
     // فحص المفتوحات الجديدة
     checkNewUnlocks() {
         const currentLevel = this.getCurrentLevelValue();
+        
+        // فتح نظام الرادار المتطور عند C25
+        if (currentLevel >= 25 && !this.buildings.find(b => b.userData.type === 'radar')) {
+            this.createRadar(-12, -12);
+            this.showMessage("📡 تم فتح نظام الرادار المتطور! يمكنك الآن كشف تحركات العدو", "success");
+        }
         
         // فتح كهف الغموض عند C30
         if (currentLevel >= 30 && !this.buildings.find(b => b.userData.type === 'mystery_cave')) {
@@ -3185,6 +3386,113 @@ class TechEmpire3D {
         this.animations.push(animation);
     }
 
+    upgradeRadar(building) {
+        if (!building || building.userData.type !== 'radar') {
+            this.showMessage('هذا ليس مبنى رادار', 'error');
+            return false;
+        }
+        
+        if (!this.canAffordUpgrade(building)) return false;
+        
+        const cost = building.userData.cost;
+        
+        // Deduct resources
+        Object.keys(cost).forEach(res => {
+            this.resources[res] -= cost[res];
+        });
+
+        // Upgrade radar
+        const oldLevel = building.userData.level;
+        building.userData.level++;
+        
+        // Update radar properties
+        building.userData.production.detection_range = 50 + building.userData.level * 10;
+        building.userData.production.alert_accuracy = 80 + building.userData.level * 5;
+        building.userData.production.intelligence *= 1.3;
+        
+        // Update advanced radar system
+        if (this.advancedRadar) {
+            this.advancedRadar.range = building.userData.production.detection_range;
+            this.advancedRadar.alertAccuracy = building.userData.production.alert_accuracy;
+        }
+        
+        // Scale building
+        this.scaleBuilding(building, 1.1);
+        
+        // Add special radar effects
+        this.addRadarUpgradeEffect(building, oldLevel, building.userData.level);
+        
+        // Update display
+        this.updateResourceDisplay();
+        this.showBuildingInfo(building);
+        
+        // Show radar upgrade message
+        if (building.userData.level % 2 === 0) {
+            this.showMessage(`🔄 تم ترقية الرادار إلى مستوى ${building.userData.level}! المدى والذكاء محسّنين`, 'success');
+        }
+        
+        return true;
+    }
+    
+    addRadarUpgradeEffect(building, oldLevel, newLevel) {
+        // إنشاء تأثيرات خاصة بالرادار عند الترقية
+        const radarEffect = document.createElement('div');
+        radarEffect.className = 'radar-upgrade-effect';
+        radarEffect.innerHTML = `
+            <div class="radar-wave"></div>
+            <div class="radar-pulse"></div>
+            <div class="upgrade-text">📡 رادار متطور - المستوى ${newLevel}</div>
+        `;
+        
+        // Position effect
+        const rect = building.getBoundingClientRect();
+        radarEffect.style.position = 'absolute';
+        radarEffect.style.top = (rect.top - 50) + 'px';
+        radarEffect.style.left = (rect.left + rect.width / 2) + 'px';
+        radarEffect.style.transform = 'translateX(-50%)';
+        radarEffect.style.pointerEvents = 'none';
+        radarEffect.style.zIndex = '1000';
+        
+        document.body.appendChild(radarEffect);
+        
+        // Remove effect after animation
+        setTimeout(() => {
+            if (radarEffect.parentNode) {
+                radarEffect.parentNode.removeChild(radarEffect);
+            }
+        }, 3000);
+    }
+    
+    // فحص إذا كان المبنى رادار ويربطه بدالة الترقية المناسبة
+    upgradeBuilding(building) {
+        if (building && building.userData.type === 'radar') {
+            return this.upgradeRadar(building);
+        }
+        
+        if (!building || !this.canAffordUpgrade(building)) return;
+
+        const cost = building.userData.cost;
+        
+        // Deduct resources
+        Object.keys(cost).forEach(res => {
+            this.resources[res] -= cost[res];
+        });
+
+        // Upgrade building
+        building.userData.level++;
+        this.scaleBuilding(building, 1.1);
+        
+        // Increase production
+        Object.keys(building.userData.production).forEach(res => {
+            building.userData.production[res] *= 1.2;
+        });
+
+        // Update display
+        this.updateResourceDisplay();
+        this.showBuildingInfo(building);
+        this.showUpgradeEffect(building);
+    }
+
     showUpgradeEffect(building) {
         // Create particle effect for upgrade
         const particles = new THREE.Group();
@@ -3326,6 +3634,7 @@ class TechEmpire3D {
             wood: document.getElementById('wood-amount'),
             stone: document.getElementById('stone-amount'),
             iron: document.getElementById('iron-amount'),
+            intelligence: document.getElementById('intelligence-amount'),
             royalGems: document.getElementById('royal-gems-amount'),
             gems: document.getElementById('gems-amount'),
             crystals: document.getElementById('crystals-amount'),
@@ -3397,6 +3706,16 @@ class TechEmpire3D {
                     } else if (building.userData.type === 'mystery_cave' && res === 'mysticalEnergy') {
                         this.resources.mysticalEnergy = (this.resources.mysticalEnergy || 0) + 
                             building.userData.production.mysticalEnergy * building.userData.level * 0.05;
+                    // إنتاج خاص لنظام الرادار المتطور
+                    } else if (building.userData.type === 'radar' && res === 'intelligence') {
+                        this.resources.intelligence = (this.resources.intelligence || 0) + 
+                            building.userData.production.intelligence * building.userData.level * 0.1;
+                    } else if (building.userData.type === 'radar' && res === 'detection_range') {
+                        // تحديث مدى كشف الرادار (متغير غير مرئي)
+                        this.advancedRadar.range = building.userData.production.detection_range;
+                    } else if (building.userData.type === 'radar' && res === 'alert_accuracy') {
+                        // تحديث دقة الإنذارات (متغير غير مرئي)
+                        this.advancedRadar.alertAccuracy = building.userData.production.alert_accuracy;
                     } else {
                         this.resources[res] += building.userData.production[res] * building.userData.level * 0.1;
                     }
