@@ -81,23 +81,10 @@
             status.textContent = 'جاري تحميل اللعبة...';
             status.className = 'status';
             
-            // Check if main game exists
-            fetch('index-3d.html')
-                .then(response => {
-                    if (response.ok) {
-                        status.textContent = '✅ اللعبة متاحة! جاري التوجيه...';
-                        status.className = 'status';
-                        setTimeout(() => {
-                            window.location.href = 'index-3d.html';
-                        }, 1000);
-                    } else {
-                        throw new Error('Game file not found');
-                    }
-                })
-                .catch(error => {
-                    status.textContent = '❌ ملف اللعبة غير متاح. الرجاء التأكد من رفع index-3d.html';
-                    status.className = 'status error';
-                });
+            // Direct redirect to main game
+            setTimeout(() => {
+                window.location.href = 'index-3d.html';
+            }, 1000);
         }
         
         function checkGame() {
