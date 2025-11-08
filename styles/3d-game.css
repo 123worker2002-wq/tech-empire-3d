@@ -6631,6 +6631,209 @@ body {
 }
 
 /* ==========================================
+   النظام المتقدم للقادة الضعفاء
+   ========================================== */
+
+.prisoner-item.advanced-analysis {
+    border-color: #e94560;
+    background: rgba(233, 69, 96, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.prisoner-item.advanced-analysis::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #e94560, #4ecdc4, #e94560);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.prisoner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.prisoner-type {
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #e94560;
+}
+
+.prisoner-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-label {
+    color: #4ecdc4;
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+
+.stat-value {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.ai-score {
+    color: #e94560;
+    font-weight: bold;
+}
+
+.prisoner-reasons {
+    margin: 10px 0;
+}
+
+.reason-title {
+    color: #ffaa00;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.advanced-categories {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.category-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    border: 1px solid;
+}
+
+.category-badge.mobile-strike {
+    background: rgba(0, 123, 255, 0.2);
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.category-badge.war-sultans {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+.category-badge.ai-system {
+    background: rgba(233, 69, 96, 0.2);
+    color: #e94560;
+    border-color: #e94560;
+}
+
+.btn-analysis {
+    background: linear-gradient(135deg, #e94560, #c03042);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-analysis:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+}
+
+/* نافذة التحليل المتقدم */
+.advanced-capture-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.advanced-capture-modal h2 {
+    color: #e94560;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.advanced-capture-modal h3 {
+    color: #4ecdc4;
+    margin: 15px 0 10px 0;
+}
+
+.advanced-capture-modal h4 {
+    color: #e94560;
+    margin: 10px 0 5px 0;
+}
+
+.advanced-capture-modal p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.advanced-capture-modal ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.advanced-capture-modal li {
+    margin: 8px 0;
+    color: #ffaa00;
+    line-height: 1.3;
+}
+
+.advanced-capture-modal button {
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.advanced-capture-modal button:hover {
+    background: #d63651;
+    transform: translateY(-2px);
+}
+
+/* ==========================================
    نافذة تطوير السجون
    ========================================== */
 

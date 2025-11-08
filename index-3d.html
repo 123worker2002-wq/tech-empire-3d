@@ -2207,12 +2207,45 @@
             return;
         }
         
-        list.innerHTML = prisoners.map(prisoner => `
-            <div class="prisoner-item ${prisoner.status || 'WEAK'}">
+        list.innerHTML = prisoners.map(prisoner => {
+            const isAdvanced = prisoner.criteria && prisoner.criteria.aiBehaviorAnalysis !== undefined;
+            const aiIcon = isAdvanced ? getAIIcon(prisoner.criteria.aiBehaviorAnalysis) : '📊';
+            const powerLevel = isAdvanced ? (prisoner.criteria.powerLevel/1000).toFixed(0) + 'K' : 'N/A';
+            const aiScore = isAdvanced ? (prisoner.criteria.aiBehaviorAnalysis * 100).toFixed(0) + '%' : 'N/A';
+            
+            return `
+            <div class="prisoner-item ${prisoner.status || 'WEAK'} ${isAdvanced ? 'advanced-analysis' : ''}">
                 <div class="prisoner-info">
-                    <h4>${prisoner.playerName || prisoner.name}</h4>
-                    <p>المستوى: ${prisoner.level}</p>
-                    <p>السبب: ${getPrisonerReason(prisoner)}</p>
+                    <div class="prisoner-header">
+                        <h4>${prisoner.playerName || prisoner.name}</h4>
+                        <span class="prisoner-type">${prisoner.status === 'WEAK' ? 'قائد ضعيف' : 'سجين'}</span>
+                    </div>
+                    <div class="prisoner-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">المستوى:</span>
+                            <span class="stat-value">${prisoner.level}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">القوة:</span>
+                            <span class="stat-value">${powerLevel}</span>
+                        </div>
+                        ${isAdvanced ? `
+                        <div class="stat-item">
+                            <span class="stat-label">${aiIcon} تحليل AI:</span>
+                            <span class="stat-value ai-score">${aiScore}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="prisoner-reasons">
+                        <p class="reason-title">السبب: ${getPrisonerReason(prisoner)}</p>
+                        ${isAdvanced ? `
+                        <div class="advanced-categories">
+                            <div class="category-badge mobile-strike">موبايل ستريكس</div>
+                            <div class="category-badge war-sultans">حرب السلاطين</div>
+                            <div class="category-badge ai-system">${aiIcon} ذكاء اصطناعي</div>
+                        </div>
+                        ` : ''}
+                    </div>
                     <p class="prison-time">⏰ ${getPrisonTime(prisoner)}</p>
                 </div>
                 <div class="prisoner-actions">
@@ -2222,9 +2255,32 @@
                     <button class="btn-release" onclick="releasePrisoner('${prisoner.playerId || prisoner.id}')">
                         🗝️ إطلق سراح
                     </button>
+                    ${isAdvanced ? `
+                    <button class="btn-analysis" onclick="showAdvancedAnalysis('${prisoner.playerId || prisoner.id}')">
+                        🔍 تحليل متقدم
+                    </button>
+                    ` : ''}
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
+    }
+
+    function getAIIcon(score) {
+        if (score >= 0.8) return '🧠';
+        if (score >= 0.6) return '💡';
+        if (score >= 0.4) return '🤖';
+        return '🔴';
+    }
+
+    function showAdvancedAnalysis(playerId) {
+        const weakLeader = levelManagementSystem.weakLeaders.find(p => p.playerId === playerId);
+        if (!weakLeader || !weakLeader.criteria.aiBehaviorAnalysis) return;
+        
+        levelManagementSystem.showAdvancedPrisonerCaptureModal(
+            { name: weakLeader.playerName, level: weakLeader.level }, 
+            weakLeader.criteria
+        );
     }
     
     function getPrisonerReason(prisoner) {

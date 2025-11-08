@@ -10254,22 +10254,40 @@ if ('serviceWorker' in navigator) {
             return 'UNKNOWN';
         }
         
-        // تحديد القائد الضعيف
+        // تحديد القائد الضعيف - نظام متقدم يدمج موبايل ستريكس وحرب السلاطين
         identifyWeakLeader(player) {
             const playerStatus = this.checkPlayerStatus(player);
             
             if (playerStatus === 'LEADER') {
-                // معايير القائد الضعيف
+                // معايير القائد الضعيف - نظام شامل متقدم
                 const weaknessCriteria = {
+                    // معايير أساسية
                     failedFarms: this.countFailedFarms(player),
                     lowProductivity: this.calculateProductivity(player),
                     recentLosses: this.getRecentLosses(player),
                     idleTime: this.getIdleTime(player),
-                    complaints: this.getComplaintCount(player)
+                    complaints: this.getComplaintCount(player),
+                    
+                    // معايير من موبايل ستريكس
+                    powerLevel: this.calculatePowerLevel(player),
+                    eventParticipation: this.getEventParticipation(player),
+                    resourceEfficiency: this.calculateResourceEfficiency(player),
+                    commanderLevel: this.getCommanderLevel(player),
+                    
+                    // معايير من حرب السلاطين
+                    alliancePosition: this.getAlliancePosition(player),
+                    socialActivity: this.getSocialActivity(player),
+                    battleParticipation: this.getBattleParticipation(player),
+                    
+                    // ابتكار الذكاء الاصطناعي
+                    aiBehaviorAnalysis: this.analyzeAIBehavior(player),
+                    decisionMakingPattern: this.analyzeDecisionMakingPattern(player),
+                    strategicIntelligence: this.calculateStrategicIntelligence(player),
+                    adaptationRate: this.calculateAdaptationRate(player)
                 };
                 
-                // تحديد إذا كان القائد ضعيفاً
-                const isWeak = this.evaluateWeakness(weaknessCriteria);
+                // تحديد إذا كان القائد ضعيفاً باستخدام النظام المتقدم
+                const isWeak = this.evaluateAdvancedWeakness(weaknessCriteria);
                 if (isWeak) {
                     this.addToWeakLeaders(player, weaknessCriteria);
                     return true;
@@ -10318,15 +10336,228 @@ if ('serviceWorker' in navigator) {
         getComplaintCount(player) {
             return Math.floor(Math.random() * 10) + 1; // 1-10 شكاوى
         }
+
+        // ===== معايير من موبايل ستريكس =====
+
+        // حساب مستوى القوة (Power Level)
+        calculatePowerLevel(player) {
+            const level = this.getPlayerLevel(player) || 1;
+            const resources = player.resources || { gold: 1000, food: 500 };
+            const troops = player.troops || 100;
+            const buildings = player.buildings || [];
+            
+            // حساب القوة بناءً على: المستوى + الموارد + القوات + المباني
+            const powerLevel = (
+                (level * 10000) + // قوة المستوى
+                (resources.gold * 0.01) + // قوة الذهب
+                (resources.food * 0.005) + // قوة الطعام
+                (troops * 10) + // قوة القوات
+                (buildings.length * 500) // قوة المباني
+            );
+            
+            return powerLevel;
+        }
+
+        // المشاركة في الأحداث
+        getEventParticipation(player) {
+            const events = player.eventHistory || [];
+            const now = Date.now();
+            const oneWeekAgo = now - (7 * 24 * 60 * 60 * 1000);
+            
+            // عد الأحداث في الأسبوع الماضي
+            const recentEvents = events.filter(event => event.timestamp > oneWeekAgo);
+            return recentEvents.length; // عدد الأحداث
+        }
+
+        // كفاءة إدارة الموارد
+        calculateResourceEfficiency(player) {
+            const resourceData = player.resourceHistory || [];
+            if (resourceData.length === 0) return 0.5;
+            
+            // حساب متوسط الإنتاجية مقابل الاسهلاك
+            const efficiencyScores = resourceData.map(data => {
+                const production = data.production || 0;
+                const consumption = data.consumption || 1;
+                return Math.min(production / consumption, 1.0);
+            });
+            
+            return efficiencyScores.reduce((sum, score) => sum + score, 0) / efficiencyScores.length;
+        }
+
+        // مستوى القائد
+        getCommanderLevel(player) {
+            return player.commanderLevel || this.getPlayerLevel(player) || 1;
+        }
+
+        // ===== معايير من حرب السلاطين =====
+
+        // منصب في التحالف
+        getAlliancePosition(player) {
+            return player.alliancePosition || 'none'; // none, member, officer, leader
+        }
+
+        // النشاط الاجتماعي
+        getSocialActivity(player) {
+            const chatMessages = player.chatMessages || 0;
+            const allianceHelp = player.allianceHelp || 0;
+            const socialEvents = player.socialEvents || 0;
+            
+            // حساب النشاط الاجتماعي (0-1)
+            const totalActivity = chatMessages + (allianceHelp * 2) + (socialEvents * 3);
+            return Math.min(totalActivity / 100, 1.0);
+        }
+
+        // المشاركة في المعارك
+        getBattleParticipation(player) {
+            const battles = player.battleHistory || [];
+            const now = Date.now();
+            const oneMonthAgo = now - (30 * 24 * 60 * 60 * 1000);
+            
+            // عد المعارك في الشهر الماضي
+            const recentBattles = battles.filter(battle => battle.timestamp > oneMonthAgo);
+            const totalBattles = recentBattles.length;
+            
+            return Math.min(totalBattles / 10, 1.0); // normalize to 0-1
+        }
+
+        // ===== ابتكار الذكاء الاصطناعي =====
+
+        // تحليل سلوك الذكاء الاصطناعي للاعب
+        analyzeAIBehavior(player) {
+            const decisionHistory = player.decisionHistory || [];
+            const behavioralPatterns = player.behavioralPatterns || {};
+            
+            // تحليل أنماط السلوك
+            const analysis = {
+                reactionTime: this.calculateAverageReactionTime(decisionHistory),
+                riskAssessment: this.assessRiskTaking(decisionHistory),
+                learningCurve: this.calculateLearningCurve(behavioralPatterns),
+                adaptabilityScore: this.calculateAdaptabilityScore(behavioralPatterns)
+            };
+            
+            // حساب النتيجة الإجمالية للذكاء الاصطناعي
+            const aiScore = (
+                analysis.reactionTime * 0.3 +
+                analysis.riskAssessment * 0.25 +
+                analysis.learningCurve * 0.25 +
+                analysis.adaptabilityScore * 0.2
+            );
+            
+            return aiScore; // 0-1
+        }
+
+        // تحليل نمط اتخاذ القرارات
+        analyzeDecisionMakingPattern(player) {
+            const decisions = player.decisionHistory || [];
+            if (decisions.length === 0) return 0.5;
+            
+            // تحليل جودة القرارات
+            const decisionQuality = decisions.map(decision => {
+                const expectedOutcome = decision.expectedOutcome || 0.5;
+                const actualOutcome = decision.actualOutcome || 0.5;
+                const accuracy = 1 - Math.abs(expectedOutcome - actualOutcome);
+                return Math.max(accuracy, 0);
+            });
+            
+            return decisionQuality.reduce((sum, quality) => sum + quality, 0) / decisionQuality.length;
+        }
+
+        // حساب الذكاء الاستراتيجي
+        calculateStrategicIntelligence(player) {
+            const strategies = player.strategyHistory || [];
+            const longTermGoals = player.longTermGoals || [];
+            const tacticalDecisions = player.tacticalDecisions || [];
+            
+            // حساب نقاط الذكاء الاستراتيجي
+            const strategyScore = strategies.length > 0 ? 
+                strategies.reduce((sum, strategy) => sum + (strategy.success || 0), 0) / strategies.length : 0.5;
+            
+            const goalScore = longTermGoals.length > 0 ?
+                longTermGoals.filter(goal => goal.achieved).length / longTermGoals.length : 0;
+            
+            const tacticalScore = tacticalDecisions.length > 0 ?
+                tacticalDecisions.reduce((sum, decision) => sum + (decision.effectiveness || 0), 0) / tacticalDecisions.length : 0.5;
+            
+            return (strategyScore * 0.4 + goalScore * 0.3 + tacticalScore * 0.3);
+        }
+
+        // حساب معدل التكيف
+        calculateAdaptationRate(player) {
+            const adaptations = player.adaptationHistory || [];
+            if (adaptations.length === 0) return 0.5;
+            
+            // حساب سرعة التكيف مع التغييرات
+            const adaptationSpeeds = adaptations.map(adaptation => {
+                const timeToAdapt = adaptation.timeToAdapt || 24; // hours
+                return Math.max(1 - (timeToAdapt / 168), 0); // normalize against 1 week
+            });
+            
+            return adaptationSpeeds.reduce((sum, speed) => sum + speed, 0) / adaptationSpeeds.length;
+        }
+
+        // تقييم الضعف المتقدم
+        evaluateAdvancedWeakness(criteria) {
+            // استخدام نفس منطق evaluateWeakness لكن مع المعايير المتقدمة
+            return this.evaluateWeakness(criteria);
+        }
+
+        // ===== دوال مساعدة للذكاء الاصطناعي =====
+
+        calculateAverageReactionTime(decisionHistory) {
+            if (decisionHistory.length === 0) return 0.5;
+            const reactionTimes = decisionHistory.map(decision => 
+                decision.reactionTime || 60 // minutes
+            );
+            const avgTime = reactionTimes.reduce((sum, time) => sum + time, 0) / reactionTimes.length;
+            return Math.max(1 - (avgTime / 120), 0); // normalize against 2 hours
+        }
+
+        assessRiskTaking(decisionHistory) {
+            if (decisionHistory.length === 0) return 0.5;
+            const riskScores = decisionHistory.map(decision => 
+                decision.riskLevel || 0.5
+            );
+            return riskScores.reduce((sum, risk) => sum + risk, 0) / riskScores.length;
+        }
+
+        calculateLearningCurve(behavioralPatterns) {
+            if (Object.keys(behavioralPatterns).length === 0) return 0.5;
+            const improvementRate = behavioralPatterns.improvementRate || 0;
+            return Math.min(improvementRate, 1.0);
+        }
+
+        calculateAdaptabilityScore(behavioralPatterns) {
+            const changeResponse = behavioralPatterns.changeResponse || 0.5;
+            const flexibility = behavioralPatterns.flexibility || 0.5;
+            return (changeResponse * 0.6 + flexibility * 0.4);
+        }
         
-        // تقييم الضعف
+        // تقييم الضعف - نظام متقدم يدمج معايير متعددة
         evaluateWeakness(criteria) {
             const weights = {
-                failedFarms: 0.3,
-                lowProductivity: 0.25,
-                recentLosses: 0.2,
-                idleTime: 0.15,
-                complaints: 0.1
+                // معايير أساسية
+                failedFarms: 0.08,
+                lowProductivity: 0.08,
+                recentLosses: 0.10,
+                idleTime: 0.12,
+                complaints: 0.06,
+                
+                // معايير موبايل ستريكس
+                powerLevel: 0.15,
+                eventParticipation: 0.10,
+                resourceEfficiency: 0.12,
+                commanderLevel: 0.08,
+                
+                // معايير حرب السلاطين
+                alliancePosition: 0.07,
+                socialActivity: 0.08,
+                battleParticipation: 0.09,
+                
+                // ابتكار الذكاء الاصطناعي
+                aiBehaviorAnalysis: 0.12,
+                decisionMakingPattern: 0.10,
+                strategicIntelligence: 0.15,
+                adaptationRate: 0.08
             };
             
             const weaknessScore = (
@@ -10334,10 +10565,21 @@ if ('serviceWorker' in navigator) {
                 (criteria.lowProductivity < 50 ? 1 : 0) * weights.lowProductivity +
                 (criteria.recentLosses > 3 ? 1 : 0) * weights.recentLosses +
                 (criteria.idleTime > 48 ? 1 : 0) * weights.idleTime +
-                (criteria.complaints > 5 ? 1 : 0) * weights.complaints
+                (criteria.complaints > 5 ? 1 : 0) * weights.complaints +
+                (criteria.powerLevel < 500000 ? 1 : 0) * weights.powerLevel +
+                (criteria.eventParticipation < 3 ? 1 : 0) * weights.eventParticipation +
+                (criteria.resourceEfficiency < 0.6 ? 1 : 0) * weights.resourceEfficiency +
+                (criteria.commanderLevel < 20 ? 1 : 0) * weights.commanderLevel +
+                (criteria.alliancePosition === 'none' ? 1 : 0) * weights.alliancePosition +
+                (criteria.socialActivity < 0.3 ? 1 : 0) * weights.socialActivity +
+                (criteria.battleParticipation < 0.4 ? 1 : 0) * weights.battleParticipation +
+                (criteria.aiBehaviorAnalysis < 0.5 ? 1 : 0) * weights.aiBehaviorAnalysis +
+                (criteria.decisionMakingPattern < 0.6 ? 1 : 0) * weights.decisionMakingPattern +
+                (criteria.strategicIntelligence < 0.4 ? 1 : 0) * weights.strategicIntelligence +
+                (criteria.adaptationRate < 0.5 ? 1 : 0) * weights.adaptationRate
             );
             
-            return weaknessScore >= 0.4; // إذا كان 40% أو أكثر ضعيف
+            return weaknessScore >= 0.35; // إذا كان 35% أو أكثر ضعيف (أكثر صرامة)
         }
         
         // إضافة للقادة الضعفاء
@@ -10355,17 +10597,22 @@ if ('serviceWorker' in navigator) {
             this.showWeakLeaderAlert(player, criteria);
         }
         
-        // عرض تنبيه القائد الضعيف
+        // عرض تنبيه القائد الضعيف - نظام متقدم
         showWeakLeaderAlert(player, criteria) {
+            const weaknessReasons = this.getAdvancedWeaknessReasons(criteria);
+            
             if (game && game.showNotification) {
                 game.showNotification(
-                    `تنبيه: القائد ${player.name || 'Unknown'} ضعيف! يتم إتمام عملية الأسر...`, 
+                    `🚨 تنبيه: القائد ${player.name || 'Unknown'} ضعيف!\n` +
+                    `🔍 السبب: ${weaknessReasons.summary}\n` +
+                    `⚡ النقاط: ${weaknessReasons.score.toFixed(2)}/1.0\n` +
+                    `🧠 تحليل AI: ${this.getAIIcon(criteria.aiBehaviorAnalysis)} ${(criteria.aiBehaviorAnalysis * 100).toFixed(1)}%` , 
                     'warning'
                 );
             }
             
-            // عرض نافذة تفاصيل السجين
-            this.showPrisonerCaptureModal(player, criteria);
+            // عرض نافذة تفاصيل السجين مع التحليل المتقدم
+            this.showAdvancedPrisonerCaptureModal(player, criteria);
         }
         
         // عرض نافذة أسر السجين
@@ -10450,6 +10697,13 @@ if ('serviceWorker' in navigator) {
         
         // الحصول على أسباب الضعف
         getWeaknessReasons(criteria) {
+            // استخدام النظام المتقدم إذا كان متوفراً
+            if (criteria.aiBehaviorAnalysis !== undefined) {
+                const advanced = this.getAdvancedWeaknessReasons(criteria);
+                return advanced.allReasons.map(reason => `<li>${reason}</li>`).join('') || '<li>أسباب أخرى</li>';
+            }
+            
+            // النظام القديم للمتوافقية العكسية
             const reasons = [];
             
             if (criteria.failedFarms > 2) {
@@ -10528,6 +10782,162 @@ if ('serviceWorker' in navigator) {
             if (countElement) {
                 countElement.textContent = count;
             }
+        }
+
+        // ===== دوال النظام المتقدم =====
+
+        // الحصول على أسباب الضعف المتقدمة
+        getAdvancedWeaknessReasons(criteria) {
+            const reasons = [];
+            const scores = {
+                basic: 0,
+                mobileStrike: 0,
+                warOfSultans: 0,
+                ai: 0
+            };
+
+            // معايير أساسية
+            if (criteria.failedFarms > 2) reasons.push(`مزارع فاشلة: ${criteria.failedFarms}`);
+            if (criteria.lowProductivity < 50) reasons.push(`إنتاجية منخفضة: ${criteria.lowProductivity}%`);
+            if (criteria.recentLosses > 3) reasons.push(`خسائر حديثة: ${criteria.recentLosses}`);
+            if (criteria.idleTime > 48) reasons.push(`عدم نشاط: ${criteria.idleTime.toFixed(1)} ساعة`);
+            if (criteria.complaints > 5) reasons.push(`شكاوى: ${criteria.complaints}`);
+
+            // معايير موبايل ستريكس
+            if (criteria.powerLevel < 500000) reasons.push(`قوة منخفضة: ${(criteria.powerLevel/1000).toFixed(0)}K`);
+            if (criteria.eventParticipation < 3) reasons.push(`مشاركة أحداث: ${criteria.eventParticipation}`);
+            if (criteria.resourceEfficiency < 0.6) reasons.push(`كفاءة موارد: ${(criteria.resourceEfficiency*100).toFixed(0)}%`);
+            if (criteria.commanderLevel < 20) reasons.push(`مستوى قائد: ${criteria.commanderLevel}`);
+
+            // معايير حرب السلاطين
+            if (criteria.alliancePosition === 'none') reasons.push('بدون منصب في التحالف');
+            if (criteria.socialActivity < 0.3) reasons.push(`نشاط اجتماعي: ${(criteria.socialActivity*100).toFixed(0)}%`);
+            if (criteria.battleParticipation < 0.4) reasons.push(`مشاركة معارك: ${(criteria.battleParticipation*100).toFixed(0)}%`);
+
+            // ابتكار الذكاء الاصطناعي
+            if (criteria.aiBehaviorAnalysis < 0.5) reasons.push(`تحليل AI: ${(criteria.aiBehaviorAnalysis*100).toFixed(0)}%`);
+            if (criteria.decisionMakingPattern < 0.6) reasons.push(`قرارات: ${(criteria.decisionMakingPattern*100).toFixed(0)}%`);
+            if (criteria.strategicIntelligence < 0.4) reasons.push(`ذكاء استراتيجي: ${(criteria.strategicIntelligence*100).toFixed(0)}%`);
+            if (criteria.adaptationRate < 0.5) reasons.push(`تكيف: ${(criteria.adaptationRate*100).toFixed(0)}%`);
+
+            // حساب النتيجة الإجمالية
+            const totalScore = this.evaluateWeakness(criteria);
+            
+            return {
+                summary: reasons.slice(0, 3).join(', ') || 'ضعف عام',
+                score: totalScore,
+                allReasons: reasons,
+                categories: {
+                    basic: `أساسي (${(criteria.failedFarms + criteria.lowProductivity + criteria.recentLosses + criteria.idleTime + criteria.complaints) / 5 * 100 | 0}%)`,
+                    mobileStrike: `موبايل ستريكس (${((criteria.powerLevel > 500000) + (criteria.eventParticipation >= 3) + (criteria.resourceEfficiency >= 0.6) + (criteria.commanderLevel >= 20)) / 4 * 100 | 0}%)`,
+                    warOfSultans: `حرب السلاطين (${((criteria.alliancePosition !== 'none') + (criteria.socialActivity >= 0.3) + (criteria.battleParticipation >= 0.4)) / 3 * 100 | 0}%)`,
+                    ai: `ذكاء اصطناعي (${((criteria.aiBehaviorAnalysis >= 0.5) + (criteria.decisionMakingPattern >= 0.6) + (criteria.strategicIntelligence >= 0.4) + (criteria.adaptationRate >= 0.5)) / 4 * 100 | 0}%)`
+                }
+            };
+        }
+
+        // الحصول على أيقونة الذكاء الاصطناعي
+        getAIIcon(score) {
+            if (score >= 0.8) return '🧠';
+            if (score >= 0.6) return '💡';
+            if (score >= 0.4) return '🤖';
+            return '🔴';
+        }
+
+        // عرض نافذة أسر السجين المتقدمة
+        showAdvancedPrisonerCaptureModal(player, criteria) {
+            const modal = document.createElement('div');
+            modal.className = 'advanced-capture-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 10000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+                color: white;
+            `;
+
+            const weaknessAnalysis = this.getAdvancedWeaknessReasons(criteria);
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a1a2e, #16213e);
+                    padding: 30px;
+                    border-radius: 15px;
+                    border: 2px solid #e94560;
+                    max-width: 600px;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                ">
+                    <h2 style="color: #e94560; text-align: center; margin-bottom: 20px;">
+                        🔒 تحليل القائد الضعيف المتقدم
+                    </h2>
+                    
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3 style="color: #4ecdc4;">📊 معلومات اللاعب</h3>
+                        <p><strong>الاسم:</strong> ${player.name || 'Unknown'}</p>
+                        <p><strong>المستوى:</strong> ${this.getPlayerLevel(player) || 1}</p>
+                        <p><strong>القوة:</strong> ${(criteria.powerLevel/1000).toFixed(0)}K</p>
+                        <p><strong>نتيجة الضعف:</strong> <span style="color: ${weaknessAnalysis.score >= 0.5 ? '#ff4444' : '#ffaa00'}">${(weaknessAnalysis.score * 100).toFixed(1)}%</span></p>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3 style="color: #4ecdc4;">🎯 تحليل متقدم</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <h4 style="color: #e94560; margin: 10px 0 5px 0;">أساسي</h4>
+                                <p style="margin: 5px 0;">${weaknessAnalysis.categories.basic}</p>
+                                <p style="margin: 5px 0;">${weaknessAnalysis.categories.mobileStrike}</p>
+                            </div>
+                            <div>
+                                <h4 style="color: #e94560; margin: 10px 0 5px 0;">متقدم</h4>
+                                <p style="margin: 5px 0;">${weaknessAnalysis.categories.warOfSultans}</p>
+                                <p style="margin: 5px 0;">${weaknessAnalysis.categories.ai}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3 style="color: #4ecdc4;">🔍 تفاصيل الضعف</h3>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            ${weaknessAnalysis.allReasons.map(reason => `<li style="margin: 8px 0; color: #ffaa00;">${reason}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <button onclick="this.parentElement.parentElement.remove()" style="
+                            background: #e94560;
+                            color: white;
+                            border: none;
+                            padding: 12px 30px;
+                            border-radius: 25px;
+                            font-size: 16px;
+                            cursor: pointer;
+                            transition: all 0.3s;
+                        " onmouseover="this.style.background='#d63651'" onmouseout="this.style.background='#e94560'">
+                            متابعة الأسر
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            
+            // تأثير الظهور
+            modal.style.opacity = '0';
+            modal.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                modal.style.transition = 'all 0.3s ease';
+                modal.style.opacity = '1';
+                modal.style.transform = 'scale(1)';
+            }, 50);
         }
         
         // فحص جميع اللاعبين
