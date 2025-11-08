@@ -1110,6 +1110,260 @@
         </div>
     </div>
 
+    <!-- مدخل المدينة والدفاعات الخاصة -->
+    <div id="city-gates-section" class="city-gates-section" style="display: none;">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>🏰 مدخل المدينة والدفاعات</h2>
+                <p>ادعم مدخل مدينتك بدفاعات فخمة وحصرية</p>
+            </div>
+
+            <!-- مدخل المدينة الفخم -->
+            <div class="city-gate-display">
+                <div class="gate-showcase">
+                    <div class="golden-gate">
+                        <div class="gate-frame">
+                            <div class="gate-door left-door">
+                                <div class="door-ornaments"></div>
+                                <div class="door-handle"></div>
+                            </div>
+                            <div class="gate-door right-door">
+                                <div class="door-ornaments"></div>
+                                <div class="door-handle"></div>
+                            </div>
+                        </div>
+                        <div class="gate-crown">
+                            <div class="crown-spikes">
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gate-stats">
+                        <div class="stat">
+                            <span class="stat-label">مستوى المدخل</span>
+                            <span class="stat-value" id="city-gate-level">1</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">قوة الحماية</span>
+                            <span class="stat-value" id="city-gate-defense">100</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="gate-controls">
+                    <button class="btn btn-primary" onclick="game.upgradeCityGate()">
+                        ترقية المدخل 
+                        <span class="cost" id="gate-upgrade-cost">500 ذهب</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- الدفاعات الخاصة -->
+            <div class="defense-grid">
+                <!-- كولوسي (عمالقة حجرية) -->
+                <div class="defense-card colossi-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">🗿</div>
+                        <div class="defense-title">
+                            <h3>كولوسي</h3>
+                            <p>عمالقة حجرية قوية</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>250</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>50/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>متوسط</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('colossi', -1)">-</button>
+                            <input type="number" id="colossi-quantity" value="0" min="0" max="10" readonly>
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('colossi', 1)">+</button>
+                        </div>
+                        <button class="btn btn-build" onclick="game.buildDefense('colossi')">
+                            بناء - <span class="cost">300 ذهب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- فخاخ نارية -->
+                <div class="defense-card fire-trap-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">🔥</div>
+                        <div class="defense-title">
+                            <h3>فخاخ نارية</h3>
+                            <p>فخاخ منحرفة</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>120</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>80/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>قصير</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('fire-trap', -1)">-</button>
+                            <input type="number" id="fire-trap-quantity" value="0" min="0" max="15" readonly>
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('fire-trap', 1)">+</button>
+                        </div>
+                        <button class="btn btn-build" onclick="game.buildDefense('fire-trap')">
+                            بناء - <span class="cost">200 ذهب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- أبراج رماية آلية -->
+                <div class="defense-card auto-turret-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">🎯</div>
+                        <div class="defense-title">
+                            <h3>أبراج رماية آلية</h3>
+                            <p>أبراج ذكية</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>180</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>60/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>طويل</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('auto-turret', -1)">-</button>
+                            <input type="number" id="auto-turret-quantity" value="0" min="0" max="8" readonly>
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('auto-turret', 1)">+</button>
+                        </div>
+                        <button class="btn btn-build" onclick="game.buildDefense('auto-turret')">
+                            بناء - <span class="cost">400 ذهب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- أحجار إلقائية -->
+                <div class="defense-card stone-thrower-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">⚡</div>
+                        <div class="defense-title">
+                            <h3>أحجار إلقائية</h3>
+                            <p>مدفعيات سحرية</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>200</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>100/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>فائق الطول</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('stone-thrower', -1)">-</button>
+                            <input type="number" id="stone-thrower-quantity" value="0" min="0" max="5" readonly>
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('stone-thrower', 1)">+</button>
+                        </div>
+                        <button class="btn btn-build" onclick="game.buildDefense('stone-thrower')">
+                            بناء - <span class="cost">500 ذهب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- جدران متحركة -->
+                <div class="defense-card moving-wall-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">🧱</div>
+                        <div class="defense-title">
+                            <h3>جدران متحركة</h3>
+                            <p>حواجز ذكية</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>150</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>0/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>حاجز</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('moving-wall', -1)">-</button>
+                            <input type="number" id="moving-wall-quantity" value="0" min="0" max="20" readonly>
+                            <button class="qty-btn" onclick="game.buildDefense('moving-wall')">
+                                بناء - <span class="cost">150 ذهب</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- إحصائيات دفاعية شاملة -->
+            <div class="defense-summary">
+                <h3>📊 إحصائيات الدفاع الشاملة</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value" id="total-defense-power">0</div>
+                        <div class="summary-label">إجمالي القوة الدفاعية</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="defense-units-count">0</div>
+                        <div class="summary-label">عدد الوحدات الدفاعية</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="defense-upgrade-cost">0</div>
+                        <div class="summary-label">تكلفة ترقية للدفاع</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- نافذة تسجيل الدخول والتسجيل -->
     <div id="auth-modal" class="auth-modal" style="display: none;">
         <div class="auth-container">
@@ -1647,5 +1901,8 @@
     <script src="scripts/license-system.js"></script>
     <script src="scripts/auth-account-management.js"></script>
     <script src="scripts/in-game-chat.js"></script>
+    
+    <!-- Main Game Script -->
+    <script src="scripts/3d-game.js"></script>
 </body>
 </html>
