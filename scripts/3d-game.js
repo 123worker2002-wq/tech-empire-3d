@@ -1406,6 +1406,9 @@ class TechEmpire3D {
         this.setupEventListeners();
         this.animate();
         
+        // Mobile و Full Screen initialization
+        this.initializeMobileFeatures();
+        
         // Initialize level system
         this.initializeLevelSystem();
         

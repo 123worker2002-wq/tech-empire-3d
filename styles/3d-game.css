@@ -76,6 +76,269 @@
 }
 
 /* ==========================================
+   Media Queries للموبايل Portrait Mode
+   ========================================== */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  :root {
+    --text-xs: 14px;
+    --text-sm: 16px;
+    --text-md: 18px;
+    --text-lg: 20px;
+    --text-xl: 24px;
+    --text-2xl: 28px;
+    
+    --icon-xs: 24px;
+    --icon-sm: 28px;
+    --icon-md: 36px;
+    --icon-lg: 44px;
+    --icon-xl: 52px;
+    --icon-2xl: 60px;
+    
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+  }
+  
+  /* Full Screen Layout للموبايل */
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    touch-action: manipulation;
+  }
+  
+  .game-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  /* شريط الموارد محسّن للموبايل */
+  .top-bar {
+    min-height: 140px;
+    flex-shrink: 0;
+  }
+  
+  .resources-bar, .troops-bar {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+  
+  .resource-item, .troop-item {
+    flex: 1;
+    min-width: 70px;
+    max-width: 120px;
+  }
+  
+  /* أزرار التنقل محسّنة للموبايل */
+  .nav-bar {
+    height: 80px;
+    background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-page) 100%);
+    border-top: 3px solid var(--border-color);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    backdrop-filter: blur(10px);
+  }
+  
+  .nav-btn {
+    min-height: 60px;
+    padding: var(--spacing-sm);
+  }
+  
+  .nav-icon {
+    width: var(--icon-md);
+    height: var(--icon-md);
+    font-size: var(--text-xl);
+  }
+  
+  .nav-btn span {
+    font-size: var(--text-sm);
+    line-height: 1.1;
+  }
+  
+  /* المشهد ثلاثي الأبعاد للموبايل */
+  .main-content {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .game-area {
+    height: calc(100vh - 140px - 80px);
+  }
+  
+  /* لوحة المباني للموبايل */
+  .building-palette {
+    position: fixed;
+    top: 140px;
+    right: 0;
+    width: 280px;
+    height: calc(100vh - 220px);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 100;
+  }
+  
+  .building-palette.show {
+    transform: translateX(0);
+  }
+  
+  /* أزرار التحكم بالموبايل */
+  .camera-controls {
+    top: 10px;
+    right: 10px;
+    gap: var(--spacing-xs);
+  }
+  
+  .camera-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  :root {
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-md: 16px;
+    --text-lg: 18px;
+    --text-xl: 20px;
+    --text-2xl: 24px;
+    
+    --icon-xs: 20px;
+    --icon-sm: 24px;
+    --icon-md: 30px;
+    --icon-lg: 36px;
+    --icon-xl: 42px;
+    --icon-2xl: 48px;
+  }
+  
+  /* موبايل صغير */
+  .top-bar {
+    min-height: 120px;
+  }
+  
+  .resource-item, .troop-item {
+    min-width: 60px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .nav-btn {
+    min-height: 50px;
+  }
+  
+  .nav-bar {
+    height: 70px;
+  }
+  
+  .game-area {
+    height: calc(100vh - 120px - 70px);
+  }
+  
+  .building-palette {
+    top: 120px;
+    height: calc(100vh - 190px);
+  }
+}
+
+/* ==========================================
+   Full Screen Support للموبايل
+   ========================================== */
+@supports (height: 100dvh) {
+  @media screen and (max-width: 768px) {
+    html, body {
+      height: 100dvh;
+    }
+    
+    .game-container {
+      height: 100dvh;
+    }
+    
+    .top-bar {
+      height: 140px;
+    }
+    
+    .game-area {
+      height: calc(100dvh - 140px - 80px);
+    }
+    
+    .building-palette {
+      height: calc(100dvh - 220px);
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .top-bar {
+      height: 120px;
+    }
+    
+    .game-area {
+      height: calc(100dvh - 120px - 70px);
+    }
+    
+    .building-palette {
+      top: 120px;
+      height: calc(100dvh - 190px);
+    }
+  }
+}
+
+/* ==========================================
+   إصلاح مشكلة space للموبايل
+   ========================================== */
+@supports (height: 100svh) {
+  @media screen and (max-width: 768px) {
+    html, body {
+      height: 100svh;
+    }
+    
+    .game-container {
+      height: 100svh;
+    }
+    
+    .top-bar {
+      height: 140px;
+    }
+    
+    .game-area {
+      height: calc(100svh - 140px - 80px);
+    }
+  }
+}
+
+/* ==========================================
+   Landscape Fallback للموبايل
+   ========================================== */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .top-bar {
+    height: 80px;
+    min-height: 80px;
+  }
+  
+  .game-area {
+    height: calc(100vh - 80px);
+  }
+  
+  .nav-bar {
+    height: 60px;
+  }
+  
+  .building-palette {
+    top: 80px;
+    height: calc(100vh - 140px);
+  }
+}
+
+/* ==========================================
    إعادة التعيين الأساسية
    ========================================== */
 * {
@@ -92,6 +355,15 @@ body {
   user-select: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ==========================================
