@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="styles/chat-translation-styles.css">
     <link rel="stylesheet" href="styles/license-styles.css">
     <link rel="stylesheet" href="styles/ai-chat.css">
+    <link rel="stylesheet" href="styles/kingdom-lands.css">
 </head>
 <body>
     <div class="game-container">
@@ -756,6 +757,10 @@
                 <div class="nav-icon radar-icon">📡</div>
                 <span>الرادار</span>
             </button>
+            <button class="nav-btn" data-section="kingdom-lands" onclick="game.showKingdomLands()">
+                <div class="nav-icon lands-icon">🌍</div>
+                <span>أراضي المملكة</span>
+            </button>
             <button class="nav-btn" data-section="military-guides" onclick="game.showMilitaryGuidesSection()">
                 <div class="nav-icon military-guides-icon">📚</div>
                 <span>أدلة عسكرية</span>
@@ -947,6 +952,7 @@
                 'owner': document.getElementById('owner-section'),
                 'riches-war': document.getElementById('riches-war-section'),
                 'territories': document.getElementById('alliance-territories-section'),
+                'kingdom-lands': document.getElementById('kingdom-lands-section'),
                 'chat': document.getElementById('chat-section'),
                 'vip': document.getElementById('vip-section')
             };
@@ -1011,6 +1017,96 @@
             <h2>🗺️ أراضي التحالف</h2>
             <p>بني مقر التحالف والأعلام لتوسيع أراضي التحالف والدفاع عنها</p>
             <div id="allianceTerritoriesDisplay"></div>
+        </div>
+    </div>
+
+    <!-- قسم أراضي المملكة -->
+    <div class="content-section" id="kingdom-lands-section" style="display: none;">
+        <div class="kingdom-lands-content">
+            <h2>🌍 أراضي المملكة</h2>
+            <p>استكشف وطوّر أراضي المملكة - التلال والساحات الخضراء والمياه</p>
+            
+            <!-- حالة الأراضي -->
+            <div class="lands-status">
+                <div class="status-grid">
+                    <div class="status-card">
+                        <div class="card-icon">⛰️</div>
+                        <h3>التلال</h3>
+                        <div class="card-value" id="hills-count">3</div>
+                        <p>توفر موارد إضافية</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="card-icon">🌱</div>
+                        <h3>الساحات الخضراء</h3>
+                        <div class="card-value" id="fields-count">5</div>
+                        <p>زيادة إنتاج الطعام</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="card-icon">💧</div>
+                        <h3>المياه</h3>
+                        <div class="card-value" id="water-count">2</div>
+                        <p>توفير المياه للمباني</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="card-icon">🏞️</div>
+                        <h3>الأراضي الخام</h3>
+                        <div class="card-value" id="raw-land-count">8</div>
+                        <p>جاهزة للتطوير</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- استكشاف وتطوير الأراضي -->
+            <div class="land-development-section">
+                <h3>تطوير الأراضي</h3>
+                <div class="development-grid">
+                    <div class="development-card" data-land-type="hills">
+                        <div class="development-icon">⛰️</div>
+                        <h4>تطوير التلال</h4>
+                        <p>تحويل التلال إلى مناجم أو حصون</p>
+                        <div class="development-cost">التكلفة: 2000💰 1000🪵</div>
+                        <button class="btn btn-primary" onclick="game.developLand('hills')">تطوير</button>
+                    </div>
+                    
+                    <div class="development-card" data-land-type="fields">
+                        <div class="development-icon">🌱</div>
+                        <h4>تطوير الساحات</h4>
+                        <p>تحويل الساحات إلى مزارع متقدمة</p>
+                        <div class="development-cost">التكلفة: 1500💰 800🪵</div>
+                        <button class="btn btn-primary" onclick="game.developLand('fields')">تطوير</button>
+                    </div>
+                    
+                    <div class="development-card" data-land-type="water">
+                        <div class="development-icon">💧</div>
+                        <h4>تطوير المياه</h4>
+                        <p>بناء أحواض مائية أو آبار</p>
+                        <div class="development-cost">التكلفة: 1200💰 600🗿</div>
+                        <button class="btn btn-primary" onclick="game.developLand('water')">تطوير</button>
+                    </div>
+                    
+                    <div class="development-card" data-land-type="forest">
+                        <div class="development-icon">🌲</div>
+                        <h4>تطوير الغابات</h4>
+                        <p>تحويل الغابات إلى مناجم خشب</p>
+                        <div class="development-cost">التكلفة: 1800💰 900🪵</div>
+                        <button class="btn btn-primary" onclick="game.developLand('forest')">تطوير</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خريطة الأراضي -->
+            <div class="land-map-section">
+                <h3>خريطة الأراضي</h3>
+                <div class="land-map" id="kingdomLandMap">
+                    <div class="map-grid">
+                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                    </div>
+                </div>
+                <div class="map-controls">
+                    <button class="btn btn-secondary" onclick="game.refreshLandMap()">تحديث الخريطة</button>
+                    <button class="btn btn-info" onclick="game.showLandDetails()">تفاصيل الأراضي</button>
+                </div>
+            </div>
         </div>
     </div>
 
