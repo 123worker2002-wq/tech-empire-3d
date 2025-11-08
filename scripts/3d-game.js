@@ -8083,6 +8083,66 @@ if ('serviceWorker' in navigator) {
         return 'available';
     }
 
+    // إدارة أراضي المملكة
+    showKingdomLands() {
+        console.log('عرض أراضي المملكة');
+        // إخفاء جميع الأقسام
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.style.display = 'none';
+        });
+        
+        // إظهار قسم أراضي المملكة
+        const kingdomLandsSection = document.getElementById('kingdom-lands-section');
+        if (kingdomLandsSection) {
+            kingdomLandsSection.style.display = 'block';
+        }
+        
+        // تحديث الخريطة
+        this.refreshLandMap();
+    }
+
+    developLand(landType) {
+        console.log('تطوير الأرض:', landType);
+        // منطق تطوير الأرض
+        if (!this.kingdomData) {
+            this.kingdomData = {
+                hills: { level: 1, stone: 50 },
+                greenFields: { level: 1, food: 100 },
+                waterSources: { level: 1, bonus: 10 },
+                forests: { level: 1, wood: 80 }
+            };
+        }
+        
+        if (this.kingdomData[landType]) {
+            this.kingdomData[landType].level++;
+            this.updateLandDisplay(landType);
+            this.showMessage(`تم تطوير ${landType} إلى المستوى ${this.kingdomData[landType].level}`);
+        }
+    }
+
+    refreshLandMap() {
+        console.log('تحديث خريطة الأراضي');
+        // تحديث عرض الأراضي
+        if (this.kingdomData) {
+            Object.keys(this.kingdomData).forEach(landType => {
+                this.updateLandDisplay(landType);
+            });
+        }
+    }
+
+    updateLandDisplay(landType) {
+        const landElement = document.getElementById(`land-${landType}`);
+        if (landElement && this.kingdomData[landType]) {
+            const land = this.kingdomData[landType];
+            landElement.querySelector('.land-level').textContent = `المستوى: ${land.level}`;
+            
+            if (land.stone) landElement.querySelector('.land-production').textContent = `إنتاج: ${land.stone} حجر/ساعة`;
+            if (land.food) landElement.querySelector('.land-production').textContent = `إنتاج: ${land.food} طعام/ساعة`;
+            if (land.wood) landElement.querySelector('.land-production').textContent = `إنتاج: ${land.wood} خشب/ساعة`;
+            if (land.bonus) landElement.querySelector('.land-production').textContent = `عائد: +${land.bonus}% موارد`;
+        }
+    }
+
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
             .then(registration => {

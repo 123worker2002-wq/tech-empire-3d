@@ -2,29 +2,29 @@
    متغيرات CSS - النسخة ثلاثية الأبعاد
    ========================================== */
 :root {
-  /* الألوان الأساسية - أحمر روماني */
-  --primary-500: #AE2012;
-  --primary-700: #9B2226;
-  --primary-300: #DC574A;
+  /* الألوان الأساسية - أزرق ملكي */
+  --primary-500: #2563eb;
+  --primary-700: #1d4ed8;
+  --primary-300: #60a5fa;
   
-  /* الألوان الثانوية - ذهبي */
-  --accent-500: #FFB627;
-  --accent-300: #FFD97D;
-  --gold-700: #D4A017;
+  /* الألوان الثانوية - ذهبي مشرق */
+  --accent-500: #fbbf24;
+  --accent-300: #fde68a;
+  --gold-700: #f59e0b;
   
-  /* الألوان المحايدة - بيج حجري */
-  --bg-page: #4F443A;
-  --bg-surface: #DDCDBF;
-  --bg-dark: #2D2520;
-  --border-color: #A49789;
-  --text-primary: #F5F1ED;
-  --text-secondary: #BEB3A8;
+  /* الألوان المحايدة - فضي داكن */
+  --bg-page: #1e293b;
+  --bg-surface: #334155;
+  --bg-dark: #0f172a;
+  --border-color: #475569;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
   
   /* الألوان الدلالية */
-  --success: #52B788;
-  --warning: #FFB627;
-  --error: #AE2012;
-  --disabled: #6A6A6A;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --disabled: #64748b;
   
   /* ألوان الموارد */
   --resource-gold: #FFD700;
@@ -34,10 +34,10 @@
   --resource-iron: #6A6A6A;
   
   /* ألوان ثلاثية الأبعاد */
-  --ambient-light: #8B7B6F;
-  --directional-light: #FFF2D6;
+  --ambient-light: #64748b;
+  --directional-light: #e2e8f0;
   --shadow-color: rgba(0, 0, 0, 0.4);
-  --highlight-color: rgba(255, 182, 39, 0.3);
+  --highlight-color: rgba(59, 130, 246, 0.3);
   
   /* الطباعة */
   --font-title: 'Silkscreen', monospace;
