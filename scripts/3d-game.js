@@ -13205,51 +13205,123 @@ function enhancedFixLoadingBar() {
     
     // إصلاح الشريط أولاً
     loadingBars.forEach((bar, index) => {
-        // استخراج النسبة من البيانات أو الحساب
-        let percentage = 0;
+        // البحث عن العنصر الداخلي لملء الشريط
+        const fillElement = bar.querySelector('.loading-progress, .progress-fill, .loading-fill, .bar-fill');
         
-        // محاولة الحصول على النسبة من الخصائص المختلفة
-        const dataPercentage = bar.getAttribute('data-percentage') || 
-                              bar.getAttribute('data-progress');
-        
-        if (dataPercentage) {
-            percentage = parseInt(dataPercentage);
-        } else {
-            // حساب النسبة من عرض الشريط
-            const computedWidth = parseInt(window.getComputedStyle(bar).width);
-            const parentWidth = bar.parentElement ? 
-                              parseInt(window.getComputedStyle(bar.parentElement).width) : 100;
+        if (fillElement) {
+            // حساب النسبة الفعلية من العنصر المملوء
+            const fillWidth = fillElement.getBoundingClientRect().width;
+            const barWidth = bar.getBoundingClientRect().width;
+            const calculatedPercentage = Math.round((fillWidth / barWidth) * 100);
             
-            percentage = Math.round((computedWidth / parentWidth) * 100);
-        }
-        
-        // تطبيق النسبة على عرض الشريط
-        if (!isNaN(percentage) && percentage >= 0 && percentage <= 100) {
-            bar.style.width = percentage + '%';
-            
-            // تطبيق على العنصر الداخلي إذا وجد
-            const fillElement = bar.querySelector('.progress-fill, .loading-fill, .bar-fill');
-            if (fillElement) {
-                fillElement.style.width = percentage + '%';
+            // تطبيق النسبة المتسقة
+            if (calculatedPercentage >= 0 && calculatedPercentage <= 100) {
+                bar.setAttribute('data-percentage', calculatedPercentage);
+                fillElement.style.width = calculatedPercentage + '%';
             }
         }
     });
     
-    // مزامنة النصوص
+    // مزامنة النصوص مع الشريط المملوء
     loadingTexts.forEach((text, index) => {
         // البحث عن الشريط المرتبط
-        const bar = text.closest('.loading-container, .progress-container')?.querySelector('.loading-bar, .progress-bar') ||
+        const bar = text.closest('.loading-content')?.querySelector('.loading-bar, .progress-bar') ||
                    document.querySelectorAll('.loading-bar, .progress-bar')[index];
         
         if (bar) {
-            const computedWidth = parseInt(window.getComputedStyle(bar).width);
-            const parentWidth = bar.parentElement ? 
-                              parseInt(window.getComputedStyle(bar.parentElement).width) : 100;
+            const fillElement = bar.querySelector('.loading-progress, .progress-fill, .loading-fill');
             
-            const actualPercentage = Math.round((computedWidth / parentWidth) * 100);
-            text.textContent = actualPercentage + '%';
+            if (fillElement) {
+                // حساب النسبة من العنصر المملوء الفعلي
+                const fillWidth = fillElement.getBoundingClientRect().width;
+                const barWidth = bar.getBoundingClientRect().width;
+                const actualPercentage = Math.max(0, Math.min(100, Math.round((fillWidth / barWidth) * 100)));
+                
+                // تطبيق النسبة على النص
+                text.textContent = actualPercentage + '%';
+            }
         }
     });
+}
+
+// دالة إصلاح شاشة التحميل المحسّنة
+function enhancedFixLoadingScreen() {
+    // إصلاح شريط التحميل
+    enhancedFixLoadingBar();
+    
+    // إصلاح تنسيق نص التحميل
+    const loadingTexts = document.querySelectorAll('.loading-text');
+    loadingTexts.forEach(text => {
+        text.style.textAlign = 'center';
+        text.style.fontWeight = '600';
+        text.style.color = 'var(--text-primary)';
+    });
+    
+    // إصلاح محتوى التحميل
+    const loadingContent = document.querySelector('.loading-content');
+    if (loadingContent) {
+        loadingContent.style.textAlign = 'center';
+        loadingContent.style.maxWidth = '400px';
+    }
+    
+    // إصلاح النص الرئيسي للتحميل
+    const loadingTitle = document.querySelector('.loading-content h2');
+    if (loadingTitle) {
+        loadingTitle.style.textAlign = 'center';
+        loadingTitle.style.whiteSpace = 'pre-wrap';
+        loadingTitle.style.wordWrap = 'break-word';
+    }
+}
+
+// دالة إصلاح زر الترجمة السريع
+function enhancedFixTranslateButton() {
+    const translateBtn = document.querySelector('.quick-translate-btn');
+    
+    if (translateBtn) {
+        // تحسين المظهر والوضوح
+        translateBtn.style.cssText = `
+            position: fixed;
+            top: 70px;
+            left: 15px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10001;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+        
+        // إضافة نص توضيحي
+        translateBtn.title = '🌐 ترجمة سريعة للواجهة';
+        
+        // إضافة أنيميشن أفضل
+        translateBtn.addEventListener('mouseenter', () => {
+            translateBtn.style.transform = 'scale(1.1)';
+            translateBtn.style.boxShadow = '0 6px 16px rgba(0, 212, 255, 0.6)';
+        });
+        
+        translateBtn.addEventListener('mouseleave', () => {
+            translateBtn.style.transform = 'scale(1)';
+            translateBtn.style.boxShadow = '0 4px 12px rgba(0, 212, 255, 0.4)';
+        });
+        
+        // إضافة تأثير للنقر
+        translateBtn.addEventListener('mousedown', () => {
+            translateBtn.style.transform = 'scale(0.95)';
+        });
+        
+        translateBtn.addEventListener('mouseup', () => {
+            translateBtn.style.transform = 'scale(1.1)';
+        });
+    }
 }
 
 // دالة تهيئة الإصلاحات المحسّنة
@@ -13257,6 +13329,8 @@ function initializeUIFixes() {
     // تطبيق الإصلاحات تدريجياً
     setTimeout(() => {
         enhancedFixBuildingIcons();
+        enhancedFixLoadingScreen();
+        enhancedFixTranslateButton();
     }, 1000);
     
     setTimeout(() => {
@@ -13443,10 +13517,33 @@ function addQuickTranslationButton() {
 // إضافة الزر بعد تحميل الصفحة
 setTimeout(addQuickTranslationButton, 3000);
 
+// تفعيل جميع الإصلاحات عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    // تطبيق الإصلاحات الأساسية
+    setTimeout(() => {
+        initializeUIFixes();
+    }, 2000);
+    
+    // تطبيق الإصلاحات بانتظام
+    setInterval(() => {
+        enhancedFixLoadingScreen();
+        enhancedFixTranslateButton();
+    }, 5000);
+});
+
+// إصلاح تلقائي عند تغيير حجم النافذة
+window.addEventListener('resize', () => {
+    setTimeout(() => {
+        enhancedFixLoadingScreen();
+    }, 300);
+});
+
 // دوال إعادة الإصلاح (يمكن استدعاؤها يدوياً)
 window.fixUI = {
     icons: enhancedFixBuildingIcons,
     loading: enhancedFixLoadingBar,
+    loadingScreen: enhancedFixLoadingScreen,
+    translateButton: enhancedFixTranslateButton,
     resizeIcons: resizeResourceIcons,
     translation: () => autoTranslationSystem.applyAutoTranslation(),
     all: initializeUIFixes,
