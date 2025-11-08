@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1A202C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tech Empire">
+    <title>الإمبراطورية التقنية - Tech Empire 3D (نسخة محمولة)</title>
+    
+    <!-- Google Fonts - محسّنة للعب العربي -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Noto+Sans+Arabic:wght@300;400;500;700;900&family=Cairo:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&family=Silkscreen&display=swap" rel="stylesheet">
+    
+    <!-- Chrome-specific optimizations -->
+    <meta name="color-scheme" content="dark">
+    <meta name="supported-color-schemes" content="dark">
+    <meta name="msapplication-navbutton-color" content="#1A202C">
+    <meta name="application-name" content="Tech Empire">
+    
+    <!-- High DPI optimizations -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <style>
+        /* ==========================================
+           CSS الرئيسي للعبة - Tech Empire 3D Mobile
+           ========================================== */
+        
+        /* تحسينات خاصة بـ Google Chrome */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+          * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+          }
+        }
+
+        /* متغيرات CSS - الألوان الأساسية */
+        :root {
+          --primary-500: #2563eb;
+          --primary-700: #1d4ed8;
+          --primary-300: #60a5fa;
+          --accent-500: #fbbf24;
+          --accent-300: #fde68a;
+          --gold-700: #f59e0b;
+          --bg-page: #1e293b;
+          --bg-surface: #334155;
+          --bg-dark: #0f172a;
+          --border-color: #475569;
+          --text-primary: #f1f5f9;
+          --text-secondary: #cbd5e1;
+          --success: #10b981;
+          --warning: #f59e0b;
+          --error: #ef4444;
+          --disabled: #64748b;
+          --text-highlight: #FFFFFF;
+          --text-muted: #CBD5E0;
+          --button-bg: #4A5568;
+          --button-hover: #5A67D8;
+          --resource-gold: #FFB800;
+          --resource-food: #CD853F;
+          --resource-wood: #8B4513;
+          --resource-stone: #A0AEC0;
+          --resource-iron: #718096;
+        }
+
+        /* إعادة تعيين الأنماط الأساسية */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body { 
+            font-family: 'Cairo', 'Noto Sans Arabic', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* حاوي اللعبة الرئيسي */
+        .game-container {
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* هيدر اللعبة */
+        .game-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 15px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 100;
+        }
+
+        .game-title {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        /* لوحة الموارد */
+        .resources-panel {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .resource-icon {
+            width: 20px;
+            height: 20px;
+            margin-left: 8px;
+            border-radius: 50%;
+        }
+
+        .resource-gold { background: var(--resource-gold); }
+        .resource-food { background: var(--resource-food); }
+        .resource-wood { background: var(--resource-wood); }
+        .resource-stone { background: var(--resource-stone); }
+        .resource-iron { background: var(--resource-iron); }
+
+        /* منطقة اللعبة */
+        .game-area {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(135deg, #2d4a3a 0%, #1a2f1f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-logo {
+            font-size: 3em;
+            margin-bottom: 30px;
+            animation: logoSpin 2s ease-in-out infinite;
+        }
+
+        @keyframes logoSpin {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5em;
+            color: var(--text-highlight);
+            margin-bottom: 20px;
+        }
+
+        .loading-bar {
+            width: 80%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        /* منطقة اللعب */
+        .play-area {
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: relative;
+            background: radial-gradient(circle at center, #2d4a3a, #1a2f1f);
+        }
+
+        .play-area.active {
+            display: block;
+        }
+
+        /* أزرار التحكم */
+        .game-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 200;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            min-width: 100px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .control-btn.primary {
+            background: linear-gradient(135deg, var(--gold-700) 0%, var(--accent-500) 100%);
+        }
+
+        .control-btn.success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        }
+
+        /* نافذة المتجر - مع الشعار الفاخر */
+        .store-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            backdrop-filter: blur(5px);
+        }
+
+        .store-modal.active {
+            display: flex;
+        }
+
+        .store-content {
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f0a 100%);
+            border: 3px solid #d4af37;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+
+        .store-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid #FFD700;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .store-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .store-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .premium-logo {
+            max-width: 300px;
+            height: auto;
+            filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .store-title {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .store-title h2 {
+            margin: 0;
+            font-size: 1.8em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .store-subtitle {
+            margin: 5px 0 0 0;
+            font-size: 1em;
+            color: #00D4FF;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-style: italic;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            font-size: 24px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 3;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .store-body {
+            padding: 20px;
+        }
+
+        .promo-banner {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .promo-banner h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .current-license {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .current-license h3 {
+            color: var(--accent-500);
+            margin-bottom: 10px;
+        }
+
+        /* تحسينات للموبايل */
+        @media (max-width: 768px) {
+            .game-title {
+                font-size: 1.5em;
+            }
+            
+            .resources-panel {
+                justify-content: center;
+            }
+            
+            .resource-item {
+                font-size: 0.8em;
+                padding: 6px 10px;
+            }
+            
+            .control-btn {
+                padding: 10px 16px;
+                font-size: 0.9em;
+                min-width: 80px;
+            }
+            
+            .premium-logo {
+                max-width: 250px;
+            }
+            
+            .store-title h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* تحسينات Samsung Internet للنص العربي */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            body {
+                text-rendering: optimizeLegibility;
+                -webkit-font-smoothing: antialiased;
+            }
+            
+            .chrome-arabic-optimization {
+                font-family: 'Cairo', 'Noto Sans Arabic', 'Tajawal', 'Roboto', sans-serif;
+                font-feature-settings: "liga" 1, "kern" 1, "calt" 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- هيدر اللعبة -->
+        <header class="game-header">
+            <h1 class="game-title">🏆 الإمبراطورية التقنية - Tech Empire 3D</h1>
+            
+            <div class="resources-panel">
+                <div class="resource-item">
+                    <div class="resource-icon resource-gold"></div>
+                    <span id="gold-count">1000</span>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-icon resource-food"></div>
+                    <span id="food-count">500</span>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-icon resource-wood"></div>
+                    <span id="wood-count">300</span>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-icon resource-stone"></div>
+                    <span id="stone-count">200</span>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-icon resource-iron"></div>
+                    <span id="iron-count">150</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- منطقة اللعبة -->
+        <main class="game-area">
+            <!-- شاشة التحميل -->
+            <div class="loading-screen" id="loadingScreen">
+                <div class="loading-logo">🏗️</div>
+                <div class="loading-text">جاري تحميل الإمبراطورية التقنية...</div>
+                <div class="loading-bar">
+                    <div class="loading-progress" id="loadingProgress"></div>
+                </div>
+                <div class="loading-text" id="loadingPercent">0%</div>
+            </div>
+
+            <!-- منطقة اللعب -->
+            <div class="play-area" id="playArea">
+                <div class="game-content">
+                    <h2 style="text-align: center; color: white; margin-top: 100px;">
+                        🎮 مرحباً بك في الإمبراطورية التقنية!
+                    </h2>
+                    <p style="text-align: center; color: var(--text-secondary); margin: 20px;">
+                        محاكي بناء المدينة ثلاثي الأبعاد
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <!-- أزرار التحكم -->
+        <div class="game-controls">
+            <button class="control-btn primary" onclick="openStore()">🛍️ المتجر</button>
+            <button class="control-btn" onclick="addResources()">💰 موارد</button>
+            <button class="control-btn success" onclick="showGameInfo()">ℹ️ معلومات</button>
+        </div>
+    </div>
+
+    <!-- نافذة المتجر - مع الشعار الفاخر -->
+    <div class="store-modal" id="storeModal">
+        <div class="store-content">
+            <div class="store-header">
+                <button class="close-btn" onclick="closeStore()">×</button>
+                <div class="store-logo">
+                    <svg class="premium-logo" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Crown icon -->
+                        <path d="M20 25 L30 15 L40 25 L50 15 L60 25 L70 15 L80 25 L90 15 L100 25 L110 15 L120 25 L130 15 L140 25 L150 15 L160 25 L170 15 L180 25" 
+                              fill="none" stroke="#FFD700" stroke-width="3" stroke-linejoin="round"/>
+                        <path d="M20 25 L20 35 L180 35 L180 25" fill="none" stroke="#FFD700" stroke-width="3"/>
+                        <!-- Tech circuits -->
+                        <circle cx="30" cy="45" r="3" fill="#00D4FF" opacity="0.8">
+                            <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="100" cy="45" r="4" fill="#00D4FF" opacity="0.8">
+                            <animate attributeName="opacity" values="0.8;1;0.8" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="170" cy="45" r="3" fill="#00D4FF" opacity="0.8">
+                            <animate attributeName="opacity" values="0.8;1;0.8" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Circuit lines -->
+                        <line x1="30" y1="45" x2="30" y2="35" stroke="#00D4FF" stroke-width="2"/>
+                        <line x1="100" y1="45" x2="100" y2="35" stroke="#00D4FF" stroke-width="2"/>
+                        <line x1="170" y1="45" x2="170" y2="35" stroke="#00D4FF" stroke-width="2"/>
+                        <!-- Tech grid -->
+                        <g class="tech-grid" opacity="0.3">
+                            <line x1="50" y1="45" x2="80" y2="45" stroke="#00D4FF" stroke-width="1"/>
+                            <line x1="120" y1="45" x2="150" y2="45" stroke="#00D4FF" stroke-width="1"/>
+                        </g>
+                        <!-- Central logo -->
+                        <text x="100" y="20" text-anchor="middle" font-family="serif" font-size="16" font-weight="bold" fill="#FFD700">
+                            Tech Empire
+                        </text>
+                        <text x="100" y="35" text-anchor="middle" font-family="monospace" font-size="8" fill="#00D4FF">
+                            ⭐ IMPERIAL STORE ⭐
+                        </text>
+                    </svg>
+                </div>
+                <div class="store-title">
+                    <h2>متجر التطوير السريع - فترة تجريبية</h2>
+                    <p class="store-subtitle">متجر الإمبراطورية التقنية - تجربة فاخرة</p>
+                </div>
+            </div>
+            
+            <div class="store-body">
+                <div class="promo-banner">
+                    <h3>🎊 عرض خاص: 6 شهور مجانية كاملة!</h3>
+                    <p><strong>الوقت المتبقي:</strong> 179 يوم</p>
+                    <p>🎁 استمتع بكل المميزات مجاناً لمدة 6 شهور!</p>
+                </div>
+                
+                <div class="current-license">
+                    <h3>حالتك الحالية</h3>
+                    <p><strong>نوع الترخيص:</strong> الفترة التجريبية المجانية</p>
+                    <p><strong>حالة الوصول:</strong> كامل (جميع المباني والمميزات)</p>
+                    <p><strong>وقت الاستخدام:</strong> غير محدود</p>
+                    <p><strong>المستوى الحالي:</strong> C1</p>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <h3 style="color: var(--accent-500); margin-bottom: 15px;">الحزم المتاحة</h3>
+                    <p style="color: var(--success); font-size: 1.2em; font-weight: bold;">
+                        🎉 جميع الحزم متاحة مجاناً لمدة 6 شهور!
+                    </p>
+                    <p style="color: var(--text-secondary); margin-top: 10px;">
+                        كن جزءاً من الإمبراطورية التقنية واستمتع بتجربة فاخرة!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript للعبة Tech Empire 3D Mobile
+        
+        // نظام كشف المتصفح والتحسينات
+        const browserOptimization = {
+            isChrome: () => /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent),
+            isSamsung: () => /SamsungBrowser/.test(navigator.userAgent),
+            optimizeForChrome: () => {
+                if (this.isChrome()) {
+                    document.body.classList.add('chrome-arabic-optimization');
+                    console.log('🔧 Chrome optimizations applied');
+                }
+            }
+        };
+
+        // تطبيق تحسينات المتصفح عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            browserOptimization.optimizeForChrome();
+            console.log('🎮 Tech Empire 3D Mobile loaded');
+            console.log('🏆 Premium store with luxury logo ready');
+            startLoadingSequence();
+        });
+
+        // نظام المحاكاة الأولية
+        const gameState = {
+            isLoading: true,
+            currentLevel: "C1",
+            resources: {
+                gold: 1000,
+                food: 500,
+                wood: 300,
+                stone: 200,
+                iron: 150
+            },
+            license: 'free_trial',
+            freePeriodMonths: 6,
+            daysRemaining: 179
+        };
+
+        // متغيرات التحميل
+        let loadingProgress = 0;
+        let loadingInterval;
+
+        // بدء تسلسل التحميل
+        function startLoadingSequence() {
+            const progressBar = document.getElementById('loadingProgress');
+            const loadingText = document.getElementById('loadingPercent');
+            const loadingScreen = document.getElementById('loadingScreen');
+            const playArea = document.getElementById('playArea');
+
+            // محاكاة تحميل تدريجي
+            const loadingSteps = [
+                { progress: 20, text: 'تحميل الواجهة...' },
+                { progress: 40, text: 'تحميل الموارد...' },
+                { progress: 60, text: 'تهيئة المحرك ثلاثي الأبعاد...' },
+                { progress: 80, text: 'تحميل المباني...' },
+                { progress: 100, text: 'تم تحميل الإمبراطورية بنجاح!' }
+            ];
+
+            let currentStep = 0;
+            
+            loadingInterval = setInterval(() => {
+                if (currentStep < loadingSteps.length) {
+                    const step = loadingSteps[currentStep];
+                    loadingProgress = step.progress;
+                    
+                    progressBar.style.width = loadingProgress + '%';
+                    loadingText.textContent = loadingProgress + '%';
+                    
+                    // تحديث النص حسب المرحلة
+                    if (loadingProgress === 100) {
+                        document.querySelector('.loading-text').textContent = step.text;
+                        
+                        // إنهاء التحميل
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                            playArea.classList.add('active');
+                            gameState.isLoading = false;
+                            console.log('🎮 Game loaded successfully!');
+                            console.log('🏪 Store with premium logo ready!');
+                        }, 1000);
+                    }
+                    
+                    currentStep++;
+                } else {
+                    clearInterval(loadingInterval);
+                }
+            }, 800);
+        }
+
+        // وظائف التحكم
+        function openStore() {
+            const storeModal = document.getElementById('storeModal');
+            storeModal.classList.add('active');
+            console.log('🛍️ Premium store opened');
+            console.log('👑 Luxury logo with crown and tech circuits displayed');
+        }
+
+        function closeStore() {
+            const storeModal = document.getElementById('storeModal');
+            storeModal.classList.remove('active');
+        }
+
+        function addResources() {
+            // إضافة موارد وهمية
+            gameState.resources.gold += 100;
+            gameState.resources.food += 50;
+            gameState.resources.wood += 30;
+            gameState.resources.stone += 25;
+            gameState.resources.iron += 20;
+            
+            updateResourcesDisplay();
+            
+            // إشعار مرئي
+            showNotification('تم إضافة موارد جديدة! 💰', 'success');
+        }
+
+        function updateResourcesDisplay() {
+            document.getElementById('gold-count').textContent = gameState.resources.gold;
+            document.getElementById('food-count').textContent = gameState.resources.food;
+            document.getElementById('wood-count').textContent = gameState.resources.wood;
+            document.getElementById('stone-count').textContent = gameState.resources.stone;
+            document.getElementById('iron-count').textContent = gameState.resources.iron;
+        }
+
+        function showGameInfo() {
+            const info = `
+🏆 الإمبراطورية التقنية - Tech Empire 3D
+
+المستوى الحالي: ${gameState.currentLevel}
+نوع الترخيص: فترة تجريبية مجانية
+الوقت المتبقي: ${gameState.daysRemaining} يوم
+الموارد الحالية:
+• الذهب: ${gameState.resources.gold}
+• الطعام: ${gameState.resources.food}
+• الخشب: ${gameState.resources.wood}
+• الحجر: ${gameState.resources.stone}
+• الحديد: ${gameState.resources.iron}
+
+🏪 المتجر: يحتوي على شعار فاخر مع تاج ذهبي ودوائر تقنية متحركة!
+            `;
+            
+            alert(info);
+        }
+
+        // إشعارات مرئية
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--primary-500)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                z-index: 10000;
+                font-weight: bold;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // إضافة animation للإشعارات
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // إغلاق المتجر عند النقر خارجه
+        document.getElementById('storeModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('storeModal')) {
+                closeStore();
+            }
+        });
+
+        console.log('🎮 Tech Empire 3D Mobile - Complete with Premium Store Logo!');
+        console.log('👑 Premium features loaded: Crown logo, animated tech circuits, shimmer effects');
+        console.log('📱 Mobile optimized with browser-specific enhancements');
+    </script>
+</body>
+</html>
