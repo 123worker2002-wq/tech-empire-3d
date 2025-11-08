@@ -90,6 +90,83 @@ const BUILDINGS = {
         effect: 'trading',
         icon: 'market-icon',
         category: 'commercial'
+    },
+    
+    ai_center: {
+        name: 'مركز الذكاء الاصطناعي',
+        description: 'مركز تقني متقدم لتطوير وتحديث الأنظمة الذكية. ينتج ذكاء اصطناعي وقوة حاسوبية',
+        cost: { gold: 2000, iron: 500, stone: 300, wood: 200 },
+        buildTime: 60,
+        production: { ai_power: 10 },
+        capacity: 25,
+        icon: 'ai-icon',
+        category: 'technology',
+        unlocks: ['ai_research', 'ai_upgrades', 'smart_farming']
+    }
+};
+
+// ==========================================
+// نظام الذكاء الاصطناعي
+// ==========================================
+const AI_SYSTEM = {
+    currentLevel: 0,
+    maxLevel: 50,
+    researchPoints: 0,
+    aiPower: 0,
+    features: {
+        smart_farming: false,      // زراعة ذكية تلقائية
+        auto_trading: false,       // تجارة تلقائية
+        combat_prediction: false,  // توقع نتائج المعارك
+        resource_optimization: false, // تحسين استخدام الموارد
+        auto_research: false,      // أبحاث تلقائية
+        building_suggestions: false, // اقتراحات بناء ذكية
+        threat_detection: false,   // كشف التهديدات
+        efficiency_boost: false    // تعزيز الكفاءة
+    },
+    
+    researchTrees: {
+        automation: {
+            name: 'الأتمتة الذكية',
+            cost: 100,
+            requirements: { level: 1 },
+            benefits: 'فتح أتمتة المهام الأساسية',
+            unlocks: ['smart_farming', 'auto_trading']
+        },
+        prediction: {
+            name: 'التنبؤ الاستراتيجي',
+            cost: 250,
+            requirements: { level: 3 },
+            benefits: 'توقع نتائج المعارك والأحداث',
+            unlocks: ['combat_prediction', 'threat_detection']
+        },
+        optimization: {
+            name: 'تحسين الموارد',
+            cost: 400,
+            requirements: { level: 5 },
+            benefits: 'تحسين استخدام وإنتاج الموارد',
+            unlocks: ['resource_optimization', 'efficiency_boost']
+        },
+        intelligence: {
+            name: 'الذكاء المتقدم',
+            cost: 750,
+            requirements: { level: 8 },
+            benefits: 'فتح قدرات ذكاء اصطناعي متقدمة',
+            unlocks: ['auto_research', 'building_suggestions']
+        }
+    },
+    
+    levelRequirements: {
+        1: { ai_power: 10, research_points: 5, resources: { gold: 100, iron: 20 } },
+        5: { ai_power: 50, research_points: 25, resources: { gold: 500, iron: 100 } },
+        10: { ai_power: 150, research_points: 100, resources: { gold: 1500, iron: 300 } },
+        15: { ai_power: 300, research_points: 200, resources: { gold: 3000, iron: 600 } },
+        20: { ai_power: 500, research_points: 400, resources: { gold: 6000, iron: 1200 } },
+        25: { ai_power: 800, research_points: 750, resources: { gold: 12000, iron: 2400 } },
+        30: { ai_power: 1200, research_points: 1200, resources: { gold: 24000, iron: 4800 } },
+        35: { ai_power: 1800, research_points: 2000, resources: { gold: 48000, iron: 9600 } },
+        40: { ai_power: 2500, research_points: 3500, resources: { gold: 96000, iron: 19200 } },
+        45: { ai_power: 3500, research_points: 6000, resources: { gold: 192000, iron: 38400 } },
+        50: { ai_power: 5000, research_points: 10000, resources: { gold: 384000, iron: 76800 } }
     }
 };
 
