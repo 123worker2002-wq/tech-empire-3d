@@ -9,6 +9,10 @@ class TechEmpire3D {
         this.renderer = null;
         this.controls = null;
         this.buildings = [];
+        this.frameCount = 0;
+        this.lastTime = 0;
+        this.fps = 60; // تحسين الأداء
+        this.performanceMode = 'high'; // high, balanced, low
         this.resources = {
             gold: 1000,
             food: 500,
@@ -3451,15 +3455,34 @@ class TechEmpire3D {
     }
 
     animate() {
-        requestAnimationFrame(() => this.animate());
+        const currentTime = performance.now();
+        const deltaTime = currentTime - this.lastTime;
         
-        // Update animations
-        this.updateAnimations();
+        // Frame rate limiting for smooth performance
+        if (deltaTime < (1000 / this.fps)) {
+            return requestAnimationFrame(() => this.animate());
+        }
         
-        // Update day/night cycle (optimized for mobile)
-        this.updateDayNightCycle();
+        this.frameCount++;
+        this.lastTime = currentTime;
         
-        // Update resource generation
+        // Adaptive performance based on device
+        this.updatePerformanceMode();
+        
+        // Smooth animations with performance optimization
+        if (this.performanceMode === 'high') {
+            this.updateAnimations();
+        } else if (this.frameCount % 2 === 0) {
+            // Skip every other frame for lower performance modes
+            this.updateAnimations();
+        }
+        
+        // Optimized day/night cycle
+        if (this.frameCount % 3 === 0) {
+            this.updateDayNightCycle();
+        }
+        
+        // Efficient resource updates
         if (this.lastResourceUpdate === undefined) {
             this.lastResourceUpdate = Date.now();
         }
