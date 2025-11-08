@@ -6355,8 +6355,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
     border-bottom: 2px solid #8B4513;
 }
 
@@ -6386,33 +6386,77 @@ body {
     font-size: 14px;
 }
 
+/* معلومات السجون */
+.prison-info {
+    background: rgba(139, 69, 19, 0.2);
+    border: 1px solid #8B4513;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.prison-level-info,
+.prison-capacity-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.prison-level-label,
+.prison-capacity-label {
+    color: #FFA500;
+    font-weight: bold;
+}
+
+.prison-level,
+.prison-capacity {
+    color: #FFB6C1;
+    font-weight: bold;
+    font-size: 16px;
+}
+
 .prison-controls {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 15px;
 }
 
-.btn-prison {
+.btn-prison,
+.btn-upgrade {
     background: linear-gradient(135deg, #8B4513, #654321);
     color: white;
     border: none;
-    padding: 12px 15px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s ease;
     text-align: center;
+    font-size: 14px;
 }
 
-.btn-prison:hover {
+.btn-prison:hover,
+.btn-upgrade:hover {
     background: linear-gradient(135deg, #A0522D, #8B4513);
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
 }
 
+.btn-upgrade {
+    background: linear-gradient(135deg, #B8860B, #8B7355);
+}
+
+.btn-upgrade:hover {
+    background: linear-gradient(135deg, #CD853F, #B8860B);
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+}
+
 .prison-alerts {
-    max-height: 200px;
+    max-height: 150px;
     overflow-y: auto;
 }
 
@@ -6584,6 +6628,183 @@ body {
     font-style: italic;
     padding: 40px;
     font-size: 18px;
+}
+
+/* ==========================================
+   نافذة تطوير السجون
+   ========================================== */
+
+.prison-upgrade-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.prison-upgrade-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 3px solid #00d4ff;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: 0 0 50px rgba(0,212,255,0.3);
+}
+
+.prison-upgrade-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #00d4ff;
+}
+
+.prison-upgrade-header h2 {
+    color: #00d4ff;
+    margin: 0;
+    font-size: 24px;
+}
+
+.current-prison-info {
+    background: rgba(0,212,255,0.1);
+    border: 2px solid #00d4ff;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.current-prison-info h3 {
+    color: #00d4ff;
+    margin: 0 0 15px 0;
+    font-size: 18px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.info-item .label {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.info-item .value {
+    color: #00d4ff;
+    font-weight: bold;
+}
+
+.upgrade-requirements {
+    background: rgba(255,215,0,0.1);
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.upgrade-requirements h3 {
+    color: #ffd700;
+    margin: 0 0 15px 0;
+    font-size: 18px;
+}
+
+.cost-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.cost-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.cost-label {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.cost-value {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.upgrade-info {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.upgrade-actions {
+    text-align: center;
+}
+
+.btn-upgrade-prison {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #2d1810;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+.btn-upgrade-prison:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ffed4e, #ffd700);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255,215,0,0.4);
+}
+
+.btn-upgrade-prison:disabled {
+    background: linear-gradient(135deg, #666, #888);
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.max-level-message {
+    text-align: center;
+    padding: 20px;
+    background: rgba(40,167,69,0.2);
+    border: 2px solid #28a745;
+    border-radius: 10px;
+}
+
+.max-level-message h3 {
+    color: #28a745;
+    margin: 0 0 10px 0;
+}
+
+.max-level-message p {
+    color: #90EE90;
+    margin: 0;
 }
 
 /* ==========================================

@@ -10053,6 +10053,19 @@ if ('serviceWorker' in navigator) {
         constructor() {
             this.prisoners = [];
             this.weakLeaders = [];
+            this.prisonSystem = {
+                level: 1,
+                capacity: 10,
+                maxLevel: 5,
+                upgradeCosts: {
+                    1: { level: 5, gold: 1000, wood: 500, stone: 500, food: 300 },
+                    2: { level: 10, gold: 2500, wood: 800, stone: 800, food: 500 },
+                    3: { level: 15, gold: 5000, wood: 1200, stone: 1200, food: 800 },
+                    4: { level: 20, gold: 10000, wood: 2000, stone: 2000, food: 1500 },
+                    5: { level: 25, gold: 20000, wood: 3000, stone: 3000, food: 2500 }
+                },
+                capacities: [0, 10, 25, 50, 100, 200] // مستوى 1: 10 سجين، مستوى 2: 25، إلخ
+            };
             this.levelThresholds = {
                 FREE_CITIZEN: 13,    // أقل من 14
                 PRISONER: 15,        // 14-15
@@ -10060,7 +10073,173 @@ if ('serviceWorker' in navigator) {
             };
         }
         
+        // ==========================================
+        // نظام تطوير السجون
+        // ==========================================
+        
+        // الحصول على مستوى السجون
+        getPrisonLevel() {
+            return this.prisonSystem.level;
+        }
+        
+        // الحصول على سعة السجون
+        getPrisonCapacity() {
+            return this.prisonSystem.capacities[this.prisonSystem.level] || 0;
+        }
+        
+        // فحص إذا كان يمكن إيواء سجين جديد
+        canHousePrisoner() {
+            return (this.prisoners.length + this.weakLeaders.length) < this.getPrisonCapacity();
+        }
+        
+        // الحصول على تكاليف التطوير
+        getUpgradeCost() {
+            const currentLevel = this.prisonSystem.level;
+            if (currentLevel >= this.prisonSystem.maxLevel) return null;
+            return this.prisonSystem.upgradeCosts[currentLevel + 1];
+        }
+        
+        // تطوير السجون
+        upgradePrison() {
+            if (this.prisonSystem.level >= this.prisonSystem.maxLevel) {
+                if (game && game.showNotification) {
+                    game.showNotification('السجن وصل لأقصى مستوى! 🎉', 'info');
+                }
+                return false;
+            }
+            
+            const cost = this.getUpgradeCost();
+            if (!cost) return false;
+            
+            // فحص مستوى اللاعب
+            if (game && game.player && (game.player.level || 0) < cost.level) {
+                if (game && game.showNotification) {
+                    game.showNotification(`⚠️ تحتاج مستوى ${cost.level} لتطوير السجون`, 'warning');
+                }
+                return false;
+            }
+            
+            // فحص الموارد
+            if (!this.hasEnoughResourcesForUpgrade(cost)) {
+                if (game && game.showNotification) {
+                    game.showNotification('⚠️ مواردك غير كافية لتطوير السجون!', 'error');
+                }
+                return false;
+            }
+            
+            // خصم الموارد وتطوير السجون
+            this.deductUpgradeResources(cost);
+            this.prisonSystem.level++;
+            this.prisonSystem.capacity = this.getPrisonCapacity();
+            
+            if (game && game.showNotification) {
+                game.showNotification(`تم تطوير السجون إلى المستوى ${this.prisonSystem.level}! 🏰`, 'success');
+            }
+            
+            this.showUpgradeNotification();
+            this.updatePrisonDisplay();
+            
+            return true;
+        }
+        
+        // فحص الموارد للتطوير
+        hasEnoughResourcesForUpgrade(cost) {
+            const player = game ? game.player : null;
+            if (!player) return false;
+            
+            return (
+                (player.level || 0) >= cost.level &&
+                (player.gold || 0) >= cost.gold &&
+                (player.resources?.wood || 0) >= cost.wood &&
+                (player.resources?.stone || 0) >= cost.stone &&
+                (player.resources?.food || 0) >= cost.food
+            );
+        }
+        
+        // خصم موارد التطوير
+        deductUpgradeResources(cost) {
+            if (game && game.player) {
+                game.player.gold = (game.player.gold || 0) - cost.gold;
+                
+                if (game.player.resources) {
+                    game.player.resources.wood = (game.player.resources.wood || 0) - cost.wood;
+                    game.player.resources.stone = (game.player.resources.stone || 0) - cost.stone;
+                    game.player.resources.food = (game.player.resources.food || 0) - cost.food;
+                }
+            }
+        }
+        
+        // عرض تنبيه التطوير
+        showUpgradeNotification() {
+            const modal = document.createElement('div');
+            modal.className = 'prison-upgrade-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #ffd700, #ffed4e);
+                padding: 30px;
+                border-radius: 20px;
+                border: 3px solid #ff6b35;
+                color: #2d1810;
+                text-align: center;
+                z-index: 10000;
+                box-shadow: 0 0 50px rgba(255,215,0,0.8);
+                animation: upgradePulse 2s ease-in-out;
+            `;
+            
+            const newCapacity = this.getPrisonCapacity();
+            const oldCapacity = this.prisonSystem.capacities[this.prisonSystem.level - 1];
+            
+            modal.innerHTML = `
+                <h2 style="color: #ff6b35; margin-bottom: 20px;">🏰 تطوير السجون! 🏰</h2>
+                
+                <div style="background: rgba(255,255,255,0.3); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <h3 style="color: #2d1810;">المستوى: ${this.prisonSystem.level}</h3>
+                    <p style="color: #2d1810;">السعة: ${oldCapacity} → <strong>${newCapacity}</strong></p>
+                    <p style="color: #2d1810;">حسنة تحسن في الأمان!</p>
+                </div>
+                
+                <button onclick="this.parentElement.remove()" 
+                        style="
+                            background: linear-gradient(135deg, #ff6b35, #ff4500);
+                            color: white;
+                            border: none;
+                            padding: 12px 25px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-weight: bold;
+                        ">
+                    ✅ إنهاء
+                </button>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            setTimeout(() => {
+                if (modal.parentElement) {
+                    modal.remove();
+                }
+            }, 5000);
+        }
+        
+        // تحديث عرض السجون
+        updatePrisonDisplay() {
+            const capacityElement = document.getElementById('prison-capacity');
+            if (capacityElement) {
+                capacityElement.textContent = `${this.getPrisonCapacity()}`;
+            }
+            
+            const levelElement = document.getElementById('prison-level');
+            if (levelElement) {
+                levelElement.textContent = this.prisonSystem.level;
+            }
+        }
+        
+        // ==========================================
         // فحص حالة اللاعب حسب المستوى
+        // ==========================================
         checkPlayerStatus(player) {
             const level = player.level || 0;
             const playerId = player.id || player.name;
@@ -10168,14 +10347,8 @@ if ('serviceWorker' in navigator) {
                 existingLeader.criteria = criteria;
                 existingLeader.detectionTime = Date.now();
             } else {
-                this.weakLeaders.push({
-                    playerId: player.id || player.name,
-                    playerName: player.name || 'Unknown',
-                    level: player.level,
-                    criteria: criteria,
-                    detectionTime: Date.now(),
-                    status: 'WEAK'
-                });
+                const added = this.addWeakLeader(player, criteria);
+                if (!added) return; // السجون ممتلئة
             }
             
             // عرض تنبيه
@@ -10300,6 +10473,14 @@ if ('serviceWorker' in navigator) {
         
         // إضافة سجين جديد
         addPrisoner(player) {
+            // فحص السعة
+            if (!this.canHousePrisoner()) {
+                if (game && game.showNotification) {
+                    game.showNotification('🚫 السجون ممتلئة! يجب تطوير السجون أولاً', 'error');
+                }
+                return null;
+            }
+            
             const prisoner = {
                 id: player.id || player.name,
                 name: player.name || 'Unknown',
@@ -10313,6 +10494,31 @@ if ('serviceWorker' in navigator) {
             this.updatePrisonCount();
             
             return prisoner;
+        }
+        
+        // إضافة قائد ضعيف
+        addWeakLeader(player, criteria) {
+            // فحص السعة
+            if (!this.canHousePrisoner()) {
+                if (game && game.showNotification) {
+                    game.showNotification('🚫 السجون ممتلئة! يجب تطوير السجون أولاً', 'error');
+                }
+                return false;
+            }
+            
+            const weakLeader = {
+                playerId: player.id || player.name,
+                playerName: player.name || 'Unknown',
+                level: player.level,
+                criteria: criteria,
+                captureTime: Date.now(),
+                status: 'WEAK'
+            };
+            
+            this.weakLeaders.push(weakLeader);
+            this.updatePrisonCount();
+            
+            return true;
         }
         
         // تحديث عدد السجناء
@@ -10715,6 +10921,9 @@ if ('serviceWorker' in navigator) {
         // بدء مراقبة السجون
         levelManagementSystem.startMonitoring();
         levelManagementSystem.startPrisonTimers();
+        
+        // تحديث عرض السجون
+        levelManagementSystem.updatePrisonDisplay();
         
         // عرض رسالة ترحيب
         setTimeout(() => {

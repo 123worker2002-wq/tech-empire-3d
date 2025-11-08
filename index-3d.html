@@ -2073,6 +2073,18 @@
             </div>
         </div>
         
+        <!-- معلومات السجون -->
+        <div class="prison-info">
+            <div class="prison-level-info">
+                <span class="prison-level-label">المستوى:</span>
+                <span class="prison-level" id="prison-level">1</span>
+            </div>
+            <div class="prison-capacity-info">
+                <span class="prison-capacity-label">السعة:</span>
+                <span class="prison-capacity" id="prison-capacity">10</span>
+            </div>
+        </div>
+        
         <div class="prison-controls">
             <button class="btn btn-prison" onclick="levelManagementSystem.checkAllPlayers()">
                 🔍 فحص اللاعبين
@@ -2082,6 +2094,9 @@
             </button>
             <button class="btn btn-prison" onclick="openPrisonList()">
                 📋 قائمة السجناء
+            </button>
+            <button class="btn btn-upgrade" onclick="showPrisonUpgradeModal()">
+                🏰 تطوير السجون
             </button>
         </div>
         
@@ -2106,6 +2121,44 @@
             
             <div class="prisoners-list" id="prisoners-list">
                 <!-- قائمة السجناء -->
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تطوير السجون -->
+    <div class="prison-upgrade-modal" id="prison-upgrade-modal" style="display: none;">
+        <div class="prison-upgrade-content">
+            <div class="prison-upgrade-header">
+                <h2>🏰 تطوير السجون</h2>
+                <button class="close-btn" onclick="closePrisonUpgrade()">✕</button>
+            </div>
+            
+            <div class="current-prison-info">
+                <h3>المعلومات الحالية</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">المستوى:</span>
+                        <span class="value" id="current-level">1</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">السعة:</span>
+                        <span class="value" id="current-capacity">10</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">السطور الحالية:</span>
+                        <span class="value" id="current-prisoners">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="upgrade-requirements" id="upgrade-requirements">
+                <!-- متطلبات التطوير -->
+            </div>
+            
+            <div class="upgrade-actions">
+                <button class="btn-upgrade-prison" id="upgrade-btn" onclick="upgradePrison()">
+                    تطوير السجون
+                </button>
             </div>
         </div>
     </div>
@@ -2229,6 +2282,130 @@
         } else {
             const remaining = 3 - days;
             return `🕐 ${days} يوم - ${hours} ساعة (متبقي ${remaining} يوم)`;
+        }
+    }
+    
+    // ==========================================
+    // وظائف تطوير السجون
+    // ==========================================
+    
+    // عرض نافذة تطوير السجون
+    function showPrisonUpgradeModal() {
+        if (!levelManagementSystem) return;
+        
+        const modal = document.getElementById('prison-upgrade-modal');
+        if (!modal) return;
+        
+        // تحديث المعلومات
+        updatePrisonUpgradeInfo();
+        
+        modal.style.display = 'flex';
+    }
+    
+    // إغلاق نافذة تطوير السجون
+    function closePrisonUpgrade() {
+        const modal = document.getElementById('prison-upgrade-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // تحديث معلومات تطوير السجون
+    function updatePrisonUpgradeInfo() {
+        if (!levelManagementSystem) return;
+        
+        const currentLevel = levelManagementSystem.getPrisonLevel();
+        const currentCapacity = levelManagementSystem.getPrisonCapacity();
+        const currentPrisoners = levelManagementSystem.prisoners.length + levelManagementSystem.weakLeaders.length;
+        
+        // تحديث المعلومات الحالية
+        const levelEl = document.getElementById('current-level');
+        const capacityEl = document.getElementById('current-capacity');
+        const prisonersEl = document.getElementById('current-prisoners');
+        
+        if (levelEl) levelEl.textContent = currentLevel;
+        if (capacityEl) capacityEl.textContent = currentCapacity;
+        if (prisonersEl) prisonersEl.textContent = currentPrisoners;
+        
+        // تحديث متطلبات التطوير
+        const upgradeRequirements = document.getElementById('upgrade-requirements');
+        const upgradeBtn = document.getElementById('upgrade-btn');
+        
+        if (currentLevel >= 5) {
+            if (upgradeRequirements) {
+                upgradeRequirements.innerHTML = `
+                    <div class="max-level-message">
+                        <h3>🎉 السجون وصلت لأقصى مستوى!</h3>
+                        <p>لا يمكن تطوير السجون أكثر من ذلك</p>
+                    </div>
+                `;
+            }
+            if (upgradeBtn) {
+                upgradeBtn.style.display = 'none';
+            }
+            return;
+        }
+        
+        const nextLevel = currentLevel + 1;
+        const cost = levelManagementSystem.getUpgradeCost();
+        const newCapacity = levelManagementSystem.prisonSystem.capacities[nextLevel];
+        
+        if (upgradeRequirements && cost) {
+            const canUpgrade = levelManagementSystem.hasEnoughResourcesForUpgrade(cost);
+            
+            upgradeRequirements.innerHTML = `
+                <h3>متطلبات التطوير للمستوى ${nextLevel}</h3>
+                <div class="cost-grid">
+                    <div class="cost-item">
+                        <span class="cost-label">🎯 المستوى المطلوب:</span>
+                        <span class="cost-value">${cost.level}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">🪙 الذهب:</span>
+                        <span class="cost-value">${cost.gold.toLocaleString()}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">🪵 الخشب:</span>
+                        <span class="cost-value">${cost.wood}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">🪨 الحجارة:</span>
+                        <span class="cost-value">${cost.stone}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">🍖 الطعام:</span>
+                        <span class="cost-value">${cost.food}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">📈 السعة الجديدة:</span>
+                        <span class="cost-value">${newCapacity}</span>
+                    </div>
+                </div>
+                <div class="upgrade-info">
+                    ${canUpgrade ? 
+                        '<p style="color: #28a745;">✓ لديك موارد كافية للتطوير</p>' : 
+                        '<p style="color: #dc3545;">✗ مواردك غير كافية</p>'
+                    }
+                </div>
+            `;
+        }
+        
+        if (upgradeBtn) {
+            upgradeBtn.style.display = cost ? 'block' : 'none';
+            upgradeBtn.disabled = cost ? !levelManagementSystem.hasEnoughResourcesForUpgrade(cost) : true;
+            
+            if (cost) {
+                const canUpgrade = levelManagementSystem.hasEnoughResourcesForUpgrade(cost);
+                upgradeBtn.textContent = canUpgrade ? `تطوير السجون (${cost.gold.toLocaleString()} 🪙)` : 'موارد غير كافية';
+            }
+        }
+    }
+    
+    // تطوير السجون
+    function upgradePrison() {
+        if (levelManagementSystem && levelManagementSystem.upgradePrison()) {
+            closePrisonUpgrade();
+            updatePrisonersList(); // تحديث القائمة
         }
     }
     </script>
