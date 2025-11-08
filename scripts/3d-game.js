@@ -13557,5 +13557,114 @@ console.log('🌾 استخدم dev.test() لاختبار إشعارات المز
 console.log('✨ استخدم dev.fancy.showStylePreview("اسمك") لمعاينة الأسماء المزخرفة');
 console.log('🔧 استخدم fixUI.all() لإصلاح جميع مشاكل الواجهة');
 console.log('🌐 تم تفعيل الترجمة التلقائية!');
+
+// ==========================================
+// تحسينات خاصة بـ Google Chrome
+// ==========================================
+
+// اكتشاف المتصفح وتطبيق تحسينات خاصة
+const browserOptimization = {
+    isChrome: /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor),
+    isSamsung: /SamsungBrowser/.test(navigator.userAgent),
+    isFirefox: /Firefox/.test(navigator.userAgent),
+    isSafari: /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
+};
+
+// تحسينات خاصة بـ Google Chrome
+if (browserOptimization.isChrome) {
+    console.log('🌐 تم تفعيل تحسينات Chrome خاصة');
+    
+    // تحسين عرض الخطوط العربية
+    function optimizeArabicText() {
+        const arabicElements = document.querySelectorAll('[dir="rtl"], [lang="ar"]');
+        arabicElements.forEach(element => {
+            element.classList.add('chrome-arabic-optimization');
+            element.style.fontFamily = 'Cairo, Noto Sans Arabic, Tajawal, Roboto, sans-serif';
+            element.style.fontFeatureSettings = '"liga" 1, "kern" 1, "calt" 1';
+            element.style.textRendering = 'optimizeLegibility';
+            element.style.webkitFontSmoothing = 'antialiased';
+        });
+    }
+    
+    // تحسين دقة الألوان والتباين
+    function enhanceColorContrast() {
+        const textElements = document.querySelectorAll('.text, .resource-text, .title');
+        textElements.forEach(element => {
+            element.style.color = 'var(--text-primary)';
+            element.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';
+            element.style.webkitFontSmoothing = 'antialiased';
+            element.style.mozOsxFontSmoothing = 'grayscale';
+        });
+    }
+    
+    // تحسين انتقالات الحركات
+    function optimizeAnimations() {
+        const animatedElements = document.querySelectorAll('.loading-bar, .resource-icon, .building-icon');
+        animatedElements.forEach(element => {
+            element.style.willChange = 'transform';
+            element.style.webkitTransform = 'translateZ(0)';
+            element.style.transform = 'translateZ(0)';
+            element.style.webkitBackfaceVisibility = 'hidden';
+            element.style.backfaceVisibility = 'hidden';
+        });
+    }
+    
+    // تطبيق التحسينات
+    setTimeout(() => {
+        optimizeArabicText();
+        enhanceColorContrast();
+        optimizeAnimations();
+    }, 1000);
+    
+    // تحسين الخطوط عند تحميل الخطوط
+    document.fonts?.ready?.then(() => {
+        setTimeout(optimizeArabicText, 500);
+    });
+    
+    // تحسينات خاصة بالـ CSS
+    const chromeStyle = document.createElement('style');
+    chromeStyle.textContent = `
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            * {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
+            }
+        }
+        
+        [dir="rtl"] {
+            font-family: 'Cairo', 'Noto Sans Arabic', 'Tajawal', 'Roboto', sans-serif;
+            font-feature-settings: "liga" 1, "kern" 1, "calt" 1;
+        }
+        
+        .chrome-optimized {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        .bidi-text {
+            unicode-bidi: plaintext;
+            direction: ltr;
+        }
+    `;
+    document.head.appendChild(chromeStyle);
+    
+    // إضافة دالة debug خاصة بـ Chrome
+    window.dev.chrome = {
+        optimize: () => {
+            optimizeArabicText();
+            enhanceColorContrast();
+            optimizeAnimations();
+            console.log('✅ تم تطبيق جميع تحسينات Chrome');
+        },
+        isOptimized: () => browserOptimization.isChrome,
+        details: browserOptimization
+    };
+}
+
+// تصدير الدالة للاستخدام الخارجي
+window.browserOptimization = browserOptimization;
 console.log('⚡ استخدم fixUI.quickTranslate() للترجمة السريعة');
 }

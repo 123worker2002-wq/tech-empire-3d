@@ -1,6 +1,50 @@
 /* ==========================================
    متغيرات CSS - النسخة ثلاثية الأبعاد
    ========================================== */
+
+/* تحسينات خاصة بـ Google Chrome */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* تحسينات خاصة للخطوط العربية في كروم */
+.chrome-arabic-optimization {
+  font-family: 'Cairo', 'Noto Sans Arabic', 'Tajawal', 'Roboto', sans-serif;
+  font-feature-settings: "liga" 1, "kern" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* تحسينات للنصوص المختلطة */
+.bidi-text {
+  unicode-bidi: plaintext;
+  direction: ltr;
+}
+
+/* تحسينات Chrome للألوان والتباين */
+@media screen and (max-width: 768px) {
+  body {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  .chrome-optimized {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/* تحسينات خاصة لعرض Samsung Internet */
 :root {
   /* الألوان الأساسية - أزرق ملكي */
   --primary-500: #2563eb;
@@ -46,8 +90,10 @@
   --highlight-color: rgba(59, 130, 246, 0.3);
   
   /* الطباعة محسّنة للموبايل */
-  --font-title: 'Silkscreen', monospace;
-  --font-body: 'Roboto', sans-serif;
+  --font-title: 'Silkscreen', 'Cairo', monospace;
+  --font-body: 'Cairo', 'Noto Sans Arabic', 'Roboto', sans-serif;
+  --font-arabic: 'Cairo', 'Tajawal', 'Noto Sans Arabic', sans-serif;
+}
   --font-arabic: 'Noto Sans Arabic', 'Arial', sans-serif;
   
   /* أحجام الخطوط محسّنة للموبايل */
