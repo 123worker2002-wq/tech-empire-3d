@@ -1,0 +1,483 @@
+/* ملف CSS لمدخل المدينة والدفاعات - Tech Empire 3D */
+
+/* ألوان متسقة مع نظام اللعبة */
+:root {
+    --primary-500: #3B82F6; /* أزرق */
+    --primary-700: #1E40AF;
+    --accent-500: #F59E0B; /* ذهبي */
+    --accent-600: #D97706;
+    --bg-page: #1E293B; /* أزرق داكن */
+    --bg-surface: #334155;
+    --bg-dark: #0F172A;
+    --text-light: #F1F5F9;
+    --text-muted: #94A3B8;
+    --defense-1: #8B5CF6; /* بنفسجي للدفاعات */
+    --defense-2: #EC4899; /* وردي */
+    --defense-3: #10B981; /* أخضر */
+    --defense-4: #F59E0B; /* ذهبي */
+    --defense-5: #06B6D4; /* سماوي */
+}
+
+/* قسم مدخل المدينة */
+.city-gates-section {
+    background: linear-gradient(135deg, var(--bg-page) 0%, var(--bg-dark) 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 1rem;
+    color: var(--text-light);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    margin: 0 0 0.5rem 0;
+    background: linear-gradient(45deg, var(--accent-500), var(--primary-500));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+}
+
+.section-header p {
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+/* عرض مدخل المدينة الفخم */
+.city-gate-display {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-dark) 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 2px solid var(--accent-500);
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+}
+
+.gate-showcase {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.golden-gate {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background: linear-gradient(135deg, var(--accent-500) 0%, #FFD700 50%, var(--accent-500) 100%);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px rgba(245, 158, 11, 0.4);
+    border: 3px solid #FFD700;
+}
+
+.gate-frame {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gate-door {
+    width: 45%;
+    height: 90%;
+    background: linear-gradient(135deg, #B45309 0%, #92400E 100%);
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.left-door {
+    border-left: 3px solid #FFD700;
+}
+
+.right-door {
+    border-right: 3px solid #FFD700;
+}
+
+.door-ornaments {
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    border: 2px solid #FFD700;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #A16207 0%, #78350F 100%);
+}
+
+.door-handle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 20px;
+    background: #FFD700;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.gate-crown {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 30px;
+    background: linear-gradient(135deg, var(--accent-500) 0%, #FFD700 50%, var(--accent-500) 100%);
+    clip-path: polygon(0% 100%, 10% 60%, 20% 100%, 30% 60%, 40% 100%, 50% 40%, 60% 100%, 70% 60%, 80% 100%, 90% 60%, 100% 100%);
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.5);
+}
+
+.crown-spikes {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.spike {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 12px solid #FFD700;
+    filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5));
+}
+
+.gate-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--primary-500);
+    min-width: 200px;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    color: var(--accent-500);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.gate-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* شبكة الدفاعات */
+.defense-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.defense-card {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-dark) 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.defense-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(45deg, var(--defense-1), var(--defense-2), var(--defense-3));
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+}
+
+.defense-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+}
+
+.defense-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.defense-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.defense-title h3 {
+    margin: 0;
+    color: var(--accent-500);
+    font-size: 1.3rem;
+}
+
+.defense-title p {
+    margin: 0.25rem 0 0 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.defense-level {
+    margin-right: auto;
+    background: var(--defense-1);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.defense-stats {
+    margin-bottom: 1.5rem;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.stat-row span:first-child {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.stat-row span:last-child {
+    color: var(--accent-500);
+    font-weight: bold;
+}
+
+/* أزرار التحكم */
+.defense-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.qty-btn {
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-btn:hover {
+    background: var(--primary-700);
+    transform: scale(1.05);
+}
+
+.qty-btn:active {
+    transform: scale(0.95);
+}
+
+.quantity-control input {
+    background: var(--bg-dark);
+    border: 2px solid var(--primary-500);
+    color: var(--text-light);
+    text-align: center;
+    border-radius: 8px;
+    width: 60px;
+    height: 35px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.quantity-control input:focus {
+    outline: none;
+    border-color: var(--accent-500);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-500) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-build {
+    background: linear-gradient(135deg, var(--defense-1) 0%, var(--defense-2) 100%);
+    color: white;
+    font-size: 0.9rem;
+}
+
+.btn-build:hover {
+    background: linear-gradient(135deg, var(--defense-2) 0%, var(--defense-1) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
+}
+
+.cost {
+    color: var(--accent-500);
+    font-weight: bold;
+}
+
+/* ملخص دفاعي */
+.defense-summary {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-dark) 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid var(--defense-1);
+}
+
+.defense-summary h3 {
+    text-align: center;
+    color: var(--accent-500);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.summary-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: 12px;
+    border: 1px solid var(--defense-1);
+}
+
+.summary-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--accent-500);
+    margin-bottom: 0.5rem;
+}
+
+.summary-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ألوان خاصة لكل نوع دفاع */
+.colossi-card::before {
+    background: linear-gradient(45deg, #8B5CF6, #A855F7);
+}
+
+.fire-trap-card::before {
+    background: linear-gradient(45deg, #EF4444, #F97316);
+}
+
+.auto-turret-card::before {
+    background: linear-gradient(45deg, #06B6D4, #0EA5E9);
+}
+
+.stone-thrower-card::before {
+    background: linear-gradient(45deg, #F59E0B, #D97706);
+}
+
+.moving-wall-card::before {
+    background: linear-gradient(45deg, #10B981, #059669);
+}
+
+/* تجاوب مع الشاشات الصغيرة */
+@media (max-width: 768px) {
+    .city-gates-section {
+        margin: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .gate-showcase {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .golden-gate {
+        width: 250px;
+        height: 150px;
+    }
+    
+    .defense-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gate-stats {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+    }
+}

@@ -3561,6 +3561,143 @@ class TechEmpire3D {
         }
     }
 
+    // إنشاء مدخل المدينة ثلاثي الأبعاد
+    createCityGate3D() {
+        const gateGroup = new THREE.Group();
+        
+        // إطار الباب
+        const frameGeometry = new THREE.BoxGeometry(3, 2, 0.3);
+        const frameMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0xF59E0B,
+            transparent: true,
+            opacity: 0.9
+        });
+        const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+        frame.position.set(0, 0, 0);
+        gateGroup.add(frame);
+        
+        // الأبواب
+        const doorGeometry = new THREE.BoxGeometry(1.3, 1.8, 0.2);
+        const doorMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
+        
+        const leftDoor = new THREE.Mesh(doorGeometry, doorMaterial);
+        leftDoor.position.set(-0.85, 0, -0.1);
+        gateGroup.add(leftDoor);
+        
+        const rightDoor = new THREE.Mesh(doorGeometry, doorMaterial);
+        rightDoor.position.set(0.85, 0, -0.1);
+        gateGroup.add(rightDoor);
+        
+        // تاج الباب
+        const crownGeometry = new THREE.ConeGeometry(1.5, 0.5, 6);
+        const crownMaterial = new THREE.MeshPhongMaterial({ color: 0xFFD700 });
+        const crown = new THREE.Mesh(crownGeometry, crownMaterial);
+        crown.position.set(0, 1.5, 0);
+        gateGroup.add(crown);
+        
+        // الإضاءة
+        const gateLight = new THREE.PointLight(0xFFD700, 0.5, 5);
+        gateLight.position.set(0, 1, 1);
+        gateGroup.add(gateLight);
+        
+        return gateGroup;
+    }
+
+    // إنشاء تمثال كولوسي
+    createColossi3D() {
+        const colossusGroup = new THREE.Group();
+        
+        // جسد الكولوس
+        const bodyGeometry = new THREE.CylinderGeometry(0.8, 1, 3, 8);
+        const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0x696969 });
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        body.position.set(0, 1.5, 0);
+        colossusGroup.add(body);
+        
+        // الرأس
+        const headGeometry = new THREE.SphereGeometry(0.6, 8, 6);
+        const headMaterial = new THREE.MeshPhongMaterial({ color: 0x808080 });
+        const head = new THREE.Mesh(headGeometry, headMaterial);
+        head.position.set(0, 3.2, 0);
+        colossusGroup.add(head);
+        
+        // الذراعان
+        const armGeometry = new THREE.CylinderGeometry(0.3, 0.3, 2, 6);
+        const armMaterial = new THREE.MeshPhongMaterial({ color: 0x696969 });
+        
+        const leftArm = new THREE.Mesh(armGeometry, armMaterial);
+        leftArm.position.set(-1.2, 2, 0);
+        leftArm.rotation.z = 0.3;
+        colossusGroup.add(leftArm);
+        
+        const rightArm = new THREE.Mesh(armGeometry, armMaterial);
+        rightArm.position.set(1.2, 2, 0);
+        rightArm.rotation.z = -0.3;
+        colossusGroup.add(rightArm);
+        
+        return colossusGroup;
+    }
+
+    // إنشاء فخ ناري
+    createFireTrap3D() {
+        const trapGroup = new THREE.Group();
+        
+        // قاعدة الفخ
+        const baseGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.1, 8);
+        const baseMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
+        const base = new THREE.Mesh(baseGeometry, baseMaterial);
+        base.position.set(0, 0.05, 0);
+        trapGroup.add(base);
+        
+        // اللهب
+        const flameGeometry = new THREE.ConeGeometry(0.3, 1, 8);
+        const flameMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0xFF4500,
+            emissive: 0xFF0000,
+            transparent: true,
+            opacity: 0.8
+        });
+        const flame = new THREE.Mesh(flameGeometry, flameMaterial);
+        flame.position.set(0, 0.6, 0);
+        trapGroup.add(flame);
+        
+        // الإضاءة النارية
+        const fireLight = new THREE.PointLight(0xFF4500, 0.8, 3);
+        fireLight.position.set(0, 0.5, 0);
+        trapGroup.add(fireLight);
+        
+        return trapGroup;
+    }
+
+    // إنشاء برج رماية آلية
+    createAutoTurret3D() {
+        const turretGroup = new THREE.Group();
+        
+        // قاعدة البرج
+        const baseGeometry = new THREE.CylinderGeometry(0.4, 0.6, 0.3, 8);
+        const baseMaterial = new THREE.MeshPhongMaterial({ color: 0x4A5568 });
+        const base = new THREE.Mesh(baseGeometry, baseMaterial);
+        base.position.set(0, 0.15, 0);
+        turretGroup.add(base);
+        
+        // جسم البرج
+        const bodyGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.8, 8);
+        const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0x718096 });
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        body.position.set(0, 0.7, 0);
+        turretGroup.add(body);
+        
+        // المدفع
+        const cannonGeometry = new THREE.CylinderGeometry(0.05, 0.08, 0.6, 6);
+        const cannonMaterial = new THREE.MeshPhongMaterial({ color: 0x2D3748 });
+        const cannon = new THREE.Mesh(cannonGeometry, cannonMaterial);
+        cannon.position.set(0, 1.2, 0.3);
+        cannon.rotation.x = 0.2;
+        turretGroup.add(cannon);
+        
+        return turretGroup;
+    }
+
     // تحديث أنيميشن كهف الغموض
     updateCaveAnimations() {
         const currentTime = Date.now();
@@ -8187,7 +8324,130 @@ if ('serviceWorker' in navigator) {
         }
     }
 
+    // إظهار مدخل المدينة والدفاعات
+    showCityGates() {
+        console.log('عرض مدخل المدينة والدفاعات');
+        // إخفاء جميع الأقسام
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.style.display = 'none';
+        });
+        
+        // إظهار قسم مدخل المدينة
+        const cityGatesSection = document.getElementById('city-gates-section');
+        if (cityGatesSection) {
+            cityGatesSection.style.display = 'block';
+        }
+        
+        // تحديث الإحصائيات الدفاعية
+        this.updateDefenseStats();
+    }
+
+    // ترقية مدخل المدينة
+    upgradeCityGate() {
+        const currentLevel = parseInt(document.getElementById('city-gate-level').textContent) || 1;
+        const cost = currentLevel * 500;
+        const currentGold = parseInt(document.getElementById('gold-amount').textContent) || 0;
+        
+        if (currentGold >= cost) {
+            // خصم التكلفة
+            document.getElementById('gold-amount').textContent = currentGold - cost;
+            
+            // ترقية المدخل
+            document.getElementById('city-gate-level').textContent = currentLevel + 1;
+            document.getElementById('city-gate-defense').textContent = 100 * (currentLevel + 1);
+            
+            // تحديث تكلفة الترقية التالية
+            document.getElementById('gate-upgrade-cost').textContent = (currentLevel + 1) * 500 + ' ذهب';
+            
+            console.log(`تم ترقية مدخل المدينة إلى المستوى ${currentLevel + 1}`);
+        } else {
+            console.log('لا يوجد ذهب كافي لترقية المدخل');
+        }
+    }
+
+    // تغيير كمية الدفاع
+    changeDefenseQuantity(defenseType, change) {
+        const inputElement = document.getElementById(`${defenseType}-quantity`);
+        if (inputElement) {
+            const currentValue = parseInt(inputElement.value) || 0;
+            const newValue = Math.max(0, Math.min(10, currentValue + change));
+            inputElement.value = newValue;
+        }
+    }
+
+    // بناء دفاع
+    buildDefense(defenseType) {
+        const quantityInput = document.getElementById(`${defenseType}-quantity`);
+        if (!quantityInput) return;
+        
+        const quantity = parseInt(quantityInput.value) || 0;
+        if (quantity <= 0) {
+            console.log('اختر كمية صحيحة للبناء');
+            return;
+        }
+        
+        // حساب التكلفة
+        const costs = {
+            'colossi': 300,
+            'fire-trap': 200,
+            'auto-turret': 400,
+            'stone-thrower': 500,
+            'moving-wall': 150
+        };
+        
+        const cost = costs[defenseType] * quantity;
+        const currentGold = parseInt(document.getElementById('gold-amount').textContent) || 0;
+        
+        if (currentGold >= cost) {
+            // خصم التكلفة
+            document.getElementById('gold-amount').textContent = currentGold - cost;
+            
+            console.log(`تم بناء ${quantity} من ${defenseType} بتكلفة ${cost} ذهب`);
+            
+            // إعادة تعيين الكمية
+            quantityInput.value = 0;
+            
+            // تحديث الإحصائيات
+            this.updateDefenseStats();
+        } else {
+            console.log('لا يوجد ذهب كافي للبناء');
+        }
+    }
+
+    // تحديث الإحصائيات الدفاعية
+    updateDefenseStats() {
+        const defenseCards = document.querySelectorAll('.defense-card');
+        let totalDefensePower = 0;
+        let totalUnits = 0;
+        
+        defenseCards.forEach(card => {
+            const quantity = parseInt(card.querySelector('.defense-controls input').value) || 0;
+            const defensePower = parseInt(card.querySelector('.stat-row:first-child span:last-child').textContent) || 0;
+            
+            totalDefensePower += defensePower * quantity;
+            totalUnits += quantity;
+        });
+        
+        // تحديث العرض
+        const totalDefenseEl = document.getElementById('total-defense-power');
+        const totalUnitsEl = document.getElementById('defense-units-count');
+        
+        if (totalDefenseEl) totalDefenseEl.textContent = totalDefensePower;
+        if (totalUnitsEl) totalUnitsEl.textContent = totalUnits;
+    }
+
     window.addEventListener('load', () => {
+        // إنشاء وتشغيل اللعبة
+        console.log('بدء تشغيل الإمبراطورية التقنية 3D...');
+        
+        try {
+            // إنشاء game object
+            window.game = new TechEmpire3D();
+            console.log('تم إنشاء game object بنجاح');
+        } catch (error) {
+            console.error('خطأ في تشغيل اللعبة:', error);
+        }
+        
         navigator.serviceWorker.register('/sw.js')
             .then(registration => {
                 console.log('SW registered: ', registration);
