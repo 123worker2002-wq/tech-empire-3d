@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خريطة الممالك - Tech Empire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .kingdoms-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .kingdoms-header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
+            border-bottom: 2px solid #ffd700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kingdoms-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: #ff3838;
+            transform: scale(1.05);
+        }
+
+        .kingdoms-main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .map-section {
+            flex: 1;
+            position: relative;
+            background: #2c3e50;
+            overflow: hidden;
+        }
+
+        .world-map {
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(120, 180, 80, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(120, 180, 80, 0.3) 0%, transparent 50%),
+                linear-gradient(45deg, #2c3e50 25%, transparent 25%),
+                linear-gradient(-45deg, #2c3e50 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #2c3e50 75%),
+                linear-gradient(-45deg, transparent 75%, #2c3e50 75%);
+            background-size: 200px 200px, 200px 200px, 20px 20px, 20px 20px, 20px 20px, 20px 20px;
+            background-position: 0 0, 100px 100px, 0 0, 0 10px, 10px -10px, -10px 0px;
+            position: relative;
+        }
+
+        .kingdom-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .kingdom-marker:hover {
+            transform: scale(1.2);
+        }
+
+        .kingdom-marker.own {
+            background: #ffd700;
+            border: 3px solid #ffaa00;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            animation: pulse-gold 2s infinite;
+        }
+
+        .kingdom-marker.enemy {
+            background: #ff4757;
+            border: 3px solid #ff3742;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
+        }
+
+        .kingdom-marker.neutral {
+            background: #5f27cd;
+            border: 3px solid #341f97;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(95, 39, 205, 0.5);
+        }
+
+        .kingdom-marker.friendly {
+            background: #00d2d3;
+            border: 3px solid #01a3a4;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0, 210, 211, 0.5);
+        }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
+            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+        }
+
+        .coordinates-display {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 1px solid #ffd700;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .map-control-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .map-control-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .sidebar {
+            width: 350px;
+            background: rgba(0, 0, 0, 0.9);
+            border-left: 2px solid #ffd700;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid #ffd700;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 12px 8px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-tab.active {
+            background: #ffd700;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .sidebar-tab:hover:not(.active) {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .kingdom-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .kingdom-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .kingdom-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00d2d3;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #cccccc;
+            margin-top: 2px;
+        }
+
+        .palace-preview {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .palace-thumbnail {
+            width: 100px;
+            height: 80px;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            border-radius: 8px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .visit-btn {
+            background: linear-gradient(45deg, #00d2d3, #01a3a4);
+            color: white;
+        }
+
+        .visit-btn:hover {
+            background: linear-gradient(45deg, #01a3a4, #00d2d3);
+            transform: translateY(-2px);
+        }
+
+        .attack-btn {
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+            color: white;
+        }
+
+        .attack-btn:hover {
+            background: linear-gradient(45deg, #ff3742, #ff4757);
+            transform: translateY(-2px);
+        }
+
+        .ally-btn {
+            background: linear-gradient(45deg, #5f27cd, #341f97);
+            color: white;
+        }
+
+        .ally-btn:hover {
+            background: linear-gradient(45deg, #341f97, #5f27cd);
+            transform: translateY(-2px);
+        }
+
+        .trade-btn {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .trade-btn:hover {
+            background: linear-gradient(45deg, #e67e22, #f39c12);
+            transform: translateY(-2px);
+        }
+
+        .coordinate-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .grid-line {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .grid-line.vertical {
+            width: 1px;
+            height: 100%;
+        }
+
+        .grid-line.horizontal {
+            width: 100%;
+            height: 1px;
+        }
+
+        .coordinate-label {
+            position: absolute;
+            color: #ffd700;
+            font-size: 10px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .message-panel {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .message-panel.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .error-message {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid #ff4757;
+            color: #ff4757;
+        }
+
+        .success-message {
+            background: rgba(0, 210, 211, 0.2);
+            border: 1px solid #00d2d3;
+            color: #00d2d3;
+        }
+
+        .warning-message {
+            background: rgba(243, 156, 18, 0.2);
+            border: 1px solid #f39c12;
+            color: #f39c12;
+        }
+
+        /* Palace 3D Preview */
+        .palace-3d-container {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 8px;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .palace-3d {
+            width: 120px;
+            height: 100px;
+            position: relative;
+            animation: palaceFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes palaceFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .palace-base {
+            width: 100px;
+            height: 60px;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            border: 2px solid #ff8c00;
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            border-radius: 8px;
+        }
+
+        .palace-tower {
+            width: 25px;
+            height: 40px;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            border: 2px solid #ff8c00;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .palace-tower.left {
+            left: 5px;
+        }
+
+        .palace-tower.right {
+            right: 5px;
+        }
+
+        .palace-tower.center {
+            left: 47.5px;
+        }
+
+        .palace-roof {
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 20px solid #ff4500;
+            position: absolute;
+            bottom: 40px;
+        }
+
+        .palace-roof.left {
+            left: 5px;
+        }
+
+        .palace-roof.right {
+            right: 5px;
+        }
+
+        .palace-roof.center {
+            left: 47.5px;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffd700;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 300px;
+            }
+            
+            .world-map {
+                background-size: 100px 100px, 100px 100px, 15px 15px, 15px 15px, 15px 15px, 15px 15px;
+            }
+            
+            .kingdom-marker {
+                width: 25px;
+                height: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="kingdoms-container">
+        <div class="kingdoms-header">
+            <h1 class="kingdoms-title">🏰 خريطة الممالك العظيمة</h1>
+            <button class="close-btn" onclick="closeKingdomsMap()">✕ إغلاق</button>
+        </div>
+
+        <div class="kingdoms-main">
+            <div class="map-section">
+                <div class="world-map" id="worldMap">
+                    <div class="coordinate-grid" id="coordinateGrid"></div>
+                    <div class="coordinates-display">
+                        إحداثيات: <span id="currentCoordinates">X: 0, Y: 0</span>
+                    </div>
+                    <div class="map-controls">
+                        <button class="map-control-btn" onclick="zoomIn()">+ تكبير</button>
+                        <button class="map-control-btn" onclick="zoomOut()">- تصغير</button>
+                        <button class="map-control-btn" onclick="toggleGrid()">📋 الشبكة</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-tabs">
+                    <button class="sidebar-tab active" onclick="switchTab('info')">📊 معلومات</button>
+                    <button class="sidebar-tab" onclick="switchTab('palace')">🏰 القصر</button>
+                    <button class="sidebar-tab" onclick="switchTab('actions')">⚡ إجراءات</button>
+                </div>
+
+                <div class="sidebar-content">
+                    <div class="tab-content active" id="info-tab">
+                        <div class="kingdom-info" id="selectedKingdom">
+                            <h3 class="kingdom-name">اختر مملكة</h3>
+                            <p>انقر على أي مملكة في الخريطة لعرض تفاصيلها</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="palace-tab">
+                        <div class="palace-preview">
+                            <h3>معاينة القصر الملكي</h3>
+                            <div class="palace-3d-container">
+                                <div class="palace-3d" id="palace3D">
+                                    <div class="palace-base"></div>
+                                    <div class="palace-tower left">
+                                        <div class="palace-roof left"></div>
+                                    </div>
+                                    <div class="palace-tower center">
+                                        <div class="palace-roof center"></div>
+                                    </div>
+                                    <div class="palace-tower right">
+                                        <div class="palace-roof right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="palaceDescription">القصر الملكي للمملكة</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="actions-tab">
+                        <div class="action-buttons" id="actionButtons">
+                            <button class="action-btn visit-btn" onclick="visitKingdom()" disabled>
+                                🚀 زيارة المملكة
+                            </button>
+                            <button class="action-btn attack-btn" onclick="attackKingdom()" disabled>
+                                ⚔️ مهاجمة المملكة
+                            </button>
+                            <button class="action-btn ally-btn" onclick="formAlliance()" disabled>
+                                🤝 التحالف
+                            </button>
+                            <button class="action-btn trade-btn" onclick="tradeWithKingdom()" disabled>
+                                💰 التجارة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // نظام إدارة الممالك
+        class KingdomsMap {
+            constructor() {
+                this.kingdoms = this.generateKingdoms();
+                this.selectedKingdom = null;
+                this.showGrid = true;
+                this.zoomLevel = 1;
+                this.init();
+            }
+
+            init() {
+                this.createKingdomMarkers();
+                this.createCoordinateGrid();
+                this.setupEventListeners();
+                this.updateCoordinatesDisplay();
+            }
+
+            generateKingdoms() {
+                const kingdoms = [
+                    {
+                        id: 1,
+                        name: "المملكة الذهبية",
+                        coordinates: { x: 200, y: 150 },
+                        type: "own",
+                        level: 15,
+                        population: 50000,
+                        power: 2500,
+                        gold: 10000,
+                        palace: {
+                            style: "gothic",
+                            level: 5,
+                            rooms: 25,
+                            description: "قصر قوطي فاخر بأبراج عالية"
+                        },
+                        buildings: 150,
+                        troops: 2000
+                    },
+                    {
+                        id: 2,
+                        name: "إمبراطورية النجوم",
+                        coordinates: { x: 500, y: 100 },
+                        type: "neutral",
+                        level: 12,
+                        population: 35000,
+                        power: 1800,
+                        gold: 7500,
+                        palace: {
+                            style: "oriental",
+                            level: 4,
+                            rooms: 20,
+                            description: "قصر شرقي مزخرف بالذهب والفضة"
+                        },
+                        buildings: 120,
+                        troops: 1500
+                    },
+                    {
+                        id: 3,
+                        name: "مملكة الماس",
+                        coordinates: { x: 350, y: 300 },
+                        type: "enemy",
+                        level: 18,
+                        population: 65000,
+                        power: 3200,
+                        gold: 15000,
+                        palace: {
+                            style: "baroque",
+                            level: 7,
+                            rooms: 35,
+                            description: "قصر باروكي مزخرف بأروع التحف الفنية"
+                        },
+                        buildings: 200,
+                        troops: 3000
+                    },
+                    {
+                        id: 4,
+                        name: "دولة النخيل",
+                        coordinates: { x: 150, y: 400 },
+                        type: "friendly",
+                        level: 10,
+                        population: 28000,
+                        power: 1200,
+                        gold: 5000,
+                        palace: {
+                            style: "desert",
+                            level: 3,
+                            rooms: 15,
+                            description: "قصر صحراوي من الرخام الأبيض"
+                        },
+                        buildings: 80,
+                        troops: 1000
+                    },
+                    {
+                        id: 5,
+                        name: "الإمبراطورية الجبلية",
+                        coordinates: { x: 600, y: 250 },
+                        type: "neutral",
+                        level: 14,
+                        population: 42000,
+                        power: 2200,
+                        gold: 8500,
+                        palace: {
+                            style: "mountain",
+                            level: 6,
+                            rooms: 28,
+                            description: "قصر جبلي من الحجر الرمادي"
+                        },
+                        buildings: 140,
+                        troops: 1800
+                    }
+                ];
+
+                return kingdoms;
+            }
+
+            createKingdomMarkers() {
+                const map = document.getElementById('worldMap');
+                
+                this.kingdoms.forEach(kingdom => {
+                    const marker = document.createElement('div');
+                    marker.className = `kingdom-marker ${kingdom.type}`;
+                    marker.style.left = `${kingdom.coordinates.x}px`;
+                    marker.style.top = `${kingdom.coordinates.y}px`;
+                    marker.dataset.kingdomId = kingdom.id;
+                    marker.innerHTML = this.getKingdomIcon(kingdom.type);
+                    
+                    marker.addEventListener('click', () => this.selectKingdom(kingdom.id));
+                    marker.addEventListener('mouseenter', (e) => this.showKingdomTooltip(e, kingdom));
+                    
+                    map.appendChild(marker);
+                });
+            }
+
+            getKingdomIcon(type) {
+                const icons = {
+                    own: '👑',
+                    enemy: '⚔️',
+                    neutral: '🏰',
+                    friendly: '🤝'
+                };
+                return `<span style="font-size: 16px; line-height: 30px; text-align: center; display: block;">${icons[type] || '🏰'}</span>`;
+            }
+
+            createCoordinateGrid() {
+                const grid = document.getElementById('coordinateGrid');
+                const map = document.getElementById('worldMap');
+                const rect = map.getBoundingClientRect();
+                
+                // إنشاء خطوط الشبكة
+                for (let x = 0; x <= rect.width; x += 100) {
+                    const line = document.createElement('div');
+                    line.className = 'grid-line vertical';
+                    line.style.left = `${x}px`;
+                    line.style.opacity = this.showGrid ? '1' : '0';
+                    grid.appendChild(line);
+                    
+                    // إضافة تسميات الإحداثيات
+                    const label = document.createElement('div');
+                    label.className = 'coordinate-label';
+                    label.style.left = `${x + 5}px`;
+                    label.style.top = '5px';
+                    label.textContent = `X:${Math.floor(x/100)}`;
+                    label.style.opacity = this.showGrid ? '1' : '0';
+                    grid.appendChild(label);
+                }
+                
+                for (let y = 0; y <= rect.height; y += 100) {
+                    const line = document.createElement('div');
+                    line.className = 'grid-line horizontal';
+                    line.style.top = `${y}px`;
+                    line.style.opacity = this.showGrid ? '1' : '0';
+                    grid.appendChild(line);
+                    
+                    // إضافة تسميات الإحداثيات
+                    const label = document.createElement('div');
+                    label.className = 'coordinate-label';
+                    label.style.left = '5px';
+                    label.style.top = `${y + 5}px`;
+                    label.textContent = `Y:${Math.floor(y/100)}`;
+                    label.style.opacity = this.showGrid ? '1' : '0';
+                    grid.appendChild(label);
+                }
+            }
+
+            selectKingdom(id) {
+                this.selectedKingdom = this.kingdoms.find(k => k.id === id);
+                this.updateKingdomInfo();
+                this.updatePalaceInfo();
+                this.updateActionButtons();
+            }
+
+            updateKingdomInfo() {
+                if (!this.selectedKingdom) return;
+                
+                const kingdom = this.selectedKingdom;
+                const infoContainer = document.getElementById('selectedKingdom');
+                
+                infoContainer.innerHTML = `
+                    <h3 class="kingdom-name">${kingdom.name}</h3>
+                    <div class="kingdom-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${kingdom.level}</div>
+                            <div class="stat-label">المستوى</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${this.formatNumber(kingdom.population)}</div>
+                            <div class="stat-label">السكان</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${this.formatNumber(kingdom.power)}</div>
+                            <div class="stat-label">القوة</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${this.formatNumber(kingdom.gold)}</div>
+                            <div class="stat-label">الذهب</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${kingdom.buildings}</div>
+                            <div class="stat-label">المباني</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${this.formatNumber(kingdom.troops)}</div>
+                            <div class="stat-label">القوات</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            updatePalaceInfo() {
+                if (!this.selectedKingdom) return;
+                
+                const palace = this.selectedKingdom.palace;
+                const description = document.getElementById('palaceDescription');
+                description.textContent = palace.description;
+                
+                // تحديث تصميم القصر
+                const palace3D = document.getElementById('palace3D');
+                palace3D.className = `palace-3d palace-${palace.style}`;
+            }
+
+            updateActionButtons() {
+                if (!this.selectedKingdom) return;
+                
+                const kingdom = this.selectedKingdom;
+                const buttons = {
+                    visit: document.querySelector('.visit-btn'),
+                    attack: document.querySelector('.attack-btn'),
+                    ally: document.querySelector('.ally-btn'),
+                    trade: document.querySelector('.trade-btn')
+                };
+                
+                // تمكين/تعطيل الأزرار حسب نوع المملكة
+                Object.values(buttons).forEach(btn => btn.disabled = false);
+                
+                if (kingdom.type === 'own') {
+                    buttons.attack.disabled = true;
+                    buttons.ally.disabled = true;
+                } else if (kingdom.type === 'enemy') {
+                    buttons.visit.disabled = true;
+                    buttons.ally.disabled = true;
+                } else if (kingdom.type === 'friendly') {
+                    buttons.attack.disabled = true;
+                }
+            }
+
+            showKingdomTooltip(event, kingdom) {
+                // يمكن إضافة tooltip هنا لاحقاً
+            }
+
+            formatNumber(num) {
+                if (num >= 1000000) {
+                    return (num / 1000000).toFixed(1) + 'M';
+                } else if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'K';
+                }
+                return num.toString();
+            }
+
+            setupEventListeners() {
+                const map = document.getElementById('worldMap');
+                
+                map.addEventListener('mousemove', (e) => {
+                    const rect = map.getBoundingClientRect();
+                    const x = Math.floor((e.clientX - rect.left) / this.zoomLevel);
+                    const y = Math.floor((e.clientY - rect.top) / this.zoomLevel);
+                    
+                    document.getElementById('currentCoordinates').textContent = 
+                        `X: ${x}, Y: ${y}`;
+                });
+            }
+
+            updateCoordinatesDisplay() {
+                // تحديث عرض الإحداثيات
+            }
+        }
+
+        // دوال التنقل والتفاعل
+        let kingdomsMap;
+
+        function closeKingdomsMap() {
+            window.location.href = 'index-3d.html';
+        }
+
+        function switchTab(tabName) {
+            // إخفاء جميع التبويبات
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.sidebar-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // إظهار التبويب المحدد
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function zoomIn() {
+            kingdomsMap.zoomLevel = Math.min(kingdomsMap.zoomLevel * 1.2, 3);
+            document.getElementById('worldMap').style.transform = `scale(${kingdomsMap.zoomLevel})`;
+        }
+
+        function zoomOut() {
+            kingdomsMap.zoomLevel = Math.max(kingdomsMap.zoomLevel / 1.2, 0.5);
+            document.getElementById('worldMap').style.transform = `scale(${kingdomsMap.zoomLevel})`;
+        }
+
+        function toggleGrid() {
+            kingdomsMap.showGrid = !kingdomsMap.showGrid;
+            const grid = document.getElementById('coordinateGrid');
+            grid.style.opacity = kingdomsMap.showGrid ? '1' : '0';
+        }
+
+        function visitKingdom() {
+            if (!kingdomsMap.selectedKingdom) return;
+            
+            const kingdom = kingdomsMap.selectedKingdom;
+            showMessage(`🚗 جاري الانتقال إلى ${kingdom.name}...`, 'success');
+            
+            // محاكاة الانتقال
+            setTimeout(() => {
+                showMessage(`✅ تم الوصول إلى ${kingdom.name} بنجاح!`, 'success');
+            }, 2000);
+        }
+
+        function attackKingdom() {
+            if (!kingdomsMap.selectedKingdom) return;
+            
+            const kingdom = kingdomsMap.selectedKingdom;
+            showMessage(`⚔️ بدء الهجوم على ${kingdom.name}...`, 'warning');
+            
+            // محاكاة الهجوم
+            setTimeout(() => {
+                showMessage(`🏆 تم هزيمة ${kingdom.name}!`, 'success');
+            }, 3000);
+        }
+
+        function formAlliance() {
+            if (!kingdomsMap.selectedKingdom) return;
+            
+            const kingdom = kingdomsMap.selectedKingdom;
+            showMessage(`🤝 إرسال طلب تحالف إلى ${kingdom.name}...`, 'info');
+        }
+
+        function tradeWithKingdom() {
+            if (!kingdomsMap.selectedKingdom) return;
+            
+            const kingdom = kingdomsMap.selectedKingdom;
+            showMessage(`💰 فتح نافذة التجارة مع ${kingdom.name}...`, 'info');
+        }
+
+        function showMessage(text, type) {
+            const messagePanel = document.createElement('div');
+            messagePanel.className = `message-panel ${type}-message`;
+            messagePanel.textContent = text;
+            
+            document.querySelector('.sidebar-content').appendChild(messagePanel);
+            messagePanel.classList.add('show');
+            
+            setTimeout(() => {
+                messagePanel.remove();
+            }, 3000);
+        }
+
+        // تهيئة النظام عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            kingdomsMap = new KingdomsMap();
+        });
+    </script>
+</body>
+</html>
