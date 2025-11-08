@@ -9392,12 +9392,347 @@ if ('serviceWorker' in navigator) {
     // إنشاء مثيل عام للنظام الصوتي
     const audioSystem = new AudioSystem();
     
+    // ==========================================
+    // نظام الإعلانات والأخبار المتحرك
+    // ==========================================
+    class TickerSystem {
+        constructor() {
+            this.tickerContent = document.getElementById('ticker-content');
+            this.currentTickerIndex = 0;
+            this.tickerItems = [
+                {
+                    type: 'event',
+                    icon: '🎉',
+                    text: 'أهلاً وسهلاً بكم في إمبراطورية التكنولوجيا! ابدأ رحلتك نحو التطوير والبناء.',
+                    sound: 'click'
+                },
+                {
+                    type: 'announcement',
+                    icon: '📢',
+                    text: 'تم تطوير ميزة التحديث التلقائي للأنظمة! استمتع بميزات الذكاء الاصطناعي الجديدة.',
+                    sound: 'click'
+                },
+                {
+                    type: 'event',
+                    icon: '🏗️',
+                    text: 'اقترحنا لك: ابنِ مزرعة لتبدأ في إنتاج الطعام والحصول على دخل مستدام.',
+                    sound: 'buildStart'
+                },
+                {
+                    type: 'update',
+                    icon: '🤖',
+                    text: 'مركز الذكاء الاصطناعي متوفر الآن! أضف ذكاءً اصطناعياً لبلدتك ليساعدك في اتخاذ القرارات.',
+                    sound: 'click'
+                },
+                {
+                    type: 'event',
+                    icon: '⚔️',
+                    text: 'تذكر: الثكنات تمكنك من تدريب القوات. اقوى جيوشك للانتصار في المعارك!',
+                    sound: 'battleStart'
+                },
+                {
+                    type: 'congratulations',
+                    icon: '🎊',
+                    text: 'مبروك! أقوى الإمبراطوريات هي التي تعرف كيفية توازن البناء والإقتصاد والجيش.',
+                    sound: 'battleWin'
+                }
+            ];
+            
+            this.init();
+        }
+        
+        init() {
+            this.updateTickerDisplay();
+            this.startTickerRotation();
+        }
+        
+        updateTickerDisplay() {
+            const currentItem = this.tickerItems[this.currentTickerIndex];
+            this.tickerContent.innerHTML = `
+                <div class="ticker-item ticker-${currentItem.type}">
+                    <span class="ticker-icon">${currentItem.icon}</span>
+                    <span class="ticker-text">${currentItem.text}</span>
+                </div>
+            `;
+        }
+        
+        startTickerRotation() {
+            setInterval(() => {
+                this.nextTickerItem();
+            }, 8000); // 8 ثواني لكل عنصر
+            
+            // تشغيل الصوت عند عرض العنصر
+            setTimeout(() => {
+                audioSystem.onButtonClick();
+            }, 500);
+        }
+        
+        nextTickerItem() {
+            this.currentTickerIndex = (this.currentTickerIndex + 1) % this.tickerItems.length;
+            this.updateTickerDisplay();
+            
+            // تشغيل صوت مناسب حسب نوع الحدث
+            const currentItem = this.tickerItems[this.currentTickerIndex];
+            if (currentItem.sound) {
+                audioSystem.playSound(currentItem.sound);
+            }
+        }
+        
+        addTickerItem(tickerItem) {
+            this.tickerItems.push(tickerItem);
+        }
+        
+        // عرض تهنئة للاعبين
+        showCongratulations(message, type = 'congratulations') {
+            const congratulationsItem = {
+                type: type,
+                icon: '🎉',
+                text: message,
+                sound: 'battleWin'
+            };
+            
+            this.addTickerItem(congratulationsItem);
+            this.updateTickerDisplay();
+            
+            // تشغيل صوت التهنئة
+            audioSystem.onBattleEnd(true);
+        }
+        
+        // عرض تنبيه
+        showWarning(message) {
+            const warningItem = {
+                type: 'warning',
+                icon: '⚠️',
+                text: message,
+                sound: 'resourceWarning'
+            };
+            
+            this.addTickerItem(warningItem);
+            this.updateTickerDisplay();
+            
+            audioSystem.onResourceWarning();
+        }
+        
+        // عرض خبر
+        showAnnouncement(message) {
+            const announcementItem = {
+                type: 'announcement',
+                icon: '📢',
+                text: message,
+                sound: 'click'
+            };
+            
+            this.addTickerItem(announcementItem);
+            this.updateTickerDisplay();
+            
+            audioSystem.onButtonClick();
+        }
+        
+        // عرض تحديث
+        showUpdate(message) {
+            const updateItem = {
+                type: 'update',
+                icon: '🔄',
+                text: message,
+                sound: 'buildComplete'
+            };
+            
+            this.addTickerItem(updateItem);
+            this.updateTickerDisplay();
+            
+            audioSystem.onBuildComplete();
+        }
+        
+        // عرض حدث
+        showEvent(message) {
+            const eventItem = {
+                type: 'event',
+                icon: '📅',
+                text: message,
+                sound: 'click'
+            };
+            
+            this.addTickerItem(eventItem);
+            this.updateTickerDisplay();
+            
+            audioSystem.onButtonClick();
+        }
+    }
+    
+    // إنشاء مثيل عام للشريط المتحرك
+    const tickerSystem = new TickerSystem();
+    
     // ربط النظام الصوتي مع أحداث اللعبة
     window.addEventListener('load', () => {
         // تفعيل الموسيقى عند أول تفاعل مع المستخدم
         document.addEventListener('click', () => {
             audioSystem.playBackgroundMusic();
         }, { once: true });
+        
+        // عرض رسالة ترحيب
+        setTimeout(() => {
+            tickerSystem.showEvent('مرحباً بك! تفاعل مع الشريط العلوي لعرض الأحداث والتهاني!');
+        }, 3000);
     });
+}
+
+// ==========================================
+// وظائف واجهة إعدادات الصوت
+// ==========================================
+
+// تهيئة إعدادات الصوت عند تحميل الصفحة
+window.addEventListener('load', () => {
+    initAudioSettings();
+});
+
+// تهيئة إعدادات الصوت
+function initAudioSettings() {
+    // عناصر التحكم
+    const masterVolume = document.getElementById('master-volume');
+    const musicVolume = document.getElementById('music-volume');
+    const effectsVolume = document.getElementById('effects-volume');
+    const backgroundMusicToggle = document.getElementById('background-music-toggle');
+    const muteToggle = document.getElementById('mute-toggle');
+    const saveButton = document.getElementById('save-audio-settings');
+    const resetButton = document.getElementById('reset-audio-settings');
+    const closeButton = document.getElementById('close-audio-settings');
+    const testSoundButtons = document.querySelectorAll('.test-sound-btn');
+
+    if (!masterVolume || !musicVolume || !effectsVolume) return; // التحقق من وجود العناصر
+
+    // تحديث العرض
+    function updateDisplay() {
+        if (masterVolume) {
+            document.getElementById('master-volume-display').textContent = `${masterVolume.value}%`;
+        }
+        if (musicVolume) {
+            document.getElementById('music-volume-display').textContent = `${musicVolume.value}%`;
+        }
+        if (effectsVolume) {
+            document.getElementById('effects-volume-display').textContent = `${effectsVolume.value}%`;
+        }
+    }
+
+    // تحميل الإعدادات
+    function loadSettings() {
+        if (masterVolume) masterVolume.value = audioSystem.settings.masterVolume;
+        if (musicVolume) musicVolume.value = audioSystem.settings.musicVolume;
+        if (effectsVolume) effectsVolume.value = audioSystem.settings.effectsVolume;
+        if (backgroundMusicToggle) backgroundMusicToggle.checked = audioSystem.settings.backgroundMusicEnabled;
+        if (muteToggle) muteToggle.checked = audioSystem.settings.isMuted;
+        
+        updateDisplay();
+    }
+
+    // حدث تغيير مستوى الصوت العام
+    if (masterVolume) {
+        masterVolume.addEventListener('input', (e) => {
+            audioSystem.setMasterVolume(parseInt(e.target.value));
+            updateDisplay();
+        });
+    }
+
+    // حدث تغيير مستوى الموسيقى
+    if (musicVolume) {
+        musicVolume.addEventListener('input', (e) => {
+            audioSystem.setMusicVolume(parseInt(e.target.value));
+            updateDisplay();
+        });
+    }
+
+    // حدث تغيير مستوى التأثيرات
+    if (effectsVolume) {
+        effectsVolume.addEventListener('input', (e) => {
+            audioSystem.setEffectsVolume(parseInt(e.target.value));
+            updateDisplay();
+        });
+    }
+
+    // حدث تشغيل/إيقاف موسيقى الخلفية
+    if (backgroundMusicToggle) {
+        backgroundMusicToggle.addEventListener('change', (e) => {
+            const enabled = audioSystem.toggleBackgroundMusic();
+            backgroundMusicToggle.checked = enabled;
+        });
+    }
+
+    // حدث كتم/إلغاء كتم الصوت
+    if (muteToggle) {
+        muteToggle.addEventListener('change', (e) => {
+            const isMuted = audioSystem.toggleMute();
+            muteToggle.checked = isMuted;
+            const label = document.getElementById('mute-label');
+            if (label) {
+                label.textContent = isMuted ? '🔇 الصوت مكتوم' : '🔊 الصوت مفعل';
+            }
+        });
+    }
+
+    // أزرار اختبار الأصوات
+    testSoundButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const soundName = e.target.dataset.sound;
+            audioSystem.playSound(soundName);
+            
+            // تأثير مرئي مؤقت
+            e.target.style.backgroundColor = '#FFD700';
+            setTimeout(() => {
+                e.target.style.backgroundColor = '';
+            }, 200);
+        });
+    });
+
+    // زر الحفظ
+    if (saveButton) {
+        saveButton.addEventListener('click', () => {
+            audioSystem.saveSettings();
+            closeAudioSettingsModal();
+            tickerSystem.showUpdate('تم حفظ إعدادات الصوت بنجاح!');
+        });
+    }
+
+    // زر إعادة التعيين
+    if (resetButton) {
+        resetButton.addEventListener('click', () => {
+            // إعادة تعيين الإعدادات للقيم الافتراضية
+            audioSystem.settings = {
+                masterVolume: 50,
+                musicVolume: 30,
+                effectsVolume: 60,
+                isMuted: false,
+                backgroundMusicEnabled: false
+            };
+            audioSystem.applySettings();
+            loadSettings();
+            audioSystem.saveSettings();
+            tickerSystem.showEvent('تم إعادة تعيين إعدادات الصوت!');
+        });
+    }
+
+    // زر الإغلاق
+    if (closeButton) {
+        closeButton.addEventListener('click', closeAudioSettingsModal);
+    }
+
+    // تحميل الإعدادات عند البدء
+    loadSettings();
+}
+
+// فتح نافذة إعدادات الصوت
+function openAudioSettingsModal() {
+    const modal = document.getElementById('audio-settings-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        audioSystem.onButtonClick();
+    }
+}
+
+// إغلاق نافذة إعدادات الصوت
+function closeAudioSettingsModal() {
+    const modal = document.getElementById('audio-settings-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        audioSystem.onButtonClick();
+    }
 }
 }
