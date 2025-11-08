@@ -2160,8 +2160,12 @@
                     <h4>${prisoner.playerName || prisoner.name}</h4>
                     <p>المستوى: ${prisoner.level}</p>
                     <p>السبب: ${getPrisonerReason(prisoner)}</p>
+                    <p class="prison-time">⏰ ${getPrisonTime(prisoner)}</p>
                 </div>
                 <div class="prisoner-actions">
+                    <button class="btn-bargain" onclick="showBargain('${prisoner.playerId || prisoner.id}')">
+                        💰 مقايضة
+                    </button>
                     <button class="btn-release" onclick="releasePrisoner('${prisoner.playerId || prisoner.id}')">
                         🗝️ إطلق سراح
                     </button>
@@ -2201,6 +2205,30 @@
             if (game && game.showNotification) {
                 game.showNotification('تم إطلاق سراح السجين بنجاح! 🗝️', 'success');
             }
+        }
+    }
+    
+    // وظيفة المقايضة
+    function showBargain(playerId) {
+        if (levelManagementSystem && levelManagementSystem.showBargainModal) {
+            levelManagementSystem.showBargainModal(playerId);
+        }
+    }
+    
+    // حساب وقت السجن
+    function getPrisonTime(prisoner) {
+        if (!prisoner.captureTime) return 'وقت غير محدد';
+        
+        const now = Date.now();
+        const timeInPrison = now - prisoner.captureTime;
+        const days = Math.floor(timeInPrison / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeInPrison % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        
+        if (days >= 3) {
+            return `⚠️ ${days} يوم - ${hours} ساعة (منتهي الصلاحية)`;
+        } else {
+            const remaining = 3 - days;
+            return `🕐 ${days} يوم - ${hours} ساعة (متبقي ${remaining} يوم)`;
         }
     }
     </script>

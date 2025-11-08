@@ -6331,3 +6331,312 @@ body {
         min-width: auto;
     }
 }
+
+/* ==========================================
+   نظام إدارة السجون
+   ========================================== */
+
+.prison-management-system {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: linear-gradient(135deg, #2c1810, #1a0f08);
+    border: 3px solid #8B4513;
+    border-radius: 15px;
+    padding: 20px;
+    min-width: 350px;
+    max-width: 400px;
+    color: #FFB6C1;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.prison-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #8B4513;
+}
+
+.prison-header h3 {
+    color: #FF6347;
+    margin: 0;
+    font-size: 18px;
+}
+
+.prison-stats {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.prison-count {
+    background: linear-gradient(135deg, #FF4500, #DC143C);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.prison-label {
+    color: #FFA500;
+    font-size: 14px;
+}
+
+.prison-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-prison {
+    background: linear-gradient(135deg, #8B4513, #654321);
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-prison:hover {
+    background: linear-gradient(135deg, #A0522D, #8B4513);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
+}
+
+.prison-alerts {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* ==========================================
+   نافذة قائمة السجناء
+   ========================================== */
+
+.prison-list-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.prison-list-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 3px solid #00d4ff;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: 0 0 50px rgba(0,212,255,0.3);
+}
+
+.prison-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #00d4ff;
+}
+
+.prison-list-header h2 {
+    color: #00d4ff;
+    margin: 0;
+    font-size: 24px;
+}
+
+.close-btn {
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prison-filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: rgba(0,212,255,0.2);
+    color: #00d4ff;
+    border: 2px solid #00d4ff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #00d4ff;
+    color: #1a1a2e;
+    transform: translateY(-2px);
+}
+
+.prisoners-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.prisoner-item {
+    background: rgba(0,212,255,0.1);
+    border: 2px solid #00d4ff;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.prisoner-item:hover {
+    border-color: #0099cc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,212,255,0.3);
+}
+
+.prisoner-item.WEAK {
+    border-color: #ff6b6b;
+    background: rgba(255,107,107,0.1);
+}
+
+.prisoner-info h4 {
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    font-size: 18px;
+}
+
+.prisoner-info p {
+    color: #00d4ff;
+    margin: 3px 0;
+    font-size: 14px;
+}
+
+.prison-time {
+    color: #ff6b6b !important;
+    font-weight: bold;
+}
+
+.prisoner-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-bargain,
+.btn-release {
+    background: linear-gradient(135deg, #00d4ff, #0099cc);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-bargain:hover,
+.btn-release:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,212,255,0.4);
+}
+
+.btn-release {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.btn-release:hover {
+    box-shadow: 0 4px 15px rgba(40,167,69,0.4);
+}
+
+.no-prisoners {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px;
+    font-size: 18px;
+}
+
+/* ==========================================
+   نوافذ السجون والمقايضة
+   ========================================== */
+
+.prisoner-capture-modal,
+.bargain-modal,
+.pardon-modal,
+.execution-modal {
+    animation: modalSlideIn 0.5s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* تحسينات الاستجابة للسجون */
+@media (max-width: 768px) {
+    .prison-management-system {
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+        margin: 10px;
+        min-width: auto;
+        max-width: none;
+    }
+    
+    .prison-list-content {
+        padding: 20px;
+        width: 95%;
+    }
+    
+    .prisoner-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .prisoner-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .prison-filters {
+        justify-content: center;
+    }
+}

@@ -10347,6 +10347,362 @@ if ('serviceWorker' in navigator) {
                 this.checkAllPlayers();
             }, 60000); // كل دقيقة
         }
+        
+        // ==========================================
+        // نظام المقايضة لفك الأسر
+        // ==========================================
+        
+        // أسعار فك الأسر
+        getRansomPrice(prisoner) {
+            if (prisoner.reason === 'PRISONER_LEVEL_14_15') {
+                return {
+                    gold: 1000,
+                    diamonds: 5,
+                    resources: { wood: 100, stone: 100, food: 100 }
+                };
+            } else {
+                // قادة ضعفاء
+                return {
+                    gold: 5000,
+                    diamonds: 20,
+                    resources: { wood: 500, stone: 500, food: 300 }
+                };
+            }
+        }
+        
+        // نافذة المقايضة
+        showBargainModal(prisonerId) {
+            const prisoner = this.getPrisonerById(prisonerId);
+            if (!prisoner) return;
+            
+            const modal = this.createBargainModal(prisoner);
+            document.body.appendChild(modal);
+            
+            setTimeout(() => {
+                modal.style.display = 'flex';
+            }, 100);
+        }
+        
+        // إنشاء نافذة المقايضة
+        createBargainModal(prisoner) {
+            const modal = document.createElement('div');
+            modal.className = 'bargain-modal';
+            modal.style.cssText = `
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                z-index: 10000;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            const price = this.getRansomPrice(prisoner);
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a1a2e, #16213e);
+                    padding: 30px;
+                    border-radius: 15px;
+                    border: 3px solid #00d4ff;
+                    color: #ffffff;
+                    text-align: center;
+                    max-width: 600px;
+                    box-shadow: 0 0 50px rgba(0,212,255,0.5);
+                ">
+                    <h2 style="color: #00d4ff; margin-bottom: 20px;">💰 مقايضة فك الأسر</h2>
+                    
+                    <div style="background: rgba(0,212,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3 style="color: #ffffff;">السجين: ${prisoner.playerName || prisoner.name}</h3>
+                        <p style="color: #00d4ff;">المستوى: ${prisoner.level}</p>
+                        <p style="color: #ff6b6b;">السبب: ${getPrisonerReason(prisoner)}</p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h4 style="color: #ffd700; margin-bottom: 15px;">📋 متطلبات فك الأسر:</h4>
+                        <div style="text-align: left; color: #ffffff;">
+                            <p>🪙 الذهب: ${price.gold.toLocaleString()}</p>
+                            <p>💎 الماس: ${price.diamonds}</p>
+                            <p>🪵 الخشب: ${price.resources.wood}</p>
+                            <p>🪨 الحجارة: ${price.resources.stone}</p>
+                            <p>🍖 الطعام: ${price.resources.food}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button onclick="levelManagementSystem.processBargain('${prisoner.playerId || prisoner.id}')"
+                                style="
+                                    background: linear-gradient(135deg, #00d4ff, #0099cc);
+                                    color: white;
+                                    border: none;
+                                    padding: 15px 30px;
+                                    border-radius: 8px;
+                                    cursor: pointer;
+                                    font-weight: bold;
+                                    margin: 0 10px;
+                                ">
+                            ✅ دفع المقايضة
+                        </button>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()"
+                                style="
+                                    background: linear-gradient(135deg, #6c757d, #545b62);
+                                    color: white;
+                                    border: none;
+                                    padding: 15px 30px;
+                                    border-radius: 8px;
+                                    cursor: pointer;
+                                    font-weight: bold;
+                                    margin: 0 10px;
+                                ">
+                            ❌ إلغاء
+                        </button>
+                    </div>
+                    
+                    <p style="color: #ff6b6b; font-size: 14px;">
+                        ⚠️ إذا لم يتم فك الأسر خلال 3 أيام، سيتم إعدام السجين
+                    </p>
+                </div>
+            `;
+            
+            return modal;
+        }
+        
+        // معالجة المقايضة
+        processBargain(prisonerId) {
+            const prisoner = this.getPrisonerById(prisonerId);
+            if (!prisoner) return;
+            
+            const price = this.getRansomPrice(prisoner);
+            
+            // فحص إذا كان اللاعب لديه موارد كافية
+            if (this.hasEnoughResources(price)) {
+                this.deductResources(price);
+                this.releasePrisoner(prisonerId);
+                
+                // عرض رسالة نجاح
+                if (game && game.showNotification) {
+                    game.showNotification('تم دفع المقايضة وإطلاق سراح السجين! 🎉', 'success');
+                }
+                
+                // إزالة النافذة
+                const modal = document.querySelector('.bargain-modal');
+                if (modal) modal.remove();
+                
+            } else {
+                if (game && game.showNotification) {
+                    game.showNotification('⚠️ مواردك غير كافية للمقايضة!', 'error');
+                }
+            }
+        }
+        
+        // فحص الموارد
+        hasEnoughResources(price) {
+            const player = game ? game.player : null;
+            if (!player) return false;
+            
+            return (
+                (player.gold || 0) >= price.gold &&
+                (player.diamonds || 0) >= price.diamonds &&
+                (player.resources?.wood || 0) >= price.resources.wood &&
+                (player.resources?.stone || 0) >= price.resources.stone &&
+                (player.resources?.food || 0) >= price.resources.food
+            );
+        }
+        
+        // خصم الموارد
+        deductResources(price) {
+            if (game && game.player) {
+                game.player.gold = (game.player.gold || 0) - price.gold;
+                game.player.diamonds = (game.player.diamonds || 0) - price.diamonds;
+                
+                if (game.player.resources) {
+                    game.player.resources.wood = (game.player.resources.wood || 0) - price.resources.wood;
+                    game.player.resources.stone = (game.player.resources.stone || 0) - price.resources.stone;
+                    game.player.resources.food = (game.player.resources.food || 0) - price.resources.food;
+                }
+            }
+        }
+        
+        // الحصول على السجين بالمعرف
+        getPrisonerById(prisonerId) {
+            return this.prisoners.find(p => p.id === prisonerId) ||
+                   this.weakLeaders.find(p => p.playerId === prisonerId);
+        }
+        
+        // ==========================================
+        // نظام العفو والإعدام
+        // ==========================================
+        
+        // بدء مؤقت الـ 3 أيام
+        startPrisonTimers() {
+            setInterval(() => {
+                this.checkPrisonTimeLimits();
+            }, 60000); // كل دقيقة
+        }
+        
+        // فحص حدود الوقت للسجناء
+        checkPrisonTimeLimits() {
+            const now = Date.now();
+            const threeDaysInMs = 3 * 24 * 60 * 60 * 1000; // 3 أيام بالميلي ثانية
+            
+            this.prisoners.forEach(prisoner => {
+                const timeInPrison = now - prisoner.captureTime;
+                if (timeInPrison > threeDaysInMs && !prisoner.processed) {
+                    this.processPrisonerFinal(prisoner);
+                }
+            });
+            
+            this.weakLeaders.forEach(leader => {
+                const timeInPrison = now - leader.captureTime;
+                if (timeInPrison > threeDaysInMs && !leader.processed) {
+                    this.processPrisonerFinal(leader);
+                }
+            });
+        }
+        
+        // معالجة نهائي للسجين (عفو أو إعدام)
+        processPrisonerFinal(prisoner) {
+            // تحديد القرار عشوائياً (70% عفو، 30% إعدام)
+            const decision = Math.random() > 0.3 ? 'PARDON' : 'EXECUTION';
+            
+            prisoner.processed = true;
+            prisoner.finalDecision = decision;
+            
+            if (decision === 'PARDON') {
+                this.showPardonModal(prisoner);
+            } else {
+                this.showExecutionModal(prisoner);
+            }
+        }
+        
+        // نافذة العفو
+        showPardonModal(prisoner) {
+            const modal = document.createElement('div');
+            modal.className = 'pardon-modal';
+            modal.style.cssText = `
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 10000;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a5f1a, #2d7d2d);
+                    padding: 40px;
+                    border-radius: 20px;
+                    border: 3px solid #00ff00;
+                    color: #ffffff;
+                    text-align: center;
+                    max-width: 500px;
+                    box-shadow: 0 0 50px rgba(0,255,0,0.5);
+                ">
+                    <h2 style="color: #00ff00; margin-bottom: 20px;">🕊️ العفو الملكي 🕊️</h2>
+                    
+                    <div style="background: rgba(0,255,0,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3 style="color: #ffffff;">${prisoner.playerName || prisoner.name}</h3>
+                        <p style="color: #00ff00;">تم العفو عن السجين!</p>
+                        <p style="color: #90EE90;">🕐 مكث في监狱 ${this.getPrisonDays(prisoner)} أيام</p>
+                    </div>
+                    
+                    <button onclick="this.parentElement.parentElement.remove(); levelManagementSystem.releasePrisoner('${prisoner.playerId || prisoner.id}')"
+                            style="
+                                background: linear-gradient(135deg, #00ff00, #00cc00);
+                                color: black;
+                                border: none;
+                                padding: 15px 30px;
+                                border-radius: 8px;
+                                cursor: pointer;
+                                font-weight: bold;
+                            ">
+                        🎉 إنهاء
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            setTimeout(() => modal.style.display = 'flex', 500);
+        }
+        
+        // نافذة الإعدام
+        showExecutionModal(prisoner) {
+            const modal = document.createElement('div');
+            modal.className = 'execution-modal';
+            modal.style.cssText = `
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                z-index: 10000;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #5c0000, #2d0000);
+                    padding: 40px;
+                    border-radius: 20px;
+                    border: 3px solid #ff0000;
+                    color: #ffffff;
+                    text-align: center;
+                    max-width: 500px;
+                    box-shadow: 0 0 50px rgba(255,0,0,0.5);
+                ">
+                    <h2 style="color: #ff0000; margin-bottom: 20px;">⚔️ الإعدام ⚔️</h2>
+                    
+                    <div style="background: rgba(255,0,0,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3 style="color: #ffffff;">${prisoner.playerName || prisoner.name}</h3>
+                        <p style="color: #ff6b6b;">تم إعدام السجين!</p>
+                        <p style="color: #ff4444;">💀 انتهت صلاحيته</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button onclick="this.parentElement.parentElement.remove(); levelManagementSystem.removePrisoner('${prisoner.playerId || prisoner.id}')"
+                                style="
+                                    background: linear-gradient(135deg, #ff0000, #cc0000);
+                                    color: white;
+                                    border: none;
+                                    padding: 15px 30px;
+                                    border-radius: 8px;
+                                    cursor: pointer;
+                                    font-weight: bold;
+                                ">
+                            💀 إنهاء
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            setTimeout(() => modal.style.display = 'flex', 500);
+        }
+        
+        // حساب أيام السجن
+        getPrisonDays(prisoner) {
+            const now = Date.now();
+            const timeInPrison = now - prisoner.captureTime;
+            return Math.floor(timeInPrison / (1000 * 60 * 60 * 24));
+        }
+        
+        // إزالة السجين
+        removePrisoner(prisonerId) {
+            this.prisoners = this.prisoners.filter(p => p.id !== prisonerId);
+            this.weakLeaders = this.weakLeaders.filter(p => p.playerId !== prisonerId);
+            this.updatePrisonCount();
+        }
     }
     
     // إنشاء الأنظمة
@@ -10354,16 +10710,17 @@ if ('serviceWorker' in navigator) {
     const fancyNameSystem = new FancyNameSystem();
     const levelManagementSystem = new LevelManagementSystem();
     
-    // ربط النظام الصوتي مع أحداث اللعبة
+    // بدء مؤقتات السجون عند تحميل الصفحة
     window.addEventListener('load', () => {
-        // تفعيل الموسيقى عند أول تفاعل مع المستخدم
-        document.addEventListener('click', () => {
-            audioSystem.playBackgroundMusic();
-        }, { once: true });
+        // بدء مراقبة السجون
+        levelManagementSystem.startMonitoring();
+        levelManagementSystem.startPrisonTimers();
         
         // عرض رسالة ترحيب
         setTimeout(() => {
-            tickerSystem.showEvent('مرحباً بك! تفاعل مع الشريط العلوي لعرض الأحداث والتهاني!');
+            if (tickerSystem && tickerSystem.showEvent) {
+                tickerSystem.showEvent('مرحباً بك! تفاعل مع الشريط العلوي لعرض الأحداث والتهاني!');
+            }
         }, 3000);
     });
 }
