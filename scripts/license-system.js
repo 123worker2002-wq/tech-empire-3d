@@ -396,7 +396,44 @@ class LicenseSystem {
         storeModal.innerHTML = `
             <div class="store-content">
                 <div class="store-header">
-                    <h2>🎉 متجر التطوير السريع - فترة تجريبية</h2>
+                    <div class="store-logo">
+                        <svg class="premium-logo" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Crown icon -->
+                            <path d="M20 25 L30 15 L40 25 L50 15 L60 25 L70 15 L80 25 L90 15 L100 25 L110 15 L120 25 L130 15 L140 25 L150 15 L160 25 L170 15 L180 25" 
+                                  fill="none" stroke="#FFD700" stroke-width="3" stroke-linejoin="round"/>
+                            <path d="M20 25 L20 35 L180 35 L180 25" fill="none" stroke="#FFD700" stroke-width="3"/>
+                            <!-- Tech circuits -->
+                            <circle cx="30" cy="45" r="3" fill="#00D4FF" opacity="0.8">
+                                <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="100" cy="45" r="4" fill="#00D4FF" opacity="0.8">
+                                <animate attributeName="opacity" values="0.8;1;0.8" dur="2.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="170" cy="45" r="3" fill="#00D4FF" opacity="0.8">
+                                <animate attributeName="opacity" values="0.8;1;0.8" dur="1.8s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- Circuit lines -->
+                            <line x1="30" y1="45" x2="30" y2="35" stroke="#00D4FF" stroke-width="2"/>
+                            <line x1="100" y1="45" x2="100" y2="35" stroke="#00D4FF" stroke-width="2"/>
+                            <line x1="170" y1="45" x2="170" y2="35" stroke="#00D4FF" stroke-width="2"/>
+                            <!-- Tech grid -->
+                            <g class="tech-grid" opacity="0.3">
+                                <line x1="50" y1="45" x2="80" y2="45" stroke="#00D4FF" stroke-width="1"/>
+                                <line x1="120" y1="45" x2="150" y2="45" stroke="#00D4FF" stroke-width="1"/>
+                            </g>
+                            <!-- Central logo -->
+                            <text x="100" y="20" text-anchor="middle" font-family="serif" font-size="16" font-weight="bold" fill="#FFD700">
+                                Tech Empire
+                            </text>
+                            <text x="100" y="35" text-anchor="middle" font-family="monospace" font-size="8" fill="#00D4FF">
+                                ⭐ IMPERIAL STORE ⭐
+                            </text>
+                        </svg>
+                    </div>
+                    <div class="store-title">
+                        <h2>متجر التطوير السريع - فترة تجريبية</h2>
+                        <p class="store-subtitle">متجر الإمبراطورية التقنية - تجربة فاخرة</p>
+                    </div>
                     <button onclick="this.closest('.store-modal').remove()" class="close-btn">×</button>
                 </div>
                 
