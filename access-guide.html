@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إرشادات الوصول للعبة - Tech Empire 3D</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1, h2 { color: #FFD700; text-align: center; margin-bottom: 20px; }
+        .error-box {
+            background: rgba(255,0,0,0.2);
+            border: 2px solid #ff6b6b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .solution-box {
+            background: rgba(0,255,0,0.2);
+            border: 2px solid #4CAF50;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .code {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            direction: ltr;
+            text-align: left;
+        }
+        .btn {
+            display: inline-block;
+            background: #FFD700;
+            color: #333;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+            font-weight: bold;
+        }
+        .btn:hover { background: #FFA500; }
+        ul { margin: 15px 0; padding-right: 20px; }
+        li { margin: 8px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Tech Empire 3D - إرشادات الوصول</h1>
+        
+        <div class="error-box">
+            <h2>🚨 المشكلة الحالية:</h2>
+            <p><strong>localhost لا يعمل من الهاتف</strong></p>
+            <ul>
+                <li>localhost يشير إلى البيئة السحابية وليس هاتفك</li>
+                <li>هذا هو سبب ظهور رسالة "لا يمكن الوصول إلى هذا الموقع"</li>
+                <li>الحل: نشر اللعبة على منصة عامة أو استخدام طرق أخرى</li>
+            </ul>
+        </div>
+
+        <div class="solution-box">
+            <h2>✅ الحلول البديلة المتاحة:</h2>
+            
+            <h3>1. عرض الملفات محلياً:</h3>
+            <p>يمكنني عرض محتوى اللعبة والشعار الفاخر في هذا المستند مباشرة</p>
+            
+            <h3>2. روابط للملفات:</h3>
+            <div class="code">
+                - ملف اللعبة: index-3d.html (138,283 بايت)<br>
+                - ملف الأنماط: styles/3d-game.css (146,208 بايت)<br>
+                - ملف JavaScript: scripts/3d-game.js (573,114 بايت)<br>
+                - نظام الترخيص: scripts/license-system.js (29,040 بايت)
+            </div>
+
+            <h3>3. الشعار الفاخر الجديد:</h3>
+            <p>✅ تم إدراج الشعار الفاخر في المتجر يحتوي على:</p>
+            <ul>
+                <li>تاج ذهبي متحرك</li>
+                <li>دوائر تقنية زرقاء متلألئة</li>
+                <li>نص "Tech Empire - ⭐ IMPERIAL STORE ⭐"</li>
+                <li>تأثيرات shimmer و float</li>
+            </ul>
+        </div>
+
+        <h2>📱 للاختبار من الهاتف:</h2>
+        <p>بما أن localhost لا يعمل من الهاتف، سأعرض لك:</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="btn" onclick="showGameContent()">🎮 عرض محتوى اللعبة</button>
+            <button class="btn" onclick="showPremiumLogo()">👑 عرض الشعار الفاخر</button>
+            <button class="btn" onclick="showBrowserOptimizations()">⚡ تحسينات المتصفح</button>
+        </div>
+
+        <div id="gameContent" style="display: none;">
+            <h2>🎮 محتوى اللعبة</h2>
+            <p>الملف الرئيسي يحتوي على:</p>
+            <ul>
+                <li>العنوان: الإمبراطورية التقنية - Tech Empire 3D</li>
+                <li>نظام التحميل المتقدم</li>
+                <li>العرض ثلاثي الأبعاد</li>
+                <li>واجهة المستخدم المحدثة</li>
+                <li>نظام المتجر مع الشعار الفاخر</li>
+            </ul>
+        </div>
+
+        <div id="premiumLogo" style="display: none;">
+            <h2>👑 الشعار الفاخر الجديد</h2>
+            <p>تم إنشاء شعار متطور يحتوي على:</p>
+            <ul>
+                <li>تاج ذهبي (#FFD700) مع تأثير shine</li>
+                <li>دوائر تقنية زرقاء متحركة (pulsing circles)</li>
+                <li>دوائر متداخلة مع ألوان زرقاء-فضية</li>
+                <li>نص "Tech Empire" و "⭐ IMPERIAL STORE ⭐"</li>
+                <li>تأثيرات CSS: shimmer و float animations</li>
+            </ul>
+        </div>
+
+        <div id="browserOptimizations" style="display: none;">
+            <h2>⚡ تحسينات المتصفح</h2>
+            <h3>Google Chrome:</h3>
+            <ul>
+                <li>خطوط محسّنة: Cairo + Noto Sans Arabic</li>
+                <li>webkit-font-smoothing: antialiased</li>
+                <li>تحسينات text-shadow للوضوح</li>
+                <li>نظام كشف المتصفح والتلقائي</li>
+            </ul>
+            <h3>Samsung Internet:</h3>
+            <ul>
+                <li>تحسينات RTL للنص العربي</li>
+                <li>تحسينات التباين والألوان</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+            <h2>📊 حالة النظام</h2>
+            <p>✅ الخادم يعمل على المنفذ 8000</p>
+            <p>✅ جميع الملفات متاحة ومُحدثة</p>
+            <p>✅ الشعار الفاخر مُطبّق</p>
+            <p>✅ تحسينات المتصفح مُفعلة</p>
+            <p>⚠️ المشكلة: localhost لا يعمل من الهاتف</p>
+        </div>
+    </div>
+
+    <script>
+        function showGameContent() {
+            document.getElementById('gameContent').style.display = 'block';
+            document.getElementById('premiumLogo').style.display = 'none';
+            document.getElementById('browserOptimizations').style.display = 'none';
+        }
+
+        function showPremiumLogo() {
+            document.getElementById('gameContent').style.display = 'none';
+            document.getElementById('premiumLogo').style.display = 'block';
+            document.getElementById('browserOptimizations').style.display = 'none';
+        }
+
+        function showBrowserOptimizations() {
+            document.getElementById('gameContent').style.display = 'none';
+            document.getElementById('premiumLogo').style.display = 'none';
+            document.getElementById('browserOptimizations').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
