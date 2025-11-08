@@ -9199,4 +9199,205 @@ if ('serviceWorker' in navigator) {
     // تهيئة ربط الأزرار عند تحميل الصفحة
     window.addEventListener('load', bindGuidanceToButtons);
     });
+    
+    // ==========================================
+    // نظام الأصوات والموسيقى
+    // ==========================================
+    
+    // إنشاء كائن النظام الصوتي
+    class AudioSystem {
+        constructor() {
+            this.sounds = {
+                // أصوات البناء والتطوير
+                buildComplete: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                buildStart: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                
+                // أصوات الحرب
+                battleStart: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                battleWin: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                battleLose: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                
+                // أصوات واجهة المستخدم
+                click: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                buttonHover: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                
+                // أصوات الموارد
+                resourceGain: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                resourceWarning: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o'),
+                
+                // موسيقى الخلفية
+                backgroundMusic: this.createAudio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjSIzvLVgy8FzO4o')
+            };
+            
+            this.settings = {
+                masterVolume: 50,
+                musicVolume: 30,
+                effectsVolume: 60,
+                isMuted: false,
+                backgroundMusicEnabled: false
+            };
+            
+            this.currentlyPlaying = null;
+            this.init();
+        }
+        
+        createAudio(dataUrl) {
+            const audio = new Audio();
+            audio.src = dataUrl;
+            audio.volume = 0.3;
+            return audio;
+        }
+        
+        init() {
+            // تحميل الإعدادات من التخزين المحلي
+            this.loadSettings();
+            
+            // تطبيق الإعدادات عند التحميل
+            this.applySettings();
+        }
+        
+        loadSettings() {
+            const saved = localStorage.getItem('techEmpireAudioSettings');
+            if (saved) {
+                this.settings = { ...this.settings, ...JSON.parse(saved) };
+            }
+        }
+        
+        saveSettings() {
+            localStorage.setItem('techEmpireAudioSettings', JSON.stringify(this.settings));
+        }
+        
+        applySettings() {
+            Object.values(this.sounds).forEach(sound => {
+                sound.volume = this.settings.masterVolume / 100;
+            });
+            
+            // موسيقى الخلفية لها صوت منفصل
+            if (this.sounds.backgroundMusic) {
+                this.sounds.backgroundMusic.volume = (this.settings.masterVolume / 100) * (this.settings.musicVolume / 100);
+                this.sounds.backgroundMusic.loop = true;
+            }
+        }
+        
+        playSound(soundName) {
+            if (this.settings.isMuted) return;
+            
+            const sound = this.sounds[soundName];
+            if (sound) {
+                // إنشاء نسخة جديدة من الصوت لتجنب التداخل
+                const soundClone = sound.cloneNode();
+                soundClone.volume = sound.volume;
+                soundClone.play().catch(e => console.log('خطأ في تشغيل الصوت:', e));
+            }
+        }
+        
+        playBackgroundMusic() {
+            if (this.settings.isMuted || !this.settings.backgroundMusicEnabled) return;
+            
+            const music = this.sounds.backgroundMusic;
+            if (music && !this.currentlyPlaying) {
+                music.play().then(() => {
+                    this.currentlyPlaying = music;
+                }).catch(e => console.log('خطأ في تشغيل الموسيقى:', e));
+            }
+        }
+        
+        stopBackgroundMusic() {
+            if (this.currentlyPlaying) {
+                this.currentlyPlaying.pause();
+                this.currentlyPlaying.currentTime = 0;
+                this.currentlyPlaying = null;
+            }
+        }
+        
+        toggleMute() {
+            this.settings.isMuted = !this.settings.isMuted;
+            if (this.settings.isMuted) {
+                this.stopBackgroundMusic();
+            } else {
+                this.playBackgroundMusic();
+            }
+            this.saveSettings();
+            return this.settings.isMuted;
+        }
+        
+        toggleBackgroundMusic() {
+            this.settings.backgroundMusicEnabled = !this.settings.backgroundMusicEnabled;
+            if (this.settings.backgroundMusicEnabled) {
+                this.playBackgroundMusic();
+            } else {
+                this.stopBackgroundMusic();
+            }
+            this.saveSettings();
+            return this.settings.backgroundMusicEnabled;
+        }
+        
+        setMasterVolume(volume) {
+            this.settings.masterVolume = Math.max(0, Math.min(100, volume));
+            this.applySettings();
+            this.saveSettings();
+        }
+        
+        setMusicVolume(volume) {
+            this.settings.musicVolume = Math.max(0, Math.min(100, volume));
+            this.applySettings();
+            this.saveSettings();
+        }
+        
+        setEffectsVolume(volume) {
+            this.settings.effectsVolume = Math.max(0, Math.min(100, volume));
+            // تطبيق على الأصوات
+            Object.entries(this.sounds).forEach(([name, sound]) => {
+                if (name !== 'backgroundMusic') {
+                    sound.volume = (this.settings.masterVolume / 100) * (this.settings.effectsVolume / 100);
+                }
+            });
+            this.saveSettings();
+        }
+        
+        // دوال مساعدة للأصوات المختلفة
+        onBuildComplete() {
+            this.playSound('buildComplete');
+        }
+        
+        onBuildStart() {
+            this.playSound('buildStart');
+        }
+        
+        onBattleStart() {
+            this.playSound('battleStart');
+        }
+        
+        onBattleEnd(win) {
+            this.playSound(win ? 'battleWin' : 'battleLose');
+        }
+        
+        onButtonClick() {
+            this.playSound('click');
+        }
+        
+        onButtonHover() {
+            this.playSound('buttonHover');
+        }
+        
+        onResourceGain() {
+            this.playSound('resourceGain');
+        }
+        
+        onResourceWarning() {
+            this.playSound('resourceWarning');
+        }
+    }
+    
+    // إنشاء مثيل عام للنظام الصوتي
+    const audioSystem = new AudioSystem();
+    
+    // ربط النظام الصوتي مع أحداث اللعبة
+    window.addEventListener('load', () => {
+        // تفعيل الموسيقى عند أول تفاعل مع المستخدم
+        document.addEventListener('click', () => {
+            audioSystem.playBackgroundMusic();
+        }, { once: true });
+    });
+}
 }

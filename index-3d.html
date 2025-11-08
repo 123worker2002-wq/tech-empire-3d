@@ -934,6 +934,89 @@
         </div>
     </div>
 
+    <!-- واجهة إعدادات الصوت -->
+    <div class="modal" id="audio-settings-modal" style="display: none;">
+        <div class="modal-content audio-settings">
+            <div class="settings-header">
+                <h2>🎵 إعدادات الصوت والموسيقى</h2>
+                <button class="close-modal" id="close-audio-settings">✕</button>
+            </div>
+            
+            <div class="settings-body">
+                <!-- التحكم في الصوت العام -->
+                <div class="settings-section">
+                    <h3>🔊 التحكم في الصوت</h3>
+                    <div class="volume-control">
+                        <label for="master-volume">
+                            <span>🔊 مستوى الصوت العام</span>
+                            <span id="master-volume-display">50%</span>
+                        </label>
+                        <input type="range" id="master-volume" min="0" max="100" value="50">
+                    </div>
+                </div>
+
+                <!-- موسيقى الخلفية -->
+                <div class="settings-section">
+                    <h3>🎶 موسيقى الخلفية</h3>
+                    <div class="music-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="background-music-toggle">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">تشغيل موسيقى الخلفية</span>
+                        </label>
+                    </div>
+                    <div class="volume-control">
+                        <label for="music-volume">
+                            <span>🎵 مستوى الموسيقى</span>
+                            <span id="music-volume-display">30%</span>
+                        </label>
+                        <input type="range" id="music-volume" min="0" max="100" value="30">
+                    </div>
+                </div>
+
+                <!-- أصوات التأثيرات -->
+                <div class="settings-section">
+                    <h3>🎯 أصوات التأثيرات</h3>
+                    <div class="volume-control">
+                        <label for="effects-volume">
+                            <span>🔔 مستوى التأثيرات</span>
+                            <span id="effects-volume-display">60%</span>
+                        </label>
+                        <input type="range" id="effects-volume" min="0" max="100" value="60">
+                    </div>
+                </div>
+
+                <!-- اختبار الأصوات -->
+                <div class="settings-section">
+                    <h3>🧪 اختبار الأصوات</h3>
+                    <div class="test-sounds">
+                        <button class="test-sound-btn" data-sound="buildComplete">🏗️ بناء</button>
+                        <button class="test-sound-btn" data-sound="battleWin">⚔️ فوز</button>
+                        <button class="test-sound-btn" data-sound="click">🔔 نقرة</button>
+                        <button class="test-sound-btn" data-sound="resourceGain">💰 ذهب</button>
+                    </div>
+                </div>
+
+                <!-- كتم الصوت -->
+                <div class="settings-section">
+                    <h3>🔇 كتم الصوت</h3>
+                    <div class="mute-control">
+                        <label class="toggle-switch large">
+                            <input type="checkbox" id="mute-toggle">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label" id="mute-label">🔊 الصوت مفعل</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-footer">
+                <button class="btn btn-secondary" id="reset-audio-settings">إعادة تعيين</button>
+                <button class="btn btn-primary" id="save-audio-settings">حفظ الإعدادات</button>
+            </div>
+        </div>
+    </div>
+
     <!-- معلومات مساعد التحكم -->
     <div class="help-overlay" id="help-overlay" style="display: none;">
         <div class="help-content">
