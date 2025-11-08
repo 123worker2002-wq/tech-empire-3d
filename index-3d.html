@@ -1609,7 +1609,43 @@
         <div class="user-actions">
             <button onclick="openUserProfile()" class="user-action-btn">الملف الشخصي</button>
             <button onclick="openUserSettings()" class="user-action-btn">الإعدادات</button>
+            <button onclick="showFarmStatus()" class="user-action-btn farm-status-btn" title="عرض حالة المزارع">🌾 المزارع</button>
+            <button onclick="openFancyNameEditor()" class="user-action-btn fancy-name-btn" title="إنشاء اسم مزخرف">✨ اسم مزخرف</button>
             <button onclick="logout()" class="user-action-btn logout-btn">تسجيل الخروج</button>
+        </div>
+    </div>
+
+    <!-- عرض حالة المزارع -->
+    <div class="farm-status-display" id="farm-status-display">
+        <div class="farm-status-header">
+            <h4>🌾 حالة المزارع</h4>
+            <button onclick="this.parentElement.parentElement.style.display='none'">✕</button>
+        </div>
+        <div class="farm-status-content">
+            <div class="farm-status-item">
+                <span class="label">الإجمالي:</span>
+                <span class="value"><span class="icon">🌾</span><span id="farm-total-count">0</span></span>
+            </div>
+            <div class="farm-status-item">
+                <span class="label">النشطة:</span>
+                <span class="value"><span class="icon">🌱</span><span id="farm-active-count">0</span></span>
+            </div>
+            <div class="farm-status-item">
+                <span class="label">جاهزة للحصاد:</span>
+                <span class="value"><span class="icon">🎉</span><span id="farm-ready-count">0</span></span>
+            </div>
+            <div class="farm-status-item">
+                <span class="label">قيد البناء:</span>
+                <span class="value"><span class="icon">🏗️</span><span id="farm-building-count">0</span></span>
+            </div>
+            <div class="farm-status-item">
+                <span class="label">تحتاج عناية:</span>
+                <span class="value"><span class="icon">⚠️</span><span id="farm-attention-count">0</span></span>
+            </div>
+        </div>
+        <div class="farm-status-actions">
+            <button onclick="testFarmNotifications()" class="btn btn-sm btn-secondary">اختبار الإشعارات</button>
+            <button onclick="addManualFarm('مزرعة تجريبية')" class="btn btn-sm btn-primary">إضافة مزرعة</button>
         </div>
     </div>
 

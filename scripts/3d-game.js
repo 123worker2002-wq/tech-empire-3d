@@ -9562,6 +9562,493 @@ if ('serviceWorker' in navigator) {
     // إنشاء مثيل عام للشريط المتحرك
     const tickerSystem = new TickerSystem();
     
+    // ==========================================
+    // نظام إشعارات المزارع
+    // ==========================================
+    
+    class FarmNotificationSystem {
+        constructor() {
+            this.farms = [];
+            this.notificationInterval = 60000; // دقيقة واحدة
+            this.notificationCooldown = 300000; // 5 دقائق
+            this.lastNotification = {};
+            this.init();
+        }
+        
+        init() {
+            this.scanForFarms();
+            this.startMonitoring();
+        }
+        
+        scanForFarms() {
+            // البحث عن المباني التي تحتوي على نوع 'farm'
+            if (game.buildings) {
+                for (const [buildingId, building] of Object.entries(game.buildings)) {
+                    if (building.userData && building.userData.type === 'farm') {
+                        this.addFarm(building);
+                    }
+                }
+            }
+        }
+        
+        addFarm(building) {
+            const farm = {
+                id: building.id || Math.random(),
+                building: building,
+                name: building.userData?.name || 'مزرعة بدون اسم',
+                status: 'idle', // idle, growing, ready, needs_attention
+                lastCheck: Date.now(),
+                lastNotification: null
+            };
+            this.farms.push(farm);
+        }
+        
+        checkFarmStatus() {
+            this.farms.forEach(farm => {
+                this.checkSingleFarm(farm);
+            });
+        }
+        
+        checkSingleFarm(farm) {
+            const building = farm.building;
+            if (!building || !building.userData) return;
+            
+            const now = Date.now();
+            const timeSinceCheck = now - farm.lastCheck;
+            
+            // فحص حالة المزرعة
+            if (building.userData.isBuilding) {
+                farm.status = 'building';
+                farm.message = 'المزرعة قيد البناء';
+            } else if (building.userData.isUpgrading) {
+                farm.status = 'upgrading';
+                farm.message = 'المزرعة قيد الترقية';
+            } else if (this.isProductionComplete(building)) {
+                farm.status = 'ready';
+                farm.message = 'جاهز للحصاد!';
+                this.sendFarmNotification(farm, 'ready');
+            } else if (this.needsMaintenance(building)) {
+                farm.status = 'needs_attention';
+                farm.message = 'تحتاج صيانة';
+                this.sendFarmNotification(farm, 'maintenance');
+            } else {
+                farm.status = 'growing';
+                farm.message = 'تعمل بشكل طبيعي';
+            }
+            
+            farm.lastCheck = now;
+        }
+        
+        isProductionComplete(building) {
+            // فحص إذا كان الإنتاج مكتملاً
+            if (building.userData.production && building.userData.production.isComplete) {
+                return true;
+            }
+            
+            // فحص بناء على الوقت المقدر للإنتاج
+            if (building.userData.production && building.userData.production.startTime) {
+                const startTime = building.userData.production.startTime;
+                const duration = building.userData.production.duration || 60000; // دقيقة واحدة افتراضية
+                return Date.now() - startTime >= duration;
+            }
+            
+            return false;
+        }
+        
+        needsMaintenance(building) {
+            // فحص إذا كانت المزرعة تحتاج صيانة
+            if (building.userData.health && building.userData.health < 80) {
+                return true;
+            }
+            
+            // فحص إذا كانت تحتاج إصلاح
+            if (building.userData.needsRepair) {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        sendFarmNotification(farm, type) {
+            const now = Date.now();
+            const key = `${farm.id}_${type}`;
+            
+            // التحقق من فترة الانتظار
+            if (this.lastNotification[key] && 
+                (now - this.lastNotification[key]) < this.notificationCooldown) {
+                return;
+            }
+            
+            let message = '';
+            let icon = '🌾';
+            let priority = 'info';
+            
+            switch (type) {
+                case 'ready':
+                    message = `حصاد ${farm.name} جاهز! 🎉`;
+                    icon = '🌾';
+                    priority = 'success';
+                    break;
+                case 'maintenance':
+                    message = `تحذير: ${farm.name} تحتاج صيانة! ⚠️`;
+                    icon = '🔧';
+                    priority = 'warning';
+                    break;
+                case 'building':
+                    message = `بناء ${farm.name} مكتمل!`;
+                    icon = '🏗️';
+                    priority = 'success';
+                    break;
+            }
+            
+            // عرض الإشعار
+            if (game.showNotification) {
+                game.showNotification(message, priority);
+            }
+            
+            // إضافة للشريط المتحرك
+            if (tickerSystem && tickerSystem.addMessage) {
+                tickerSystem.addMessage({
+                    type: 'farm_alert',
+                    icon: icon,
+                    text: message,
+                    priority: priority
+                });
+            }
+            
+            this.lastNotification[key] = now;
+            
+            // تشغيل صوت الإشعار
+            if (audioSystem && audioSystem.playEffect) {
+                if (type === 'ready') {
+                    audioSystem.playEffect('productionComplete');
+                } else if (type === 'maintenance') {
+                    audioSystem.playEffect('warning');
+                }
+            }
+        }
+        
+        startMonitoring() {
+            // فحص كل دقيقة
+            setInterval(() => {
+                this.checkFarmStatus();
+            }, this.notificationInterval);
+            
+            // فحص فوري عند بدء التشغيل
+            this.checkFarmStatus();
+        }
+        
+        addCustomFarm(name, status = 'idle') {
+            const farm = {
+                id: 'custom_' + Date.now(),
+                name: name,
+                status: status,
+                message: 'مزرعة يدوية',
+                lastCheck: Date.now(),
+                lastNotification: null
+            };
+            this.farms.push(farm);
+            return farm;
+        }
+        
+        getFarmStatus() {
+            const status = {
+                total: this.farms.length,
+                active: this.farms.filter(f => f.status === 'growing').length,
+                ready: this.farms.filter(f => f.status === 'ready').length,
+                building: this.farms.filter(f => f.status === 'building').length,
+                needs_attention: this.farms.filter(f => f.status === 'needs_attention').length
+            };
+            return status;
+        }
+    }
+    
+    // ==========================================
+    // نظام الأسماء المزخرفة
+    // ==========================================
+    
+    class FancyNameSystem {
+        constructor() {
+            this.fancyFonts = {
+                'decorative': {
+                    'A': '𝔸', 'B': '𝔹', 'C': 'ℂ', 'D': '𝔻', 'E': '𝔼',
+                    'F': '𝔽', 'G': '𝔾', 'H': 'ℍ', 'I': '𝕀', 'J': '𝕁',
+                    'K': '𝕂', 'L': '𝕃', 'M': '𝕄', 'N': 'ℕ', 'O': '𝕆',
+                    'P': 'ℙ', 'Q': 'ℚ', 'R': 'ℝ', 'S': '𝕊', 'T': '𝕋',
+                    'U': '𝕌', 'V': '𝕍', 'W': '𝕎', 'X': '𝕏', 'Y': '𝕐', 'Z': 'ℤ',
+                    'a': '𝖆', 'b': '𝖇', 'c': '𝖈', 'd': '𝖉', 'e': '𝖊',
+                    'f': '𝖋', 'g': '𝖌', 'h': '𝖍', 'i': '𝖎', 'j': '𝖏',
+                    'k': '𝖐', 'l': '𝖑', 'm': '𝖒', 'n': '𝖓', 'o': '𝖔',
+                    'p': '𝖕', 'q': '𝖖', 'r': '𝖗', 's': '𝖘', 't': '𝖙',
+                    'u': '𝖚', 'v': '𝖛', 'w': '𝖜', 'x': '𝖝', 'y': '𝖞', 'z': '𝖟'
+                },
+                'bold': {
+                    'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄',
+                    'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉',
+                    'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎',
+                    'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
+                    'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
+                    'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞',
+                    'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
+                    'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨',
+                    'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
+                    'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳'
+                },
+                'script': {
+                    'A': '𝒜', 'B': 'ℬ', 'C': '𝒞', 'D': '𝒟', 'E': 'ℰ',
+                    'F': 'ℱ', 'G': '𝒢', 'H': 'ℋ', 'I': 'ℐ', 'J': '𝒥',
+                    'K': '𝒦', 'L': 'ℒ', 'M': 'ℳ', 'N': '𝒩', 'O': '𝒪',
+                    'P': '𝒫', 'Q': '𝒬', 'R': 'ℛ', 'S': '𝒮', 'T': '𝒯',
+                    'U': '𝒰', 'V': '𝒱', 'W': '𝒲', 'X': '𝒳', 'Y': '𝒴', 'Z': '𝒵'
+                },
+                'gothic': {
+                    'A': '𝔄', 'B': '𝔅', 'C': 'ℭ', 'D': '𝔇', 'E': '𝔈',
+                    'F': '𝔉', 'G': '𝔊', 'H': 'ℌ', 'I': 'ℑ', 'J': '𝔍',
+                    'K': '𝔎', 'L': '𝔏', 'M': '𝔐', 'N': '𝔑', 'O': '𝔒',
+                    'P': '𝔓', 'Q': '𝔔', 'R': 'ℜ', 'S': '𝔖', 'T': '𝔗',
+                    'U': '𝔘', 'V': '𝔙', 'W': '𝔚', 'X': '𝔛', 'Y': '𝔜', 'Z': 'ℤ'
+                }
+            };
+            
+            this.symbols = {
+                'king': '👑',
+                'queen': '👸',
+                'warrior': '⚔️',
+                'shield': '🛡️',
+                'crown': '💎',
+                'star': '⭐',
+                'fire': '🔥',
+                'lightning': '⚡',
+                'crystal': '💎',
+                'crown2': '👑',
+                'victory': '🏆',
+                'diamond': '💎',
+                'gem': '💍',
+                'gold': '🏆'
+            };
+            
+            this.decorations = {
+                'frame': ['┌─┐', '└─┘'],
+                'brackets': ['⟦⟧', '『』', '《》'],
+                'arrows': ['→←', '↕️', '↔️'],
+                'dividers': ['━━━', '═══', '────'],
+                'special': ['❁', '✿', '❀', '❈', '❉']
+            };
+        }
+        
+        convertToFancy(text, style = 'decorative', addSymbol = null, decoration = 'frame') {
+            if (!text) return text;
+            
+            let result = text;
+            const font = this.fancyFonts[style] || this.fancyFonts['decorative'];
+            
+            // تحويل الأحرف
+            result = result.split('').map(char => {
+                return font[char] || char;
+            }).join('');
+            
+            // إضافة رمز
+            if (addSymbol && this.symbols[addSymbol]) {
+                result = this.symbols[addSymbol] + result + this.symbols[addSymbol];
+            }
+            
+            // إضافة زخرفة
+            if (this.decorations[decoration]) {
+                const deco = this.decorations[decoration];
+                if (decoration === 'frame') {
+                    result = deco[0] + result + deco[1];
+                } else if (decoration === 'brackets') {
+                    result = deco[1][0] + result + deco[1][1];
+                } else if (decoration === 'dividers') {
+                    result = deco[0] + result + deco[0];
+                }
+            }
+            
+            return result;
+        }
+        
+        getAvailableStyles() {
+            return Object.keys(this.fancyFonts);
+        }
+        
+        getAvailableSymbols() {
+            return Object.keys(this.symbols);
+        }
+        
+        getAvailableDecorations() {
+            return Object.keys(this.decorations);
+        }
+        
+        showStylePreview(text) {
+            const preview = {};
+            
+            // معاينة الخطط
+            for (const [styleName, font] of Object.entries(this.fancyFonts)) {
+                preview[styleName] = this.convertToFancy(text, styleName);
+            }
+            
+            return preview;
+        }
+        
+        createFancyNameInput() {
+            const modal = this.createModal();
+            return modal;
+        }
+        
+        createModal() {
+            const modal = document.createElement('div');
+            modal.className = 'fancy-name-modal modal';
+            modal.style.display = 'none';
+            
+            modal.innerHTML = `
+                <div class="fancy-name-content">
+                    <div class="fancy-name-header">
+                        <h3>✨ تحويل الاسم إلى اسم مزخرف ✨</h3>
+                        <button class="close-fancy-name" onclick="this.parentElement.parentElement.parentElement.remove()">✕</button>
+                    </div>
+                    <div class="fancy-name-body">
+                        <div class="input-section">
+                            <input type="text" id="original-name" placeholder="أدخل اسمك هنا...">
+                            <button onclick="FancyNameSystem.convertName()" class="btn btn-primary">تحويل</button>
+                        </div>
+                        <div class="options-section">
+                            <div class="option-group">
+                                <label>نوع الخط:</label>
+                                <select id="fancy-style">
+                                    <option value="decorative">خط مزخرف</option>
+                                    <option value="bold">خط عريض</option>
+                                    <option value="script">خط مخطوط</option>
+                                    <option value="gothic">خط قوطي</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label>رمز زخرفي:</label>
+                                <select id="fancy-symbol">
+                                    <option value="">بدون رمز</option>
+                                    <option value="king">تاج ملكي</option>
+                                    <option value="crown">تاج</option>
+                                    <option value="star">نجمة</option>
+                                    <option value="fire">نار</option>
+                                    <option value="lightning">برق</option>
+                                    <option value="victory">نصر</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label>نوع الزخرفة:</label>
+                                <select id="fancy-decoration">
+                                    <option value="frame">إطار</option>
+                                    <option value="brackets">أقواس</option>
+                                    <option value="dividers">فواصل</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="preview-section">
+                            <label>المعاينة:</label>
+                            <div class="fancy-name-preview" id="fancy-name-preview">اسمك المزخرف سيظهر هنا</div>
+                        </div>
+                        <div class="actions-section">
+                            <button onclick="FancyNameSystem.useFancyName()" class="btn btn-success">استخدام الاسم</button>
+                            <button onclick="FancyNameSystem.copyFancyName()" class="btn btn-secondary">نسخ</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return modal;
+        }
+        
+        openFancyNameEditor() {
+            let modal = document.querySelector('.fancy-name-modal');
+            if (!modal) {
+                modal = this.createModal();
+                document.body.appendChild(modal);
+            }
+            modal.style.display = 'flex';
+            
+            // إضافة مستمعي الأحداث
+            const originalInput = document.getElementById('original-name');
+            if (originalInput) {
+                originalInput.addEventListener('input', () => this.convertName());
+            }
+        }
+        
+        convertName() {
+            const originalInput = document.getElementById('original-name');
+            const styleSelect = document.getElementById('fancy-style');
+            const symbolSelect = document.getElementById('fancy-symbol');
+            const decorationSelect = document.getElementById('fancy-decoration');
+            const preview = document.getElementById('fancy-name-preview');
+            
+            if (!originalInput || !preview) return;
+            
+            const originalName = originalInput.value || 'اسمك';
+            const style = styleSelect ? styleSelect.value : 'decorative';
+            const symbol = symbolSelect ? symbolSelect.value : null;
+            const decoration = decorationSelect ? decorationSelect.value : 'frame';
+            
+            const fancyName = this.convertToFancy(originalName, style, symbol, decoration);
+            preview.textContent = fancyName;
+            preview.dataset.fancyName = fancyName;
+        }
+        
+        useFancyName() {
+            const preview = document.getElementById('fancy-name-preview');
+            if (preview && preview.dataset.fancyName) {
+                // تطبيق الاسم المزخرف على معلومات اللاعب
+                if (game && game.player) {
+                    game.player.displayName = preview.dataset.fancyName;
+                    game.player.fancyName = preview.dataset.fancyName;
+                }
+                
+                // تحديث واجهة المستخدم
+                this.updatePlayerDisplayName(preview.dataset.fancyName);
+                
+                // إغلاق النافذة
+                const modal = document.querySelector('.fancy-name-modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+                
+                // عرض رسالة تأكيد
+                if (game && game.showNotification) {
+                    game.showNotification('تم تطبيق الاسم المزخرف بنجاح! ✨', 'success');
+                }
+            }
+        }
+        
+        copyFancyName() {
+            const preview = document.getElementById('fancy-name-preview');
+            if (preview && preview.dataset.fancyName) {
+                navigator.clipboard.writeText(preview.dataset.fancyName).then(() => {
+                    if (game && game.showNotification) {
+                        game.showNotification('تم نسخ الاسم المزخرف! 📋', 'info');
+                    }
+                });
+            }
+        }
+        
+        updatePlayerDisplayName(fancyName) {
+            // تحديث العناصر التي تعرض اسم اللاعب
+            const playerNameElements = [
+                'player-name',
+                'current-user-name',
+                'username-display',
+                'user-display-name'
+            ];
+            
+            playerNameElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = fancyName;
+                }
+            });
+        }
+    }
+    
+    // إنشاء الأنظمة
+    const farmNotificationSystem = new FarmNotificationSystem();
+    const fancyNameSystem = new FancyNameSystem();
+    
     // ربط النظام الصوتي مع أحداث اللعبة
     window.addEventListener('load', () => {
         // تفعيل الموسيقى عند أول تفاعل مع المستخدم
@@ -9735,4 +10222,291 @@ function closeAudioSettingsModal() {
         audioSystem.onButtonClick();
     }
 }
+
+// دالة فتح إعدادات المستخدم
+function openUserSettings() {
+    openAudioSettingsModal();
+}
+
+// دالة فتح محرر الأسماء المزخرفة
+function openFancyNameEditor() {
+    if (fancyNameSystem) {
+        fancyNameSystem.openFancyNameEditor();
+    }
+}
+
+// دالة عرض حالة المزارع
+function showFarmStatus() {
+    if (farmNotificationSystem) {
+        const status = farmNotificationSystem.getFarmStatus();
+        const message = `📊 حالة المزارع:
+        الإجمالي: ${status.total}
+        النشطة: ${status.active}
+        جاهزة للحصاد: ${status.ready}
+        قيد البناء: ${status.building}
+        تحتاج عناية: ${status.needs_attention}`;
+        
+        if (game && game.showNotification) {
+            game.showNotification(message, 'info');
+        }
+    }
+}
+
+// ربط أنظمة المزارع مع اللعبة
+function initializeFarmSystem() {
+    // البحث عن المزارع عند تحميل الصفحة
+    if (farmNotificationSystem) {
+        farmNotificationSystem.scanForFarms();
+    }
+}
+
+// دالة إضافة مزرعة يدوية
+function addManualFarm(farmName) {
+    if (farmNotificationSystem) {
+        const farm = farmNotificationSystem.addCustomFarm(farmName);
+        if (game && game.showNotification) {
+            game.showNotification(`تم إضافة مزرعة: ${farmName} 🌾`, 'success');
+        }
+        return farm;
+    }
+    return null;
+}
+
+// دالة الحصول على اسم مزخرف للاعب
+function getPlayerFancyName() {
+    if (game && game.player && game.player.fancyName) {
+        return game.player.fancyName;
+    }
+    return null;
+}
+
+// دالة إنشاء إشعار مزرعة مخصص
+function createFarmAlert(farmName, message, type = 'info') {
+    if (tickerSystem && tickerSystem.addMessage) {
+        let icon = '🌾';
+        let priority = type;
+        
+        switch (type) {
+            case 'success':
+                icon = '🎉';
+                break;
+            case 'warning':
+                icon = '⚠️';
+                break;
+            case 'error':
+                icon = '❌';
+                break;
+            default:
+                icon = '🌾';
+        }
+        
+        tickerSystem.addMessage({
+            type: 'custom_farm_alert',
+            icon: icon,
+            text: `${farmName}: ${message}`,
+            priority: priority
+        });
+    }
+    
+    // تشغيل الصوت المناسب
+    if (audioSystem && audioSystem.playEffect) {
+        switch (type) {
+            case 'success':
+                audioSystem.playEffect('productionComplete');
+                break;
+            case 'warning':
+                audioSystem.playEffect('warning');
+                break;
+            case 'error':
+                audioSystem.playEffect('error');
+                break;
+            default:
+                audioSystem.playEffect('notification');
+        }
+    }
+}
+
+// دالة تحديث عرض حالة المزارع في الواجهة
+function updateFarmDisplay() {
+    if (!farmNotificationSystem) return;
+    
+    const status = farmNotificationSystem.getFarmStatus();
+    
+    // تحديث عناصر واجهة المستخدم
+    const farmStatusElements = [
+        { id: 'farm-total-count', value: status.total },
+        { id: 'farm-active-count', value: status.active },
+        { id: 'farm-ready-count', value: status.ready },
+        { id: 'farm-building-count', value: status.building },
+        { id: 'farm-attention-count', value: status.needs_attention }
+    ];
+    
+    farmStatusElements.forEach(item => {
+        const element = document.getElementById(item.id);
+        if (element) {
+            element.textContent = item.value;
+        }
+    });
+}
+
+// دوال مساعدة للأسماء المزخرفة
+window.FancyNameSystem = fancyNameSystem;
+
+// ==========================================
+// تكامل الأنظمة مع أحداث اللعبة
+// ==========================================
+
+// تهيئة شاملة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    // تهيئة نظام المزارع
+    setTimeout(() => {
+        initializeFarmSystem();
+    }, 2000);
+    
+    // تهيئة عرض المزارع
+    setTimeout(() => {
+        updateFarmDisplay();
+    }, 3000);
+    
+    // تحديث دوري لعرض المزارع
+    setInterval(() => {
+        updateFarmDisplay();
+    }, 60000); // كل دقيقة
+});
+
+// ربط الأسماء المزخرفة مع نظام اللعبة
+if (typeof game !== 'undefined' && game.player) {
+    // تحميل الاسم المزخرف من التخزين المحلي
+    const savedFancyName = localStorage.getItem('playerFancyName');
+    if (savedFancyName) {
+        game.player.fancyName = savedFancyName;
+        game.player.displayName = savedFancyName;
+    }
+    
+    // حفظ الاسم المزخرف عند تحديثه
+    const originalUpdatePlayerInfo = game.updatePlayerInfo;
+    if (originalUpdatePlayerInfo) {
+        game.updatePlayerInfo = function() {
+            const result = originalUpdatePlayerInfo.apply(this, arguments);
+            
+            // حفظ الاسم المزخرف إذا تم تحديثه
+            if (this.player && this.player.fancyName) {
+                localStorage.setItem('playerFancyName', this.player.fancyName);
+            }
+            
+            return result;
+        };
+    }
+}
+
+// إضافة أزرار إضافية للواجهة
+function addExtraUIButtons() {
+    // البحث عن منطقة الأزرار
+    const buttonContainer = document.querySelector('.user-actions') || 
+                          document.querySelector('.top-bar') ||
+                          document.querySelector('.game-controls');
+    
+    if (buttonContainer) {
+        // زر حالة المزارع
+        const farmStatusBtn = document.createElement('button');
+        farmStatusBtn.className = 'user-action-btn farm-status-btn';
+        farmStatusBtn.innerHTML = '🌾 المزارع';
+        farmStatusBtn.onclick = showFarmStatus;
+        farmStatusBtn.title = 'عرض حالة المزارع';
+        
+        // زر الأسماء المزخرفة
+        const fancyNameBtn = document.createElement('button');
+        fancyNameBtn.className = 'user-action-btn fancy-name-btn';
+        fancyNameBtn.innerHTML = '✨ اسم مزخرف';
+        fancyNameBtn.onclick = openFancyNameEditor;
+        fancyNameBtn.title = 'إنشاء اسم مزخرف';
+        
+        // إضافة الأزرار
+        buttonContainer.appendChild(farmStatusBtn);
+        buttonContainer.appendChild(fancyNameBtn);
+    }
+}
+
+// إضافة الأزرار عند تحميل الصفحة
+setTimeout(addExtraUIButtons, 1000);
+
+// إشعارات تجريبية للمزارع
+function testFarmNotifications() {
+    // إشعار تجريبي للحصاد
+    createFarmAlert('مزرعة التجارب', 'جاهزة للحصاد! 🎉', 'success');
+    
+    // إشعار تجريبي للتحذير
+    setTimeout(() => {
+        createFarmAlert('مزرعة البرتقال', 'تحتاج مياه! 💧', 'warning');
+    }, 3000);
+}
+
+// دوال لتطوير النظام
+window.testFarmNotifications = testFarmNotifications;
+window.addManualFarm = addManualFarm;
+window.showFarmStatus = showFarmStatus;
+window.openFancyNameEditor = openFancyNameEditor;
+window.updateFarmDisplay = updateFarmDisplay;
+window.createFarmAlert = createFarmAlert;
+
+// دوال الاختبار والتجريب
+function initializeDemo() {
+    // إضافة مزارع تجريبية
+    setTimeout(() => {
+        addManualFarm('مزرعة القمح');
+        addManualFarm('مزرعة الذرة');
+        addManualFarm('مزرعة البطاطس');
+        updateFarmDisplay();
+    }, 3000);
+    
+    // إشعار ترحيبي
+    setTimeout(() => {
+        createFarmAlert('النظام', 'مرحباً! تم تفعيل نظام إشعارات المزارع والأسماء المزخرفة! 🎉', 'success');
+    }, 5000);
+    
+    // إشعار تحذيري تجريبي
+    setTimeout(() => {
+        createFarmAlert('مزرعة القمح', 'تحتاج إلى مياه! 💧', 'warning');
+    }, 8000);
+    
+    // إشعار نجاح تجريبي
+    setTimeout(() => {
+        createFarmAlert('مزرعة الذرة', 'جاهزة للحصاد! 🎉', 'success');
+    }, 12000);
+}
+
+// تشغيل التجريب عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initializeDemo, 10000); // بعد 10 ثوانٍ من تحميل الصفحة
+});
+
+// دالة سريعة لفحص النظام
+function quickSystemCheck() {
+    console.log('=== فحص النظام ===');
+    console.log('نظام المزارع:', farmNotificationSystem ? 'مفعل ✅' : 'غير مفعل ❌');
+    console.log('نظام الأسماء المزخرفة:', fancyNameSystem ? 'مفعل ✅' : 'غير مفعل ❌');
+    console.log('النظام الصوتي:', audioSystem ? 'مفعل ✅' : 'غير مفعل ❌');
+    console.log('الشريط المتحرك:', tickerSystem ? 'مفعل ✅' : 'غير مفعل ❌');
+    
+    if (farmNotificationSystem) {
+        const status = farmNotificationSystem.getFarmStatus();
+        console.log('حالة المزارع:', status);
+    }
+}
+
+// أوامر التطوير (يمكن استخدامها في وحدة التحكم)
+window.dev = {
+    check: quickSystemCheck,
+    farms: farmNotificationSystem,
+    fancy: fancyNameSystem,
+    audio: audioSystem,
+    ticker: tickerSystem,
+    test: testFarmNotifications,
+    addFarm: addManualFarm
+};
+
+console.log('🚀 تم تحميل جميع الأنظمة بنجاح!');
+console.log('💡 استخدم dev.check() لفحص النظام');
+console.log('🌾 استخدم dev.test() لاختبار إشعارات المزارع');
+console.log('✨ استخدم dev.fancy.showStylePreview("اسمك") لمعاينة الأسماء المزخرفة');
 }

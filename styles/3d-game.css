@@ -5925,3 +5925,409 @@ body {
         font-size: 14px;
     }
 }
+
+/* ==========================================
+   تصميمات الأسماء المزخرفة والمزارع
+   ========================================== */
+
+/* نافذة الأسماء المزخرفة */
+.fancy-name-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+.fancy-name-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 2px solid #00d4ff;
+    position: relative;
+}
+
+.fancy-name-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #00d4ff;
+}
+
+.fancy-name-header h3 {
+    color: #00d4ff;
+    font-size: 1.5rem;
+    margin: 0;
+    text-align: center;
+    flex: 1;
+}
+
+.close-fancy-name {
+    background: none;
+    border: none;
+    color: #ff4757;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-fancy-name:hover {
+    background: #ff4757;
+    color: white;
+    transform: rotate(90deg);
+}
+
+.fancy-name-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* قسم الإدخال */
+.input-section {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+#original-name {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid #00d4ff;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#original-name:focus {
+    border-color: #00ff88;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+#original-name::placeholder {
+    color: #999;
+}
+
+/* قسم الخيارات */
+.options-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.option-group label {
+    color: #00d4ff;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.option-group select {
+    padding: 0.8rem;
+    border: 2px solid #00d4ff;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.9rem;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-group select:hover,
+.option-group select:focus {
+    border-color: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.option-group select option {
+    background: #1a1a2e;
+    color: white;
+}
+
+/* قسم المعاينة */
+.preview-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.preview-section label {
+    color: #00d4ff;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.fancy-name-preview {
+    min-height: 60px;
+    padding: 1rem;
+    border: 2px dashed #00d4ff;
+    border-radius: 10px;
+    background: rgba(0, 212, 255, 0.1);
+    color: #00ff88;
+    font-size: 1.2rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+    transition: all 0.3s ease;
+}
+
+.fancy-name-preview:empty::before {
+    content: "اسمك المزخرف سيظهر هنا";
+    color: #999;
+    font-style: italic;
+}
+
+/* قسم الإجراءات */
+.actions-section {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.actions-section .btn {
+    flex: 1;
+    max-width: 150px;
+}
+
+/* أزرار المزارع */
+.farm-status-btn,
+.fancy-name-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.farm-status-btn::before,
+.fancy-name-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.farm-status-btn:hover::before,
+.fancy-name-btn:hover::before {
+    left: 100%;
+}
+
+.farm-status-btn {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+}
+
+.fancy-name-btn {
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+    color: white;
+}
+
+/* إشعارات المزارع */
+.farm-alert {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    border-left: 5px solid #00ff88;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    animation: farmAlertSlide 0.5s ease;
+}
+
+.farm-alert.warning {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    border-left-color: #ff4757;
+}
+
+.farm-alert.error {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    border-left-color: #ff3742;
+}
+
+@keyframes farmAlertSlide {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* عرض حالة المزارع */
+.farm-status-display {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 15px;
+    border: 2px solid #00d4ff;
+    min-width: 280px;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.farm-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #00d4ff;
+}
+
+.farm-status-header h4 {
+    color: #00d4ff;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.farm-status-header button {
+    background: none;
+    border: none;
+    color: #ff4757;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.farm-status-header button:hover {
+    background: #ff4757;
+    color: white;
+}
+
+.farm-status-content {
+    margin-bottom: 1rem;
+}
+
+.farm-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.8rem 0;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.farm-status-item:hover {
+    background: rgba(0, 212, 255, 0.2);
+    transform: translateX(-5px);
+}
+
+.farm-status-item .label {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.farm-status-item .value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    color: #00ff88;
+}
+
+.farm-status-item .icon {
+    font-size: 1.2rem;
+}
+
+.farm-status-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.btn-sm.btn-secondary {
+    background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%);
+    color: white;
+}
+
+.btn-sm.btn-secondary:hover {
+    background: linear-gradient(135deg, #95a5a6 0%, #bdc3c7 100%);
+    transform: translateY(-2px);
+}
+
+.btn-sm.btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+}
+
+.btn-sm.btn-primary:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #1f4e79 100%);
+    transform: translateY(-2px);
+}
+
+/* تحسينات الاستجابة */
+@media (max-width: 768px) {
+    .fancy-name-content {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .input-section {
+        flex-direction: column;
+    }
+    
+    .options-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .actions-section {
+        flex-direction: column;
+    }
+    
+    .actions-section .btn {
+        max-width: none;
+    }
+    
+    .farm-status-display {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+    }
+}
