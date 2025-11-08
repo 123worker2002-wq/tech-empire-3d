@@ -2,118 +2,2505 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Tech Empire 3D - Quick Start</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            direction: rtl;
-        }
-        .container { 
-            background: rgba(255,255,255,0.1); 
-            padding: 40px; 
-            border-radius: 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            max-width: 600px;
-        }
-        h1 { font-size: 3em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .credentials { 
-            background: rgba(255,255,255,0.2); 
-            padding: 20px; 
-            border-radius: 10px; 
-            margin: 20px 0;
-        }
-        .login-btn { 
-            background: #28a745; 
-            color: white; 
-            padding: 15px 30px; 
-            border: none; 
-            border-radius: 10px;
-            font-size: 1.2em;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s;
-        }
-        .login-btn:hover { background: #218838; transform: translateY(-2px); }
-        .status { 
-            margin: 20px 0; 
-            padding: 15px; 
-            border-radius: 10px; 
-            background: rgba(40, 167, 69, 0.3);
-        }
-        .error { background: rgba(220, 53, 69, 0.3); }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1A202C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tech Empire">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>الإمبراطورية التقنية - Tech Empire 3D</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Noto+Sans+Arabic:wght@300;400;500;700;900&family=Cairo:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Optimized Google Fonts for Chrome -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Chrome-specific optimizations -->
+    <meta name="color-scheme" content="dark">
+    <meta name="supported-color-schemes" content="dark">
+    <meta name="msapplication-navbutton-color" content="#1A202C">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="application-name" content="Tech Empire">
+    
+    <!-- High DPI optimizations -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="360-fullscreen" content="true">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/3d-game.css">
+    <link rel="stylesheet" href="styles/chat-translation-styles.css">
+    <link rel="stylesheet" href="styles/license-styles.css">
+    <link rel="stylesheet" href="styles/ai-chat.css">
+    <link rel="stylesheet" href="styles/kingdom-lands.css">
+    <link rel="stylesheet" href="styles/city-gates-defense.css">
 </head>
 <body>
-    <div class="container">
-        <h1>🎮 Tech Empire 3D</h1>
-        <div class="status" id="status">اللعبة محملة وجاهزة للعب</div>
-        
-        <div class="credentials">
-            <h3>بيانات الدخول:</h3>
-            <p><strong>Username:</strong> dr.alothman1</p>
-            <p><strong>Password:</strong> alothman7starmaster9A</p>
+    <!-- شريط الإعلانات والأخبار المتحرك -->
+    <div class="ticker-container" id="ticker-container">
+        <div class="ticker-content" id="ticker-content">
+            <div class="ticker-item">
+                <span class="ticker-icon">🎉</span>
+                <span class="ticker-text">أهلاً وسهلاً بكم في إمبراطورية التكنولوجيا! ابدأ رحلتك نحو التطوير والبناء.</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-container">
+        <!-- شريط الموارد والقوات العلوي -->
+        <header class="top-bar">
+            <!-- الصف الأول: الموارد -->
+            <div class="top-bar-row">
+                <div class="resources-bar">
+                    <div class="resource-item" data-resource="gold">
+                        <div class="resource-icon gold-icon"></div>
+                        <span class="resource-value" id="gold-amount">2500</span>
+                    </div>
+                    <div class="resource-item" data-resource="food">
+                        <div class="resource-icon food-icon"></div>
+                        <span class="resource-value" id="food-amount">1500</span>
+                    </div>
+                    <div class="resource-item" data-resource="wood">
+                        <div class="resource-icon wood-icon"></div>
+                        <span class="resource-value" id="wood-amount">800</span>
+                    </div>
+                    <div class="resource-item" data-resource="stone">
+                        <div class="resource-icon stone-icon"></div>
+                        <span class="resource-value" id="stone-amount">600</span>
+                    </div>
+                    <div class="resource-item" data-resource="iron">
+                        <div class="resource-icon iron-icon"></div>
+                        <span class="resource-value" id="iron-amount">200</span>
+                    </div>
+                    <div class="resource-item" data-resource="intelligence">
+                        <div class="resource-icon intelligence-icon">📡</div>
+                        <span class="resource-value" id="intelligence-amount">0</span>
+                    </div>
+                </div>
+                
+                <div class="vip-section">
+                    <div class="vip-icon" id="vip-icon"></div>
+                    <span class="vip-level" id="vip-level">VIP أساسي</span>
+                </div>
+                
+                <!-- أزرار حقول النخبة والحرب والنظام -->
+                <div class="elite-systems-section">
+                    <button class="elite-btn" onclick="game.createEliteFieldsInterface()" title="حقول النخبة">
+                        🌟 حقول النخبة
+                    </button>
+                    <button class="elite-btn" onclick="game.createTradeShipInterface()" title="السفينة التجارية">
+                        🚢 السفينة التجارية
+                    </button>
+                    <button class="elite-btn" onclick="game.createInvestmentCenterInterface()" title="مركز الاستثمار">
+                        💰 مركز الاستثمار
+                    </button>
+                    <button class="elite-btn new-feature" onclick="game.createAdvancedStoresInterface()" title="المتاجر المتقدمة">
+                        🛒 المتاجر المتقدمة
+                    </button>
+                    <button class="elite-btn new-feature" onclick="game.createBlackMarketInterface()" title="السوق المظلم السرية">
+                        🕴️ السوق المظلم
+                    </button>
+                </div>
+            </div>
+            
+            <!-- الصف الثاني: القوات -->
+            <div class="top-bar-row">
+                <div class="troops-bar">
+                    <div class="troop-item" data-troop="infantry">
+                        <div class="troop-icon infantry-icon">👥</div>
+                        <span class="troop-value" id="infantry-count">150</span>
+                    </div>
+                    <div class="troop-item" data-troop="archers">
+                        <div class="troop-icon archers-icon">🏹</div>
+                        <span class="troop-value" id="archers-count">80</span>
+                    </div>
+                    <div class="troop-item" data-troop="cavalry">
+                        <div class="troop-icon cavalry-icon">🐎</div>
+                        <span class="troop-value" id="cavalry-count">40</span>
+                    </div>
+                    <div class="troop-item" data-troop="ranged">
+                        <div class="troop-icon ranged-icon">⚔️</div>
+                        <span class="troop-value" id="ranged-count">60</span>
+                    </div>
+                    <div class="troop-item" data-troop="heavy">
+                        <div class="troop-icon heavy-icon">🛡️</div>
+                        <span class="troop-value" id="heavy-count">25</span>
+                    </div>
+                </div>
+                
+                <div class="population-info">
+                    <span>السكان: </span>
+                    <span id="population-count">500</span>
+                </div>
+            </div>
+            
+            <!-- الصف الثالث: معلومات الوقت والترخيص -->
+            <div class="top-bar-row">
+                <div class="game-info">
+                    <div class="time-display">
+                        <span>🕐 </span>
+                        <span id="game-time">12:00</span>
+                    </div>
+                </div>
+                
+                <div class="license-status-bar" id="license-info">
+                    <span class="license-type">🆓 اللعبة المجانية</span>
+                    <span class="time-remaining">⏰ 30 دقيقة</span>
+                </div>
+            </div>
+            
+            <div class="game-info">
+                <div class="time-display">
+                    <span>الوقت: </span>
+                    <span id="game-time">الوقت: 12:00</span>
+                </div>
+                <div class="gmt-time-display">
+                    <span id="gmt-time-display">🕐 12:00:00 GMT</span>
+                </div>
+                <div class="population-display">
+                    <span>السكان: </span>
+                    <span id="population-count">500</span>
+                </div>
+            </div>
+            
+            <div class="vip-section">
+                <div class="vip-icon" id="vip-icon"></div>
+                <span class="vip-level" id="vip-level">VIP أساسي</span>
+            </div>
+
+            <!-- معلومات الترخيص -->
+            <div class="license-status-bar" id="license-info">
+                <span class="license-type">اللعبة المجانية</span>
+                <span class="time-remaining">الوقت المتبقي: 30 دقيقة</span>
+            </div>
+
+            <!-- زر المتجر - العرض الترويجي -->
+            <button class="store-btn" onclick="game.openStore()" id="store-button">
+                🎁 الفترة التجريبية المجانية - 6 شهور!
+            </button>
+
+            <!-- لوحة تحكم الرادار السريعة -->
+            <div class="radar-mini-display" id="radar-mini-display">
+                <div class="radar-icon" id="radar-status-icon">📡</div>
+                <div class="radar-info">
+                    <div class="radar-status">الرادار: نشط</div>
+                    <div class="radar-alerts-count">إنذارات: 0</div>
+                </div>
+                <div class="radar-controls-mini">
+                    <button onclick="game.toggleFlashMode()" class="mini-btn" title="تشغيل/إيقاف الومض">⚡</button>
+                    <button onclick="game.dismissAllAlerts()" class="mini-btn" title="إطفاء جميع الإنذارات">🚫</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- المنطقة الرئيسية - مشهد ثلاثي الأبعاد -->
+        <main class="main-content">
+            <div class="game-area">
+                <!-- المشهد ثلاثي الأبعاد -->
+                <div class="scene-container" id="3d-container">
+                    <div class="loading-screen" id="loading-screen">
+                        <div class="loading-content">
+                            <h2>جاري تحميل الإمبراطورية التقنية...</h2>
+                            <div class="loading-bar">
+                                <div class="loading-progress" id="loading-progress"></div>
+                            </div>
+                            <div class="loading-text" id="loading-text">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- أزرار التحكم بالكميرا -->
+                <div class="camera-controls">
+                    <button class="camera-btn" id="btn-top-view" title="منظر علوي">↑</button>
+                    <button class="camera-btn" id="btn-front-view" title="منظر أمامي">←</button>
+                    <button class="camera-btn" id="btn-3d-view" title="منظر ثلاثي الأبعاد">3D</button>
+                    <button class="camera-btn" id="btn-back-view" title="منظر خلفي">→</button>
+                    <button class="camera-btn" id="btn-zoom-in" title="تكبير">+</button>
+                    <button class="camera-btn" id="btn-zoom-out" title="تصغير">-</button>
+                </div>
+
+                <!-- لوحة أدوات المباني -->
+                <div class="building-palette">
+                    <div class="palette-title">أدوات البناء</div>
+                    <div class="building-items">
+                        <div class="building-item" data-building="villa">
+                            <div class="building-icon villa-icon"></div>
+                            <span>فيلا</span>
+                            <div class="building-cost">500💰 300🍖 200🪵</div>
+                        </div>
+                        <div class="building-item" data-building="columns">
+                            <div class="building-icon columns-icon"></div>
+                            <span>الأعمدة</span>
+                            <div class="building-cost">300💰 200🗿</div>
+                        </div>
+                        <div class="building-item" data-building="theater">
+                            <div class="building-icon theater-icon"></div>
+                            <span>المسرح</span>
+                            <div class="building-cost">800💰 400🗿 200🪵</div>
+                        </div>
+                        <div class="building-item" data-building="colosseum">
+                            <div class="building-icon colosseum-icon"></div>
+                            <span>الكولوسيوم</span>
+                            <div class="building-cost">2000💰 1000🗿 200🔩</div>
+                        </div>
+                        <div class="building-item" data-building="barracks">
+                            <div class="building-icon barracks-icon"></div>
+                            <span>الثكنات</span>
+                            <div class="building-cost">600💰 300🪵 100🔩</div>
+                        </div>
+                        <div class="building-item" data-building="market">
+                            <div class="building-icon market-icon"></div>
+                            <span>السوق</span>
+                            <div class="building-cost">1000💰 500🪵 200🗿</div>
+                        </div>
+                        <div class="building-item" data-building="temple">
+                            <div class="building-icon temple-icon"></div>
+                            <span>المعبد</span>
+                            <div class="building-cost">1500💰 800🗿 300🪵</div>
+                        </div>
+                        <div class="building-item" data-building="forum">
+                            <div class="building-icon forum-icon"></div>
+                            <span>المنتدى</span>
+                            <div class="building-cost">1200💰 600🗿 400🪵</div>
+                        </div>
+                        <div class="building-item" data-building="royal_palace">
+                            <div class="building-icon royal-palace-icon"></div>
+                            <span>القصر الملكي</span>
+                            <div class="building-cost">3000💰 1500🗿 1000🪵 500🔩</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قسم التحالفات -->
+                <div class="content-section" id="alliances-section" style="display: none;">
+                    <div class="alliances-content">
+                        <h2>التحالفات السياسية</h2>
+                        <p>أطلق العنان لقوة المملكة من خلال التحالفات مع الممالك الأخرى</p>
+                        
+                        <!-- التحالفات النشطة -->
+                        <div class="active-alliances-section">
+                            <h3>التحالفات النشطة</h3>
+                            <div class="alliances-summary">
+                                <div class="alliance-bonus-card">
+                                    <h4>مكافأة التحالف</h4>
+                                    <div class="bonus-details">
+                                        <span>قوة إضافية: <span id="total-alliance-bonus">0</span></span>
+                                        <span>ذهب إضافي: <span id="extra-gold-bonus">0</span></span>
+                                        <span>طعام إضافي: <span id="extra-food-bonus">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="active-alliances-list" class="active-alliances-list">
+                                <div class="no-alliances">لا توجد تحالفات نشطة</div>
+                            </div>
+                        </div>
+                        
+                        <!-- التحالفات المتاحة -->
+                        <div class="available-alliances-section">
+                            <h3>التحالفات المتاحة</h3>
+                            <div id="available-alliances-list" class="available-alliances-list">
+                                <!-- سيتم ملؤها بواسطة JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- معلومات التحالف -->
+                        <div class="alliance-info-section">
+                            <h3>معلومات التحالف</h3>
+                            <div class="info-cards">
+                                <div class="info-card">
+                                    <h4>فوائد التحالف</h4>
+                                    <ul>
+                                        <li>زيادة في قوة المعركة</li>
+                                        <li>مكافآت ذهبية إضافية</li>
+                                        <li>إنتاج طعام محسن</li>
+                                        <li>فوائد حصينة في الدفاع</li>
+                                    </ul>
+                                </div>
+                                <div class="info-card">
+                                    <h4>قواعد التحالف</h4>
+                                    <ul>
+                                        <li>يمكن تفعيل تحالفين فقط في نفس الوقت</li>
+                                        <li>مدة التحالف: 5 دقائق</li>
+                                        <li>لا يمكن إعادة تفعيل نفس التحالف فوراً</li>
+                                        <li>التحالف يعطي أفضلية في войска الطلاب</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- تكنولوجيا التحالف -->
+                        <div class="alliance-tech-section">
+                            <h3>تكنولوجيا التحالف</h3>
+                            <div class="tech-grid">
+                                <div class="tech-card">
+                                    <h4>تكنولوجيا الذهب</h4>
+                                    <p>مستوى: <span id="tech-gold-level">0</span></p>
+                                    <button class="btn btn-small" onclick="game.researchAllianceTech('gold')">تطوير (500 ذهب)</button>
+                                </div>
+                                <div class="tech-card">
+                                    <h4>تكنولوجيا الطعام</h4>
+                                    <p>مستوى: <span id="tech-food-level">0</span></p>
+                                    <button class="btn btn-small" onclick="game.researchAllianceTech('food')">تطوير (500 ذهب)</button>
+                                </div>
+                                <div class="tech-card">
+                                    <h4>التكنولوجيا العسكرية</h4>
+                                    <p>مستوى: <span id="tech-military-level">0</span></p>
+                                    <button class="btn btn-small" onclick="game.researchAllianceTech('military')">تطوير (800 ذهب)</button>
+                                </div>
+                                <div class="tech-card">
+                                    <h4>تكنولوجيا البناء</h4>
+                                    <p>مستوى: <span id="tech-construction-level">0</span></p>
+                                    <button class="btn btn-small" onclick="game.researchAllianceTech('construction')">تطوير (600 ذهب)</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- هدايا التحالف -->
+                        <div class="alliance-gifts-section">
+                            <h3>هدايا التحالف</h3>
+                            <div class="gift-status">
+                                <p>الهدايا المستخدمة اليوم: <span id="gifts-used-today">0</span>/3</p>
+                                <button class="btn btn-small" onclick="game.collectAllianceGift()" id="collect-gift-btn">جمع الهدية</button>
+                            </div>
+                        </div>
+                        
+                        <!-- أحداث التحالف -->
+                        <div class="alliance-events-section">
+                            <h3>أحداث التحالف</h3>
+                            <div class="events-grid">
+                                <div class="event-card">
+                                    <h4>دفاع عن الإقليم</h4>
+                                    <p>الحدث الأسبوعي للدفاع عن أراضي التحالف</p>
+                                    <span class="event-reward">مكافأة: 1000 ذهب</span>
+                                    <button class="btn btn-small" onclick="game.joinAllianceEvent('territoryDefense')">انضمام</button>
+                                </div>
+                                <div class="event-card">
+                                    <h4>مغامرات النخبة</h4>
+                                    <p>مغامرات مثيرة مع أعضاء التحالف</p>
+                                    <span class="event-reward">مكافأة: 800 ذهب</span>
+                                    <button class="btn btn-small" onclick="game.joinAllianceEvent('eliteAdventures')">انضمام</button>
+                                </div>
+                                <div class="event-card">
+                                    <h4>حروب النخبة</h4>
+                                    <p>معارك تحالفية ضد أعداء مشتركين</p>
+                                    <span class="event-reward">مكافأة: 1200 ذهب</span>
+                                    <button class="btn btn-small" onclick="game.joinAllianceEvent('eliteWars')">انضمام</button>
+                                </div>
+                                <div class="event-card">
+                                    <h4>محاكمة الوحوش</h4>
+                                    <p>حدث يومي لهزيمة وحوش قوية</p>
+                                    <span class="event-reward">مكافأة: 300 ذهب</span>
+                                    <button class="btn btn-small" onclick="game.joinAllianceEvent('fiendTrial')">انضمام</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- مساعدة أعضاء التحالف -->
+                        <div class="alliance-help-section">
+                            <h3>مساعدة أعضاء التحالف</h3>
+                            <div class="help-controls">
+                                <button class="btn btn-small" onclick="game.helpAllianceMember('gold')">مساعدة في الذهب</button>
+                                <button class="btn btn-small" onclick="game.helpAllianceMember('food')">مساعدة في الطعام</button>
+                                <button class="btn btn-small" onclick="game.helpAllianceMember('construction')">مساعدة في البناء</button>
+                                <button class="btn btn-small" onclick="game.helpAllianceMember('military')">مساعدة عسكرية</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قسم الجيش -->
+                <div class="content-section" id="military-section" style="display: none;">
+                    <div class="military-content">
+                        <h2>الجيش الروماني</h2>
+                        <p>أدِر تشكيلاتك العسكرية واجمع القوة من خلال التدريب الاستراتيجي</p>
+                        
+                        <!-- معلومات القوة -->
+                        <div class="military-power-section">
+                            <div class="power-display">
+                                <div class="power-card">
+                                    <h3>قوة المعركة</h3>
+                                    <span class="power-value" id="military-power-value">0</span>
+                                    <div class="power-breakdown">
+                                        <span>المستوى: <span id="kingdom-level-display">1</span></span>
+                                        <span>التشكيلة: <span id="current-formation-display">تستودو</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- الوحدات العسكرية -->
+                        <div class="military-units-section">
+                            <h3>الوحدات العسكرية</h3>
+                            <div class="units-grid">
+                                <!-- الطقوس (Legionaries) -->
+                                <div class="unit-card">
+                                    <div class="unit-icon">⚔️</div>
+                                    <h4>الطقوس</h4>
+                                    <p>المشاة الثقيلة الأساسية</p>
+                                    <div class="unit-stats">
+                                        <span>العدد: <span id="legiones-count">0</span>/200</span>
+                                        <span>القوة: +25</span>
+                                    </div>
+                                    <div class="unit-actions">
+                                        <button class="btn btn-small" onclick="game.trainUnit('legiones')">تدريب (50 ذهب)</button>
+                                        <button class="btn btn-small btn-secondary" onclick="game.dismissUnit('legiones')">تقليل</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- الفرسان (Cavalry) -->
+                                <div class="unit-card">
+                                    <div class="unit-icon">🐎</div>
+                                    <h4>الفرسان</h4>
+                                    <p>وحدة خيالة للكمين</p>
+                                    <div class="unit-stats">
+                                        <span>العدد: <span id="equites-count">0</span>/100</span>
+                                        <span>القوة: +30</span>
+                                    </div>
+                                    <div class="unit-actions">
+                                        <button class="btn btn-small" onclick="game.trainUnit('equites')">تدريب (80 ذهب)</button>
+                                        <button class="btn btn-small btn-secondary" onclick="game.dismissUnit('equites')">تقليل</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- الرماة (Archers) -->
+                                <div class="unit-card">
+                                    <div class="unit-icon">🏹</div>
+                                    <h4>الرماة</h4>
+                                    <p>المقاتلون بالخيث</p>
+                                    <div class="unit-stats">
+                                        <span>العدد: <span id="sagittarii-count">0</span>/150</span>
+                                        <span>القوة: +20</span>
+                                    </div>
+                                    <div class="unit-actions">
+                                        <button class="btn btn-small" onclick="game.trainUnit('sagittarii')">تدريب (40 ذهب)</button>
+                                        <button class="btn btn-small btn-secondary" onclick="game.dismissUnit('sagittarii')">تقليل</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- الخفيفون (Light Infantry) -->
+                                <div class="unit-card">
+                                    <div class="unit-icon">🗡️</div>
+                                    <h4>الخفيفون</h4>
+                                    <p>مشاة خفيفون للتجسس</p>
+                                    <div class="unit-stats">
+                                        <span>العدد: <span id="velites-count">0</span>/120</span>
+                                        <span>القوة: +15</span>
+                                    </div>
+                                    <div class="unit-actions">
+                                        <button class="btn btn-small" onclick="game.trainUnit('velites')">تدريب (30 ذهب)</button>
+                                        <button class="btn btn-small btn-secondary" onclick="game.dismissUnit('velites')">تقليل</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- مدافع الجرارات (Artillery) -->
+                                <div class="unit-card">
+                                    <div class="unit-icon">🏗️</div>
+                                    <h4>مدافع الجرارات</h4>
+                                    <p>مشغلو أسلحة الحصار</p>
+                                    <div class="unit-stats">
+                                        <span>العدد: <span id="ballistarii-count">0</span>/50</span>
+                                        <span>القوة: +50</span>
+                                    </div>
+                                    <div class="unit-actions">
+                                        <button class="btn btn-small" onclick="game.trainUnit('ballistarii')">تدريب (100 ذهب)</button>
+                                        <button class="btn btn-small btn-secondary" onclick="game.dismissUnit('ballistarii')">تقليل</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- المساعدون (Auxiliary) -->
+                                <div class="unit-card">
+                                    <div class="unit-icon">🛡️</div>
+                                    <h4>المساعدون</h4>
+                                    <p>جنود من الأراضي المدموعة</p>
+                                    <div class="unit-stats">
+                                        <span>العدد: <span id="auxilia-count">0</span>/80</span>
+                                        <span>القوة: +35</span>
+                                    </div>
+                                    <div class="unit-actions">
+                                        <button class="btn btn-small" onclick="game.trainUnit('auxilia')">تدريب (60 ذهب)</button>
+                                        <button class="btn btn-small btn-secondary" onclick="game.dismissUnit('auxilia')">تقليل</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- التشكيلات العسكرية -->
+                        <div class="military-formations-section">
+                            <h3>التشكيلات العسكرية</h3>
+                            <div class="formations-grid">
+                                <div class="formation-card" onclick="game.changeFormation('testudo')">
+                                    <h4>تستودو (السلحفاة)</h4>
+                                    <p>تشكيلة دفاعية قوية</p>
+                                    <span class="formation-bonus">+25 دفاع</span>
+                                </div>
+                                <div class="formation-card" onclick="game.changeFormation('wedges')">
+                                    <h4>الوتد</h4>
+                                    <p>تشكيلة هجومية للاختراق</p>
+                                    <span class="formation-bonus">+30 هجوم</span>
+                                </div>
+                                <div class="formation-card" onclick="game.changeFormation('circle')">
+                                    <h4>الدائرة</h4>
+                                    <p>تشكيلة دائرية متوازنة</p>
+                                    <span class="formation-bonus">+20 متوسطة</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- نظام المعارك -->
+                        <div class="battle-system-section">
+                            <h3>نظام المعارك</h3>
+                            <div class="battle-controls">
+                                <div class="battle-type-cards">
+                                    <div class="battle-card">
+                                        <h4>هجوم منفرد</h4>
+                                        <p>جيش واحد يهاجم</p>
+                                        <span class="risk-level">مخاطر: متوسط</span>
+                                        <button class="btn btn-small" onclick="game.startBattle('solo')">بدء</button>
+                                    </div>
+                                    <div class="battle-card">
+                                        <h4>تجمع تحالفي</h4>
+                                        <p>جيش تحالفي موحد</p>
+                                        <span class="risk-level">مخاطر: منخفض</span>
+                                        <button class="btn btn-small" onclick="game.coordinateAllianceAttack()">تنسيق</button>
+                                    </div>
+                                    <div class="battle-card">
+                                        <h4>هجوم منسق</h4>
+                                        <p>هجمات متزامنة</p>
+                                        <span class="risk-level">مخاطر: عالي</span>
+                                        <button class="btn btn-small" onclick="game.initiateTimedAttack()">تنفيذ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- النظام الصحي -->
+                        <div class="hospital-section">
+                            <h3>النظام الصحي</h3>
+                            <div class="hospital-status">
+                                <div class="wounded-display">
+                                    <span>الوحدات المصابة: <span id="wounded-units">0</span></span>
+                                    <span>السعة: <span id="hospital-capacity">20</span></span>
+                                </div>
+                                <button class="btn btn-small" onclick="game.healUnits()">علاج الوحدات</button>
+                            </div>
+                        </div>
+                        
+                        <!-- معلومات التدريب -->
+                        <div class="training-info-section">
+                            <h3>معلومات التدريب</h3>
+                            <div class="info-cards">
+                                <div class="info-card">
+                                    <h4>أنواع الوحدات</h4>
+                                    <ul>
+                                        <li><strong>الطقوس:</strong> العمود الفقري للجيش الروماني</li>
+                                        <li><strong>الفرسان:</strong> للكمين والاختراق السريع</li>
+                                        <li><strong>الرماة:</strong> للدعم من مسافة بعيدة</li>
+                                        <li><strong>الخفيفون:</strong> للمهام الخاصة والتجسس</li>
+                                    </ul>
+                                </div>
+                                <div class="info-card">
+                                    <h4>نصائح التدريب</h4>
+                                    <ul>
+                                        <li>حافظ على توازن بين أنواع الوحدات</li>
+                                        <li>استثمر في المستشفى للعلاج</li>
+                                        <li>استخدم الأكاديمية لتقليل التكاليف</li>
+                                        <li>تفاعل مع التحالفات لزيادة القوة</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- اللوحة الجانبية للمعلومات -->
+            <div class="side-panel" id="side-panel">
+                <div class="panel-header">
+                    <h1 id="panel-title">معلومات المدينة</h1>
+                    <button class="close-panel" id="close-panel">×</button>
+                </div>
+                <div class="panel-content" id="panel-content">
+                    <div class="city-stats">
+                        <h3>إحصائيات المدينة</h3>
+                        <div class="stat-item">
+                            <span>إجمالي المباني:</span>
+                            <span id="total-buildings">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>السعة السكانية:</span>
+                            <span id="total-capacity">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>الإنتاج اليومي:</span>
+                            <div id="daily-production">
+                                <div>ذهب: <span id="gold-production">0</span>/يوم</div>
+                                <div>طعام: <span id="food-production">0</span>/يوم</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="current-selection">
+                        <h3>المبنى المحدد</h3>
+                        <p>انقر على أي مبنى لعرض تفاصيله وخياراته.</p>
+                    </div>
+                </div>
+                
+                <div class="panel-footer">
+                    <button class="btn btn-secondary" id="btn-rotate-camera">تدوير الكاميرا</button>
+                    <button class="btn btn-secondary" id="btn-reset-camera">إعادة تعيين</button>
+                </div>
+            </div>
+            
+            <!-- قسم حرب الممالك -->
+            <div class="content-section" id="warfare-section" style="display: none;">
+                <div class="warfare-content">
+                    <h2>حرب الممالك</h2>
+                    
+                    <!-- حالة المملكة والجيش -->
+                    <div class="kingdom-status">
+                        <div class="status-card">
+                            <h3>مستوى المملكة</h3>
+                            <div class="status-value" id="kingdom-level">1</div>
+                        </div>
+                        <div class="status-card">
+                            <h3>حجم الجيش</h3>
+                            <div class="status-value" id="army-size">0/100</div>
+                        </div>
+                        <div class="status-card">
+                            <h3>الوضع</h3>
+                            <div class="status-value" id="war-status">سلم</div>
+                        </div>
+                    </div>
+                    
+                    <!-- تجنيد الجيش -->
+                    <div class="army-recruitment">
+                        <h3>تجنيد الجيش</h3>
+                        <div class="recruitment-options">
+                            <button class="btn btn-primary" onclick="game.recruitArmy(10)">
+                                تجنيد 10 جندي (100💰)
+                            </button>
+                            <button class="btn btn-primary" onclick="game.recruitArmy(50)">
+                                تجنيد 50 جندي (500💰)
+                            </button>
+                            <button class="btn btn-primary" onclick="game.recruitArmy(100)">
+                                تجنيد 100 جندي (1000💰)
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- الأعداء -->
+                    <div class="enemies-section">
+                        <h3>الممالك المعادية</h3>
+                        <div class="enemies-list" id="enemies-list">
+                            <div class="enemy-card" data-enemy="0">
+                                <h4>ممالك بيزنطة</h4>
+                                <p>القوة: 50</p>
+                                <p>المكافأة: 500 ذهب</p>
+                                <button class="btn btn-danger" onclick="game.startKingdomWar(0)">هاجم</button>
+                            </div>
+                            <div class="enemy-card" data-enemy="1">
+                                <h4>ممالك مصر</h4>
+                                <p>القوة: 75</p>
+                                <p>المكافأة: 750 ذهب</p>
+                                <button class="btn btn-danger" onclick="game.startKingdomWar(1)">هاجم</button>
+                            </div>
+                            <div class="enemy-card" data-enemy="2">
+                                <h4>ممالك اليونان</h4>
+                                <p>القوة: 100</p>
+                                <p>المكافأة: 1000 ذهب</p>
+                                <button class="btn btn-danger" onclick="game.startKingdomWar(2)">هاجم</button>
+                            </div>
+                            <div class="enemy-card" data-enemy="3">
+                                <h4>الإمبراطورية الجرمانية</h4>
+                                <p>القوة: 150</p>
+                                <p>المكافأة: 1500 ذهب</p>
+                                <button class="btn btn-danger" onclick="game.startKingdomWar(3)">هاجم</button>
+                            </div>
+                        </div>
+                        
+                        <!-- زر الهجوم -->
+                        <div class="attack-section" id="attack-section" style="display: none;">
+                            <h3>الهجوم</h3>
+                            <p>العدو الحالي: <span id="current-enemy">لا يوجد</span></p>
+                            <button class="btn btn-warning btn-large" onclick="game.executeKingdomAttack()">
+                                شن هجوم
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- شريط التنقل السفلي -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-section="city">
+                <div class="nav-icon city-icon"></div>
+                <span>المدينة</span>
+            </button>
+            <button class="nav-btn" data-section="map">
+                <div class="nav-icon map-icon"></div>
+                <span>الخريطة</span>
+            </button>
+            <button class="nav-btn" data-section="warfare">
+                <div class="nav-icon warfare-icon"></div>
+                <span>حرب الممالك</span>
+            </button>
+            <button class="nav-btn" data-section="troops" id="military-btn">
+                <div class="nav-icon troops-icon"></div>
+                <span>القوات</span>
+            </button>
+            <button class="nav-btn" data-section="research" id="research-btn">
+                <div class="nav-icon research-icon"></div>
+                <span>البحث</span>
+            </button>
+            <button class="nav-btn" data-section="kingdoms" id="kingdoms-btn">
+                <div class="nav-icon kingdoms-icon"></div>
+                <span>الممالك</span>
+            </button>
+            <button class="nav-btn" data-section="expansion" onclick="game.showExpansionSection()">
+                <div class="nav-icon expansion-icon">🗺️</div>
+                <span>التوسعات</span>
+            </button>
+            <button class="nav-btn" data-section="pets" onclick="game.showPetSystem()">
+                <div class="nav-icon pet-icon" id="pet-system-icon">🐾</div>
+                <span>الحفلان</span>
+            </button>
+            <button class="nav-btn" data-section="security" onclick="game.showSecurityPanel()">
+                <div class="nav-icon security-icon">🛡️</div>
+                <span>الأمان</span>
+            </button>
+            <button class="nav-btn" data-section="alliances" id="alliances-btn">
+                <div class="nav-icon alliance-icon"></div>
+                <span>التحالفات</span>
+            </button>
+            <button class="nav-btn" data-section="owner" onclick="game.toggleOwnerMode()">
+                <div class="nav-icon owner-icon"></div>
+                <span>المالك</span>
+            </button>
+            <button class="nav-btn" data-section="riches-war" onclick="game.showRichesWarSection()">
+                <div class="nav-icon riches-war-icon">🏛️</div>
+                <span>حرب الثروه</span>
+            </button>
+            <button class="nav-btn" data-section="territories" onclick="game.showAllianceTerritoriesSection()">
+                <div class="nav-icon territories-icon">🗺️</div>
+                <span>أراضي التحالف</span>
+            </button>
+            <button class="nav-btn" data-section="chat" onclick="game.openAllianceChat()" id="chat-btn">
+                <div class="nav-icon chat-icon">💬</div>
+                <span>دردشة التحالف</span>
+            </button>
+            <button class="nav-btn" data-section="ai-system" onclick="game.showAISystemSection()">
+                <div class="nav-icon ai-system-icon">🤖</div>
+                <span>الذكاء الاصطناعي</span>
+            </button>
+            <button class="nav-btn" data-section="radar" onclick="game.showRadarSection()">
+                <div class="nav-icon radar-icon">📡</div>
+                <span>الرادار</span>
+            </button>
+            <button class="nav-btn" data-section="kingdom-lands" onclick="game.showKingdomLands()">
+                <div class="nav-icon lands-icon">🌍</div>
+                <span>أراضي المملكة</span>
+            </button>
+            <button class="nav-btn" data-section="city-gates" onclick="game.showCityGates()">
+                <div class="nav-icon city-gates-icon">🏰</div>
+                <span>مدخل المدينة</span>
+            </button>
+            <button class="nav-btn" data-section="military-guides" onclick="game.showMilitaryGuidesSection()">
+                <div class="nav-icon military-guides-icon">📚</div>
+                <span>أدلة عسكرية</span>
+            </button>
+            <button class="nav-btn" data-section="account-management" onclick="window.accountManager.showAccountManagement()">
+                <div class="nav-icon account-management-icon">👥</div>
+                <span>إدارة الحسابات</span>
+            </button>
+            <button class="nav-btn" data-section="vip">
+                <div class="nav-icon vip-nav-icon"></div>
+                <span>VIP</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- نوافذ منبثقة للبناء -->
+    <div class="modal" id="build-modal" style="display: none;">
+        <div class="modal-content">
+            <h2>بناء مبنى جديد</h2>
+            <div id="build-info"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancel-build">إلغاء</button>
+                <button class="btn btn-primary" id="confirm-build">بناء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة معلومات المبنى -->
+    <div class="modal" id="building-info-modal" style="display: none;">
+        <div class="modal-content">
+            <h2 id="building-modal-title">معلومات المبنى</h2>
+            <div id="building-modal-content"></div>
+            <div class="modal-actions" id="building-modal-actions">
+                <button class="btn btn-secondary" id="close-building-modal">إغلاق</button>
+                <button class="btn btn-primary" id="upgrade-building">ترقية</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم القوات -->
+    <div class="content-section" id="troops-section" style="display: none;">
+        <div class="troops-content">
+            <h2>⚔️ نظام القوات</h2>
+            <p>طور قواتك من T1 إلى T14 لفتح القدرات الحربية المتقدمة</p>
+            
+            <!-- عرض مستوى القوات الحالي -->
+            <div id="troopDisplay"></div>
+            
+            <!-- معلومات تفصيلية عن القدرات -->
+            <div class="troop-capabilities">
+                <h3>قدرات القوات</h3>
+                <div class="capability-grid">
+                    <div class="capability-item">
+                        <div class="capability-icon">⚔️</div>
+                        <h4>الهجوم</h4>
+                        <p>زيادة قوة الهجوم للوحدات العسكرية</p>
+                    </div>
+                    <div class="capability-item">
+                        <div class="capability-icon">🛡️</div>
+                        <h4>الدفاع</h4>
+                        <p>حماية أفضل من الهجمات المعادية</p>
+                    </div>
+                    <div class="capability-item">
+                        <div class="capability-icon">❤️</div>
+                        <h4>الصحة</h4>
+                        <p>زيادة صحة الوحدات وقدرتها على البقاء</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم الممالك -->
+    <div class="content-section" id="kingdoms-section" style="display: none;">
+        <div class="kingdoms-content">
+            <h2>🏰 نظام الممالك</h2>
+            <p>سافر بين الممالك واستكشف عوالم جديدة</p>
+            
+            <!-- عرض المملكة الحالية -->
+            <div id="kingdomDisplay"></div>
+            
+            <!-- معلومات الممالك -->
+            <div class="kingdom-info">
+                <h3>معلومات التنقل</h3>
+                <div class="info-items">
+                    <div class="info-item">
+                        <span class="info-icon">📅</span>
+                        <span>يتطلب عمر حساب 3 أيام للوصول للممالك</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">⭐</span>
+                        <span>يتطلب مستوى C8 للوصول للممالك</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">💰</span>
+                        <span>يكلف 500-2100 ذهبية للتنقل</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة VIP -->
+    <div class="modal" id="vip-modal" style="display: none;">
+        <div class="modal-content">
+            <h2>اشتراك VIP</h2>
+            <div class="vip-packages">
+                <div class="vip-package" data-level="1">
+                    <h3>VIP شامل</h3>
+                    <div class="benefits">
+                        <p>• 2500 ذهب</p>
+                        <p>• تسريع 4x</p>
+                        <p>• إنهاء المهام 5x</p>
+                        <p>• صلاحية 30 يوم</p>
+                    </div>
+                    <button class="btn btn-gold">اشترك الآن</button>
+                </div>
+                <div class="vip-package" data-level="2">
+                    <h3>VIP كامل</h3>
+                    <div class="benefits">
+                        <p>• 5000 ذهب</p>
+                        <p>• تسريع 5x</p>
+                        <p>• إنهاء المهام 10x</p>
+                        <p>• صلاحية 60 يوم</p>
+                    </div>
+                    <button class="btn btn-gold">اشترك الآن</button>
+                </div>
+                <div class="vip-package" data-level="3">
+                    <h3>VIP ماسي</h3>
+                    <div class="benefits">
+                        <p>• 10000 ذهب</p>
+                        <p>• تسريع كامل</p>
+                        <p>• إنهاء المهام 15x</p>
+                        <p>• صلاحية 90 يوم</p>
+                    </div>
+                    <button class="btn btn-gold">اشترك الآن</button>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="close-vip">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نظام الإرشاد الشامل -->
+    <div class="guidance-overlay" id="guidance-overlay" style="display: none;">
+        <div class="guidance-content">
+            <div class="guidance-header">
+                <h3 id="guidance-title">دليل الممالك</h3>
+                <button class="guidance-close" id="close-guidance">✕</button>
+            </div>
+            
+            <div class="guidance-body" id="guidance-body">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+            
+            <div class="guidance-footer">
+                <button class="btn btn-primary" id="guidance-understood">فهمت</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجهة إعدادات الصوت -->
+    <div class="modal" id="audio-settings-modal" style="display: none;">
+        <div class="modal-content audio-settings">
+            <div class="settings-header">
+                <h2>🎵 إعدادات الصوت والموسيقى</h2>
+                <button class="close-modal" id="close-audio-settings">✕</button>
+            </div>
+            
+            <div class="settings-body">
+                <!-- التحكم في الصوت العام -->
+                <div class="settings-section">
+                    <h3>🔊 التحكم في الصوت</h3>
+                    <div class="volume-control">
+                        <label for="master-volume">
+                            <span>🔊 مستوى الصوت العام</span>
+                            <span id="master-volume-display">50%</span>
+                        </label>
+                        <input type="range" id="master-volume" min="0" max="100" value="50">
+                    </div>
+                </div>
+
+                <!-- موسيقى الخلفية -->
+                <div class="settings-section">
+                    <h3>🎶 موسيقى الخلفية</h3>
+                    <div class="music-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="background-music-toggle">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">تشغيل موسيقى الخلفية</span>
+                        </label>
+                    </div>
+                    <div class="volume-control">
+                        <label for="music-volume">
+                            <span>🎵 مستوى الموسيقى</span>
+                            <span id="music-volume-display">30%</span>
+                        </label>
+                        <input type="range" id="music-volume" min="0" max="100" value="30">
+                    </div>
+                </div>
+
+                <!-- أصوات التأثيرات -->
+                <div class="settings-section">
+                    <h3>🎯 أصوات التأثيرات</h3>
+                    <div class="volume-control">
+                        <label for="effects-volume">
+                            <span>🔔 مستوى التأثيرات</span>
+                            <span id="effects-volume-display">60%</span>
+                        </label>
+                        <input type="range" id="effects-volume" min="0" max="100" value="60">
+                    </div>
+                </div>
+
+                <!-- اختبار الأصوات -->
+                <div class="settings-section">
+                    <h3>🧪 اختبار الأصوات</h3>
+                    <div class="test-sounds">
+                        <button class="test-sound-btn" data-sound="buildComplete">🏗️ بناء</button>
+                        <button class="test-sound-btn" data-sound="battleWin">⚔️ فوز</button>
+                        <button class="test-sound-btn" data-sound="click">🔔 نقرة</button>
+                        <button class="test-sound-btn" data-sound="resourceGain">💰 ذهب</button>
+                    </div>
+                </div>
+
+                <!-- كتم الصوت -->
+                <div class="settings-section">
+                    <h3>🔇 كتم الصوت</h3>
+                    <div class="mute-control">
+                        <label class="toggle-switch large">
+                            <input type="checkbox" id="mute-toggle">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label" id="mute-label">🔊 الصوت مفعل</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-footer">
+                <button class="btn btn-secondary" id="reset-audio-settings">إعادة تعيين</button>
+                <button class="btn btn-primary" id="save-audio-settings">حفظ الإعدادات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- معلومات مساعد التحكم -->
+    <div class="help-overlay" id="help-overlay" style="display: none;">
+        <div class="help-content">
+            <h3>طريقة اللعب</h3>
+            <div class="help-section">
+                <h4>التحكم بالكميرا:</h4>
+                <p>• استخدم أزرار التحكم أو الماوس للتنقل</p>
+                <p>• العجلة للتكبير والتصغير</p>
+                <p>• السحب لتحريك الكاميرا</p>
+            </div>
+            <div class="help-section">
+                <h4>البناء:</h4>
+                <p>• انقر على أي مبنى في اللوحة</p>
+                <p>• اضغط على موقع فارغ في المدينة</p>
+                <p>• أكد البناء عند توفر الموارد</p>
+            </div>
+            <div class="help-section">
+                <h4>إدارة المباني:</h4>
+                <p>• انقر على مبنى موجود لعرض معلوماته</p>
+                <p>• استخدم الترقية لزيادة الإنتاج</p>
+                <p>• راقب التقدم في اللوحة الجانبية</p>
+            </div>
+            <button class="btn btn-primary" id="close-help">فهمت</button>
+        </div>
+    </div>
+
+    <!-- تحميل مكتبات Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="scripts/3d-game.js"></script>
+    
+    <script>
+        // تنقل بين الأقسام
+        document.addEventListener('DOMContentLoaded', function() {
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const sections = {
+                'city': document.getElementById('city-section'),
+                'map': document.getElementById('map-section'), 
+                'military': document.getElementById('military-section'),
+                'warfare': document.getElementById('warfare-section'),
+                'troops': document.getElementById('troops-section'),
+                'research': document.getElementById('research-section'),
+                'kingdoms': document.getElementById('kingdoms-section'),
+                'alliances': document.getElementById('alliances-section'),
+                'owner': document.getElementById('owner-section'),
+                'riches-war': document.getElementById('riches-war-section'),
+                'territories': document.getElementById('alliance-territories-section'),
+                'kingdom-lands': document.getElementById('kingdom-lands-section'),
+                'chat': document.getElementById('chat-section'),
+                'vip': document.getElementById('vip-section')
+            };
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const section = this.dataset.section;
+                    
+                    // إزالة الفئة النشطة من جميع الأزرار
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    // إضافة الفئة النشطة للزر المحدد
+                    this.classList.add('active');
+                    
+                    // إخفاء جميع الأقسام
+                    Object.values(sections).forEach(sec => {
+                        if (sec) sec.style.display = 'none';
+                    });
+                    
+                    // عرض القسم المحدد
+                    if (sections[section]) {
+                        sections[section].style.display = 'block';
+                    }
+                });
+            });
+            
+            // تحديث عرض حرب الممالك عند توفر القصر الملكي
+            function updateWarfareVisibility() {
+                const warfareSection = document.getElementById('warfare-section');
+                const attackSection = document.getElementById('attack-section');
+                
+                if (window.game && window.game.royalPalace) {
+                    if (warfareSection) warfareSection.style.display = 'block';
+                }
+            }
+            
+            // تحديث دوري لواجهة حرب الممالك
+            setInterval(updateWarfareVisibility, 1000);
+        });
+    </script>
+
+    <!-- قسم حرب الثروه -->
+    <div class="content-section" id="riches-war-section" style="display: none;">
+        <div class="riches-war-content">
+            <h2>🏛️ حرب الثروه</h2>
+            <p>أدخل حرب الثروه لتطوير أسلحتك بفترات متدرجة مع مستوى البناء</p>
+            <div id="richesWarDisplay"></div>
+        </div>
+    </div>
+
+    <!-- قسم دردشة التحالف (سيظهر كنافذة منبثقة) -->
+    <div class="content-section" id="chat-section" style="display: none;">
+        <div class="chat-content">
+            <h2>💬 دردشة التحالف</h2>
+            <p>درد مع أعضاء التحالف وتبادل الاستراتيجيات</p>
+            <button class="btn btn-primary" onclick="game.openAllianceChat()">فتح الدردشة</button>
+        </div>
+    </div>
+
+    <!-- قسم أراضي التحالف -->
+    <div class="content-section" id="alliance-territories-section" style="display: none;">
+        <div class="alliance-territories-content">
+            <h2>🗺️ أراضي التحالف</h2>
+            <p>بني مقر التحالف والأعلام لتوسيع أراضي التحالف والدفاع عنها</p>
+            <div id="allianceTerritoriesDisplay"></div>
+        </div>
+    </div>
+
+    <!-- قسم أراضي المملكة -->
+    <div class="content-section" id="kingdom-lands-section" style="display: none;">
+        <div class="kingdom-lands-content">
+            <h2>🌍 أراضي المملكة</h2>
+            <p>استكشف وطوّر أراضي المملكة - التلال والساحات الخضراء والمياه</p>
+            
+            <!-- حالة الأراضي -->
+            <div class="lands-status">
+                <div class="status-grid">
+                    <div class="status-card">
+                        <div class="card-icon">⛰️</div>
+                        <h3>التلال</h3>
+                        <div class="card-value" id="hills-count">3</div>
+                        <p>توفر موارد إضافية</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="card-icon">🌱</div>
+                        <h3>الساحات الخضراء</h3>
+                        <div class="card-value" id="fields-count">5</div>
+                        <p>زيادة إنتاج الطعام</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="card-icon">💧</div>
+                        <h3>المياه</h3>
+                        <div class="card-value" id="water-count">2</div>
+                        <p>توفير المياه للمباني</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="card-icon">🏞️</div>
+                        <h3>الأراضي الخام</h3>
+                        <div class="card-value" id="raw-land-count">8</div>
+                        <p>جاهزة للتطوير</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- استكشاف وتطوير الأراضي -->
+            <div class="land-development-section">
+                <h3>تطوير الأراضي</h3>
+                <div class="development-grid">
+                    <div class="development-card" data-land-type="hills">
+                        <div class="development-icon">⛰️</div>
+                        <h4>تطوير التلال</h4>
+                        <p>تحويل التلال إلى مناجم أو حصون</p>
+                        <div class="development-cost">التكلفة: 2000💰 1000🪵</div>
+                        <button class="btn btn-primary" onclick="game.developLand('hills')">تطوير</button>
+                    </div>
+                    
+                    <div class="development-card" data-land-type="fields">
+                        <div class="development-icon">🌱</div>
+                        <h4>تطوير الساحات</h4>
+                        <p>تحويل الساحات إلى مزارع متقدمة</p>
+                        <div class="development-cost">التكلفة: 1500💰 800🪵</div>
+                        <button class="btn btn-primary" onclick="game.developLand('fields')">تطوير</button>
+                    </div>
+                    
+                    <div class="development-card" data-land-type="water">
+                        <div class="development-icon">💧</div>
+                        <h4>تطوير المياه</h4>
+                        <p>بناء أحواض مائية أو آبار</p>
+                        <div class="development-cost">التكلفة: 1200💰 600🗿</div>
+                        <button class="btn btn-primary" onclick="game.developLand('water')">تطوير</button>
+                    </div>
+                    
+                    <div class="development-card" data-land-type="forest">
+                        <div class="development-icon">🌲</div>
+                        <h4>تطوير الغابات</h4>
+                        <p>تحويل الغابات إلى مناجم خشب</p>
+                        <div class="development-cost">التكلفة: 1800💰 900🪵</div>
+                        <button class="btn btn-primary" onclick="game.developLand('forest')">تطوير</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خريطة الأراضي -->
+            <div class="land-map-section">
+                <h3>خريطة الأراضي</h3>
+                <div class="land-map" id="kingdomLandMap">
+                    <div class="map-grid">
+                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                    </div>
+                </div>
+                <div class="map-controls">
+                    <button class="btn btn-secondary" onclick="game.refreshLandMap()">تحديث الخريطة</button>
+                    <button class="btn btn-info" onclick="game.showLandDetails()">تفاصيل الأراضي</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مدخل المدينة والدفاعات الخاصة -->
+    <div id="city-gates-section" class="city-gates-section" style="display: none;">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>🏰 مدخل المدينة والدفاعات</h2>
+                <p>ادعم مدخل مدينتك بدفاعات فخمة وحصرية</p>
+            </div>
+
+            <!-- مدخل المدينة الفخم -->
+            <div class="city-gate-display">
+                <div class="gate-showcase">
+                    <div class="golden-gate">
+                        <div class="gate-frame">
+                            <div class="gate-door left-door">
+                                <div class="door-ornaments"></div>
+                                <div class="door-handle"></div>
+                            </div>
+                            <div class="gate-door right-door">
+                                <div class="door-ornaments"></div>
+                                <div class="door-handle"></div>
+                            </div>
+                        </div>
+                        <div class="gate-crown">
+                            <div class="crown-spikes">
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gate-stats">
+                        <div class="stat">
+                            <span class="stat-label">مستوى المدخل</span>
+                            <span class="stat-value" id="city-gate-level">1</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">قوة الحماية</span>
+                            <span class="stat-value" id="city-gate-defense">100</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="gate-controls">
+                    <button class="btn btn-primary" onclick="game.upgradeCityGate()">
+                        ترقية المدخل 
+                        <span class="cost" id="gate-upgrade-cost">500 ذهب</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- الدفاعات الخاصة -->
+            <div class="defense-grid">
+                <!-- كولوسي (عمالقة حجرية) -->
+                <div class="defense-card colossi-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">🗿</div>
+                        <div class="defense-title">
+                            <h3>كولوسي</h3>
+                            <p>عمالقة حجرية قوية</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>250</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>50/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>متوسط</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('colossi', -1)">-</button>
+                            <input type="number" id="colossi-quantity" value="0" min="0" max="10" readonly>
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('colossi', 1)">+</button>
+                        </div>
+                        <button class="btn btn-build" onclick="game.buildDefense('colossi')">
+                            بناء - <span class="cost">300 ذهب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- فخاخ نارية -->
+                <div class="defense-card fire-trap-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">🔥</div>
+                        <div class="defense-title">
+                            <h3>فخاخ نارية</h3>
+                            <p>فخاخ منحرفة</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>120</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>80/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>قصير</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('fire-trap', -1)">-</button>
+                            <input type="number" id="fire-trap-quantity" value="0" min="0" max="15" readonly>
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('fire-trap', 1)">+</button>
+                        </div>
+                        <button class="btn btn-build" onclick="game.buildDefense('fire-trap')">
+                            بناء - <span class="cost">200 ذهب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- أبراج رماية آلية -->
+                <div class="defense-card auto-turret-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">🎯</div>
+                        <div class="defense-title">
+                            <h3>أبراج رماية آلية</h3>
+                            <p>أبراج ذكية</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>180</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>60/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>طويل</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('auto-turret', -1)">-</button>
+                            <input type="number" id="auto-turret-quantity" value="0" min="0" max="8" readonly>
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('auto-turret', 1)">+</button>
+                        </div>
+                        <button class="btn btn-build" onclick="game.buildDefense('auto-turret')">
+                            بناء - <span class="cost">400 ذهب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- أحجار إلقائية -->
+                <div class="defense-card stone-thrower-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">⚡</div>
+                        <div class="defense-title">
+                            <h3>أحجار إلقائية</h3>
+                            <p>مدفعيات سحرية</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>200</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>100/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>فائق الطول</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('stone-thrower', -1)">-</button>
+                            <input type="number" id="stone-thrower-quantity" value="0" min="0" max="5" readonly>
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('stone-thrower', 1)">+</button>
+                        </div>
+                        <button class="btn btn-build" onclick="game.buildDefense('stone-thrower')">
+                            بناء - <span class="cost">500 ذهب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- جدران متحركة -->
+                <div class="defense-card moving-wall-card">
+                    <div class="defense-header">
+                        <div class="defense-icon">🧱</div>
+                        <div class="defense-title">
+                            <h3>جدران متحركة</h3>
+                            <p>حواجز ذكية</p>
+                        </div>
+                        <div class="defense-level">مستوى 1</div>
+                    </div>
+                    <div class="defense-stats">
+                        <div class="stat-row">
+                            <span>القوة الدفاعية</span>
+                            <span>150</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>معدل الضرر</span>
+                            <span>0/ثانية</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>المدى</span>
+                            <span>حاجز</span>
+                        </div>
+                    </div>
+                    <div class="defense-controls">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="game.changeDefenseQuantity('moving-wall', -1)">-</button>
+                            <input type="number" id="moving-wall-quantity" value="0" min="0" max="20" readonly>
+                            <button class="qty-btn" onclick="game.buildDefense('moving-wall')">
+                                بناء - <span class="cost">150 ذهب</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- إحصائيات دفاعية شاملة -->
+            <div class="defense-summary">
+                <h3>📊 إحصائيات الدفاع الشاملة</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value" id="total-defense-power">0</div>
+                        <div class="summary-label">إجمالي القوة الدفاعية</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="defense-units-count">0</div>
+                        <div class="summary-label">عدد الوحدات الدفاعية</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="defense-upgrade-cost">0</div>
+                        <div class="summary-label">تكلفة ترقية للدفاع</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تسجيل الدخول والتسجيل -->
+    <div id="auth-modal" class="auth-modal" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="showAuthTab('login')">تسجيل الدخول</button>
+                <button class="tab-btn" onclick="showAuthTab('register')">إنشاء حساب</button>
+            </div>
+
+            <!-- تبويب تسجيل الدخول -->
+            <div id="login-tab" class="auth-tab-content">
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label>البريد الإلكتروني أو اسم المستخدم</label>
+                        <input type="text" id="login-username" required placeholder="أدخل البريد الإلكتروني أو اسم المستخدم">
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="login-password" required placeholder="أدخل كلمة المرور">
+                    </div>
+                    <button type="submit" class="btn btn-primary auth-submit">تسجيل الدخول</button>
+                </form>
+
+                <div class="social-login">
+                    <div class="social-divider">
+                        <span>أو سجل دخولك باستخدام</span>
+                    </div>
+                    <div class="social-buttons">
+                        <button class="social-btn google-btn" onclick="loginWithGoogle()">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            الدخول مع Google
+                        </button>
+                        <button class="social-btn facebook-btn" onclick="loginWithFacebook()">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            الدخول مع Facebook
+                        </button>
+                        <button class="social-btn twitter-btn" onclick="loginWithTwitter()">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path fill="#1DA1F2" d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                            الدخول مع Twitter
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب إنشاء حساب -->
+            <div id="register-tab" class="auth-tab-content" style="display: none;">
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label>اسم المستخدم</label>
+                        <input type="text" id="register-username" required placeholder="اختر اسم مستخدم فريد">
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="register-email" placeholder="أدخل بريدك الإلكتروني (اختياري)">
+                    </div>
+                    <div class="form-group">
+                        <label>مثال للإيميل:</label>
+                        <input type="email" value="game.player@email.com" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="register-password" required placeholder="اختر كلمة مرور قوية">
+                    </div>
+                    <div class="form-group">
+                        <label>تأكيد كلمة المرور</label>
+                        <input type="password" id="register-confirm" required placeholder="أعد إدخال كلمة المرور">
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="accept-terms" required>
+                        <label for="accept-terms">أوافق على <a href="#" onclick="showTerms()">الشروط والأحكام</a></label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="accept-newsletter" checked>
+                        <label for="accept-newsletter">أريد تلقي آخر الأخبار والتحديثات</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary auth-submit">إنشاء الحساب</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تأكيد البريد الإلكتروني -->
+    <div id="email-verification-modal" class="auth-modal" style="display: none;">
+        <div class="auth-container">
+            <div class="verification-header">
+                <h2>✉️ تأكيد البريد الإلكتروني</h2>
+                <p>أرسلنا لك رابط التأكيد على بريدك الإلكتروني</p>
+            </div>
+            <div class="verification-form">
+                <div class="form-group">
+                    <label>أدخل رمز التأكيد</label>
+                    <input type="text" id="verification-code" placeholder="أدخل الرمز من 6 أرقام" maxlength="6">
+                </div>
+                <button onclick="verifyEmailCode()" class="btn btn-primary auth-submit">تأكيد الحساب</button>
+                <button onclick="resendVerificationCode()" class="btn btn-secondary">إعادة إرسال الرمز</button>
+                <p class="verification-info">
+                    لم تتلق رسالة التأكيد؟ تحقق من مجلد الرسائل المزعجة أو 
+                    <a href="#" onclick="changeEmail()">غيّر عنوان البريد الإلكتروني</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- أزرار المستخدم المتصل -->
+    <div id="user-menu" class="user-menu" style="display: none;">
+        <div class="user-info">
+            <div class="user-avatar" id="user-avatar"></div>
+            <div class="user-details">
+                <span class="user-name" id="user-name">اسم المستخدم</span>
+                <span class="user-level" id="user-level">مستوى C1</span>
+            </div>
+        </div>
+        <div class="user-actions">
+            <button onclick="openUserProfile()" class="user-action-btn">الملف الشخصي</button>
+            <button onclick="openUserSettings()" class="user-action-btn">الإعدادات</button>
+            <button onclick="showFarmStatus()" class="user-action-btn farm-status-btn" title="عرض حالة المزارع">🌾 المزارع</button>
+            <button onclick="openFancyNameEditor()" class="user-action-btn fancy-name-btn" title="إنشاء اسم مزخرف">✨ اسم مزخرف</button>
+            <button onclick="logout()" class="user-action-btn logout-btn">تسجيل الخروج</button>
+        </div>
+    </div>
+
+    <!-- عرض حالة المزارع -->
+    <div class="farm-status-display" id="farm-status-display">
+        <div class="farm-status-header">
+            <h4>🌾 حالة المزارع</h4>
+            <button onclick="this.parentElement.parentElement.style.display='none'">✕</button>
+        </div>
+        <div class="farm-status-content">
+            <div class="farm-status-item">
+                <span class="label">الإجمالي:</span>
+                <span class="value"><span class="icon">🌾</span><span id="farm-total-count">0</span></span>
+            </div>
+            <div class="farm-status-item">
+                <span class="label">النشطة:</span>
+                <span class="value"><span class="icon">🌱</span><span id="farm-active-count">0</span></span>
+            </div>
+            <div class="farm-status-item">
+                <span class="label">جاهزة للحصاد:</span>
+                <span class="value"><span class="icon">🎉</span><span id="farm-ready-count">0</span></span>
+            </div>
+            <div class="farm-status-item">
+                <span class="label">قيد البناء:</span>
+                <span class="value"><span class="icon">🏗️</span><span id="farm-building-count">0</span></span>
+            </div>
+            <div class="farm-status-item">
+                <span class="label">تحتاج عناية:</span>
+                <span class="value"><span class="icon">⚠️</span><span id="farm-attention-count">0</span></span>
+            </div>
+        </div>
+        <div class="farm-status-actions">
+            <button onclick="testFarmNotifications()" class="btn btn-sm btn-secondary">اختبار الإشعارات</button>
+            <button onclick="addManualFarm('مزرعة تجريبية')" class="btn btn-sm btn-primary">إضافة مزرعة</button>
+        </div>
+    </div>
+
+    <!-- نافذة الملف الشخصي -->
+    <div id="user-profile-modal" class="auth-modal" style="display: none;">
+        <div class="auth-container">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profile-avatar"></div>
+                <h2 id="profile-name">اسم المستخدم</h2>
+                <p id="profile-email">البريد الإلكتروني</p>
+                <span class="profile-level" id="profile-level">مستوى C1</span>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-label">تاريخ الانضمام</span>
+                    <span class="stat-value" id="join-date">غير محدد</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">آخر تسجيل دخول</span>
+                    <span class="stat-value" id="last-login">غير محدد</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">حالة التأكيد</span>
+                    <span class="stat-value" id="verification-status">غير مؤكد</span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button onclick="changePassword()" class="btn btn-primary">تغيير كلمة المرور</button>
+                <button onclick="closeUserProfile()" class="btn btn-secondary">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تغيير كلمة المرور -->
+    <div id="change-password-modal" class="auth-modal" style="display: none;">
+        <div class="auth-container">
+            <h2>تغيير كلمة المرور</h2>
+            <form id="change-password-form">
+                <div class="form-group">
+                    <label>كلمة المرور الحالية</label>
+                    <input type="password" id="current-password" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور الجديدة</label>
+                    <input type="password" id="new-password" required>
+                </div>
+                <div class="form-group">
+                    <label>تأكيد كلمة المرور الجديدة</label>
+                    <input type="password" id="new-password-confirm" required>
+                </div>
+                <button type="submit" class="btn btn-primary">تحديث كلمة المرور</button>
+                <button type="button" onclick="closeChangePassword()" class="btn btn-secondary">إلغاء</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- أزرار تسجيل الدخول في شريط التنقل -->
+    <div id="login-buttons" class="login-buttons">
+        <button onclick="showAuthModal()" class="btn btn-primary">تسجيل الدخول</button>
+        <button onclick="showAuthModal('register')" class="btn btn-secondary">إنشاء حساب</button>
+    </div>
+
+    <!-- قسم نظام الذكاء الاصطناعي -->
+    <div class="content-section" id="ai-system-section" style="display: none;">
+        <div class="ai-system-content">
+            <h2>🤖 نظام الذكاء الاصطناعي</h2>
+            <p>نظام ذكي لمساعدتك في تنظيم القوات وترتيب صفوف القتال وقراءة تقارير المعركة</p>
+            <div id="aiSystemDisplay"></div>
+        </div>
+    </div>
+
+    <!-- قسم نظام الرادار -->
+    <div class="content-section" id="radar-section" style="display: none;">
+        <div class="radar-content">
+            <h2>📡 الرادار المتطور</h2>
+            <p>نظام مراقبة متقدم مع إشعارات ملونة للإنذارات والمخاطر</p>
+            <div id="radar-container"></div>
+        </div>
+    </div>
+
+    <!-- قسم الأدلة العسكرية -->
+    <div class="content-section" id="military-guides-section" style="display: none;">
+        <div class="military-guides-content">
+            <h2>📚 الأدلة العسكرية الاستراتيجية</h2>
+            <p>دليل شامل لتنظيم القوات والطبقات الداخلية - مجاني تماماً لجميع اللاعبين!</p>
+            <div id="militaryGuidesDisplay"></div>
+        </div>
+    </div>
+
+                                <h5>🔰 الطبقة الضعيفة (40%) - 400 جندي</h5>
+                                <ul>
+                                    <li><strong>جنود البنادق:</strong> 200-300 جندي</li>
+                                    <li><strong>الاحتياط:</strong> 40-60 جندي</li>
+                                    <li><strong>الوظيفة:</strong> امتصاص الأضرار الأولى</li>
+                                    <li><strong>معدل الخسائر المقبول:</strong> 25-35%</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>⚡ الطبقة المتوسطة (35%) - 350 جندي</h5>
+                                <ul>
+                                    <li><strong>مشاة القتال:</strong> 120-150 جندي</li>
+                                    <li><strong>الدعم:</strong> 80-100 جندي</li>
+                                    <li><strong>الوظيفة:</strong> دعم الخطوط الأمامية</li>
+                                    <li><strong>معدل الخسائر المقبول:</strong> 15-20%</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>🛡️ الطبقة القوية (15%) - 150 جندي</h5>
+                                <ul>
+                                    <li><strong>المختارون:</strong> 50-80 جندي</li>
+                                    <li><strong>المتخصصون:</strong> 30-50 جندي</li>
+                                    <li><strong>الوظيفة:</strong> القتال المركز</li>
+                                    <li><strong>معدل الخسائر المقبول:</strong> 8-12%</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>👑 طبقة النخبة (10%) - 100 جندي</h5>
+                                <ul>
+                                    <li><strong>حراس القيادة:</strong> 20-30 جندي</li>
+                                    <li><strong>القوات الخاصة:</strong> 30-50 جندي</li>
+                                    <li><strong>الوظيفة:</strong> الحماية الكاملة للقيادة</li>
+                                    <li><strong>معدل الخسائر المقبول:</strong> 2-5%</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- دليل المدرعات -->
+                <div id="guide-armored" class="guide-tab-content">
+                    <h3>🏎️ دليل القوات المدرعة</h3>
+                    <div class="armored-details">
+                        <h4>التوزيع الأمثل للمدرعات (200 مركبة)</h4>
+                        <div class="layer-breakdown">
+                            <div class="layer-info">
+                                <h5>🔰 الطبقة الضعيفة (45%) - 90 مركبة</h5>
+                                <ul>
+                                    <li><strong>دبابات خفيفة:</strong> 50-60 مركبة</li>
+                                    <li><strong>النقل المدرع:</strong> 20-25 مركبة</li>
+                                    <li><strong>الوظيفة:</strong> صد الهجمات الأولى</li>
+                                    <li><strong>خسائر مقبولة:</strong> 30-40%</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>⚡ الطبقة المتوسطة (35%) - 70 مركبة</h5>
+                                <ul>
+                                    <li><strong>دبابات متوسطة:</strong> 35-40 مركبة</li>
+                                    <li><strong>المدفعية المدرعة:</strong> 20-25 مركبة</li>
+                                    <li><strong>الوظيفة:</strong> الدعم الرئيسي</li>
+                                    <li><strong>خسائر مقبولة:</strong> 15-20%</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>🛡️ الطبقة القوية (15%) - 30 مركبة</h5>
+                                <ul>
+                                    <li><strong>دبابات ثقيلة:</strong> 15-18 مركبة</li>
+                                    <li><strong>الهندسة العسكرية:</strong> 8-10 مركبات</li>
+                                    <li><strong>الوظيفة:</strong> الاختراق</li>
+                                    <li><strong>خسائر مقبولة:</strong> 8-12%</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>👑 طبقة النخبة (5%) - 10 مركبات</h5>
+                                <ul>
+                                    <li><strong>دبابات القائد:</strong> 3-4 مركبات</li>
+                                    <li><strong>المشاة الخاصة:</strong> 4-5 مركبات</li>
+                                    <li><strong>الوظيفة:</strong> حماية القيادة</li>
+                                    <li><strong>خسائر مقبولة:</strong> 1-3%</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- دليل الطيران -->
+                <div id="guide-aviation" class="guide-tab-content">
+                    <h3>✈️ دليل القوات الجوية</h3>
+                    <div class="aviation-details">
+                        <h4>التوزيع الأمثل للطيران (150 طائرة)</h4>
+                        <div class="layer-breakdown">
+                            <div class="layer-info">
+                                <h5>🔰 الطبقة الضعيفة (40%) - 60 طائرة</h5>
+                                <ul>
+                                    <li><strong>المقاتلات الخفيفة:</strong> 25-30 طائرة</li>
+                                    <li><strong>الطائرات المراقبة:</strong> 15-20 طائرة</li>
+                                    <li><strong>النقل الخفيف:</strong> 10-15 طائرة</li>
+                                    <li><strong>الوظيفة:</strong> الاستطلاع والدعم</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>⚡ الطبقة المتوسطة (35%) - 52 طائرة</h5>
+                                <ul>
+                                    <li><strong>المقاتلات المتوسطة:</strong> 25-30 طائرة</li>
+                                    <li><strong>المدافع الطارئة:</strong> 15-18 طائرة</li>
+                                    <li><strong>الوظيفة:</strong> السيطرة على المجال الجوي</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>🛡️ الطبقة القوية (20%) - 30 طائرة</h5>
+                                <ul>
+                                    <li><strong>المقاتلات الثقيلة:</strong> 15-18 طائرة</li>
+                                    <li><strong>قاذفات صغيرة:</strong> 10-12 طائرة</li>
+                                    <li><strong>الوظيفة:</strong> الهجوم المركز</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>👑 طبقة النخبة (5%) - 8 طائرات</h5>
+                                <ul>
+                                    <li><strong>طائرات القيادة:</strong> 3-4 طائرات</li>
+                                    <li><strong>القتال الخاصة:</strong> 3-4 طائرات</li>
+                                    <li><strong>الوظيفة:</strong> حماية القادة</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- دليل المدفعية -->
+                <div id="guide-artillery" class="guide-tab-content">
+                    <h3>💥 دليل المدفعية</h3>
+                    <div class="artillery-details">
+                        <h4>التوزيع الأمثل للمدفعية (80 قطعة)</h4>
+                        <div class="layer-breakdown">
+                            <div class="layer-info">
+                                <h5>🔰 الطبقة الضعيفة (45%) - 36 قطعة</h5>
+                                <ul>
+                                    <li><strong>المدافع الخفيفة:</strong> 18-20 قطعة</li>
+                                    <li><strong>الهاون:</strong> 10-12 قطعة</li>
+                                    <li><strong>الوظيفة:</strong> النار الكثيفة الأولى</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>⚡ الطبقة المتوسطة (35%) - 28 قطعة</h5>
+                                <ul>
+                                    <li><strong>المدفعية المتوسطة:</strong> 15-18 قطعة</li>
+                                    <li><strong>صواريخ أرضية:</strong> 8-10 قطعة</li>
+                                    <li><strong>الوظيفة:</strong> الدعم المستمر</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>🛡️ الطبقة القوية (15%) - 12 قطعة</h5>
+                                <ul>
+                                    <li><strong>المدافع الثقيلة:</strong> 6-8 قطع</li>
+                                    <li><strong>الصواريخ المتقدمة:</strong> 4-6 قطع</li>
+                                    <li><strong>الوظيفة:</strong> الضربات الحاسمة</li>
+                                </ul>
+                            </div>
+                            <div class="layer-info">
+                                <h5>👑 طبقة النخبة (5%) - 4 قطع</h5>
+                                <ul>
+                                    <li><strong>مدافع القيادة:</strong> 2 قطعة</li>
+                                    <li><strong>المدفعية الخاصة:</strong> 2 قطعة</li>
+                                    <li><strong>الوظيفة:</strong> حماية العمليات</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- حسابات الطبقات -->
+                <div id="guide-calculations" class="guide-tab-content">
+                    <h3>🧮 حاسبة التوزيع العسكري الذكي</h3>
+                    <div class="calculator-section">
+                        <div class="calculator-input">
+                            <h4>أدخل حجم جيشك</h4>
+                            <input type="number" id="army-size-input" placeholder="مثال: 1000" min="1" max="10000">
+                            <button onclick="calculateArmyLayers()" class="btn btn-primary">حساب التوزيع</button>
+                        </div>
+                        <div id="calculation-results" class="calculation-results">
+                            <p class="instruction">أدخل عدد القوات للحصول على التوزيع الأمثل</p>
+                        </div>
+                        <div class="calculation-formula">
+                            <h4>📐 معادلات التوزيع</h4>
+                            <div class="formula-item">
+                                <strong>الطبقة الضعيفة:</strong> 40-45% من إجمالي القوات
+                            </div>
+                            <div class="formula-item">
+                                <strong>الطبقة المتوسطة:</strong> 35% من إجمالي القوات
+                            </div>
+                            <div class="formula-item">
+                                <strong>الطبقة القوية:</strong> 15% من إجمالي القوات
+                            </div>
+                            <div class="formula-item">
+                                <strong>طبقة النخبة:</strong> 10% من إجمالي القوات
+                            </div>
+                            <div class="calculation-note">
+                                <strong>💡 نصيحة:</strong> هذا التوزيع يضمن حماية 70-80% من القوات عالية القيمة
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- إدارة الحسابات المتعددة -->
+    <div class="content-section" id="account-management-section" style="display: none;">
+        <div class="account-management-content">
+            <h2>👥 إدارة الحسابات المتعددة</h2>
+            <p>نظام متقدم لإدارة عدة حسابات في المزارع - مثالي للاعبين المتقدمين!</p>
+            
+            <!-- معلومات الحساب الحالي -->
+            <div class="current-account-info">
+                <h3>🔐 الحساب الحالي</h3>
+                <div class="account-info-card">
+                    <div class="account-stat">
+                        <span class="stat-label">اسم الحساب:</span>
+                        <span class="stat-value" id="current-account-name">غير محدد</span>
+                    </div>
+                    <div class="account-stat">
+                        <span class="stat-label">المستوى:</span>
+                        <span class="stat-value" id="current-account-level">1</span>
+                    </div>
+                    <div class="account-stat">
+                        <span class="stat-label">آخر دخول:</span>
+                        <span class="stat-value" id="current-account-login">غير محدد</span>
+                    </div>
+                    <div class="account-stat">
+                        <span class="stat-label">إجمالي الذهب:</span>
+                        <span class="stat-value gold-text" id="current-account-gold">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة الحسابات -->
+            <div class="accounts-list">
+                <h3>📋 الحسابات المحفوظة</h3>
+                <div id="saved-accounts" class="accounts-grid">
+                    <!-- سيتم ملؤها بـ JavaScript -->
+                </div>
+            </div>
+
+            <!-- أزرار الإدارة -->
+            <div class="account-actions">
+                <h3>⚙️ إجراءات الحساب</h3>
+                <div class="action-buttons">
+                    <button onclick="createNewAccount()" class="btn btn-primary">
+                        ➕ إنشاء حساب جديد
+                    </button>
+                    <button onclick="showAccountSwitcher()" class="btn btn-secondary">
+                        🔄 التبديل بين الحسابات
+                    </button>
+                    <button onclick="exportAccountsData()" class="btn btn-info">
+                        💾 تصدير البيانات
+                    </button>
+                    <button onclick="importAccountsData()" class="btn btn-success">
+                        📁 استيراد البيانات
+                    </button>
+                </div>
+            </div>
+
+            <!-- إحصائيات المزرعة -->
+            <div class="farm-stats">
+                <h3>📊 إحصائيات المزرعة</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-accounts">0</div>
+                        <div class="stat-label">إجمالي الحسابات</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-farm-gold">0</div>
+                        <div class="stat-label">إجمالي الذهب</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-farm-level">0</div>
+                        <div class="stat-label">متوسط المستوى</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-farm-exp">0</div>
+                        <div class="stat-label">إجمالي الخبرة</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نصائح المزرعة -->
+            <div class="farming-tips">
+                <h3>💡 نصائح إدارة المزارع</h3>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4>🎯 تنظيم الحسابات</h4>
+                        <ul>
+                            <li>استخدم أسماء واضحة للحسابات</li>
+                            <li>سجل مستويات كل حساب</li>
+                            <li>تابع آخر نشاط لكل حساب</li>
+                        </ul>
+                    </div>
+                    <div class="tip-card">
+                        <h4>⚡ تحسين الأداء</h4>
+                        <ul>
+                            <li>اعط الأولوية للحسابات عالية المستوى</li>
+                            <li>وازن الموارد بين الحسابات</li>
+                            <li>استخدم التبديل السريع</li>
+                        </ul>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🔒 الأمان</h4>
+                        <ul>
+                            <li>استخدم كلمات مرور قوية</li>
+                            <li>اعمل نسخة احتياطية من البيانات</li>
+                            <li>لا تشارك بيانات الحسابات</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Translation and Chat System Scripts -->
+    <script src="scripts/translation-system.js"></script>
+    <script src="scripts/game-chat-system.js"></script>
+    <script src="scripts/license-system.js"></script>
+    <script src="scripts/auth-account-management.js"></script>
+    <script src="scripts/in-game-chat.js"></script>
+    
+    <!-- Main Game Script -->
+    <script src="scripts/3d-game.js"></script>
+
+    <!-- نظام إدارة السجون -->
+    <div class="prison-management-system" id="prison-management-system">
+        <div class="prison-header">
+            <h3>⛓️ نظام إدارة السجون</h3>
+            <div class="prison-stats">
+                <span class="prison-count" id="prison-count">0</span>
+                <span class="prison-label">سجين</span>
+            </div>
         </div>
         
-        <button class="login-btn" onclick="loadFullGame()">🎮 ابدأ اللعب</button>
-        <button class="login-btn" onclick="checkGame()">🔍 تحقق من الحالة</button>
+        <!-- معلومات السجون -->
+        <div class="prison-info">
+            <div class="prison-level-info">
+                <span class="prison-level-label">المستوى:</span>
+                <span class="prison-level" id="prison-level">1</span>
+            </div>
+            <div class="prison-capacity-info">
+                <span class="prison-capacity-label">السعة:</span>
+                <span class="prison-capacity" id="prison-capacity">10</span>
+            </div>
+        </div>
         
-        <div id="gameInfo" style="margin-top: 20px;">
-            <p>🔧 النسخة: Tech Empire 3D v1.0</p>
-            <p>🕐 آخر تحديث: Nov 8, 2025</p>
-            <p>👥 نظام الممالك: جاهز</p>
-            <p>⚔️ الوحدات العسكرية: T1-T14</p>
+        <div class="prison-controls">
+            <button class="btn btn-prison" onclick="levelManagementSystem.checkAllPlayers()">
+                🔍 فحص اللاعبين
+            </button>
+            <button class="btn btn-prison" onclick="levelManagementSystem.startMonitoring()">
+                ▶️ بدء المراقبة
+            </button>
+            <button class="btn btn-prison" onclick="openPrisonList()">
+                📋 قائمة السجناء
+            </button>
+            <button class="btn btn-upgrade" onclick="showPrisonUpgradeModal()">
+                🏰 تطوير السجون
+            </button>
+        </div>
+        
+        <div class="prison-alerts" id="prison-alerts">
+            <!-- تنبيهات السجون -->
+        </div>
+    </div>
+
+    <!-- نافذة قائمة السجناء -->
+    <div class="prison-list-modal" id="prison-list-modal" style="display: none;">
+        <div class="prison-list-content">
+            <div class="prison-list-header">
+                <h2>📋 قائمة السجناء</h2>
+                <button class="close-btn" onclick="closePrisonList()">✕</button>
+            </div>
+            
+            <div class="prison-filters">
+                <button class="filter-btn active" onclick="filterPrisoners('ALL')">الكل</button>
+                <button class="filter-btn" onclick="filterPrisoners('LEVEL_14_15')">مستوى 14-15</button>
+                <button class="filter-btn" onclick="filterPrisoners('WEAK_LEADERS')">قادة ضعفاء</button>
+            </div>
+            
+            <div class="prisoners-list" id="prisoners-list">
+                <!-- قائمة السجناء -->
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تطوير السجون -->
+    <div class="prison-upgrade-modal" id="prison-upgrade-modal" style="display: none;">
+        <div class="prison-upgrade-content">
+            <div class="prison-upgrade-header">
+                <h2>🏰 تطوير السجون</h2>
+                <button class="close-btn" onclick="closePrisonUpgrade()">✕</button>
+            </div>
+            
+            <div class="current-prison-info">
+                <h3>المعلومات الحالية</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">المستوى:</span>
+                        <span class="value" id="current-level">1</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">السعة:</span>
+                        <span class="value" id="current-capacity">10</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">السطور الحالية:</span>
+                        <span class="value" id="current-prisoners">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="upgrade-requirements" id="upgrade-requirements">
+                <!-- متطلبات التطوير -->
+            </div>
+            
+            <div class="upgrade-actions">
+                <button class="btn-upgrade-prison" id="upgrade-btn" onclick="upgradePrison()">
+                    تطوير السجون
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        let checkCount = 0;
+    // وظائف إدارة السجون
+    function openPrisonList() {
+        const modal = document.getElementById('prison-list-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            updatePrisonersList();
+        }
+    }
+    
+    function closePrisonList() {
+        const modal = document.getElementById('prison-list-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    function filterPrisoners(type) {
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
         
-        function loadFullGame() {
-            const status = document.getElementById('status');
-            status.textContent = 'جاري تحميل اللعبة...';
-            status.className = 'status';
-            
-            // Direct redirect to main game
-            setTimeout(() => {
-                window.location.href = 'index-3d.html';
-            }, 1000);
+        updatePrisonersList(type);
+    }
+    
+    function updatePrisonersList(filter = 'ALL') {
+        const list = document.getElementById('prisoners-list');
+        if (!list || !levelManagementSystem) return;
+        
+        let prisoners = [];
+        
+        if (filter === 'ALL') {
+            prisoners = [...levelManagementSystem.prisoners, ...levelManagementSystem.weakLeaders];
+        } else if (filter === 'LEVEL_14_15') {
+            prisoners = levelManagementSystem.prisoners;
+        } else if (filter === 'WEAK_LEADERS') {
+            prisoners = levelManagementSystem.weakLeaders;
         }
         
-        function checkGame() {
-            checkCount++;
-            const status = document.getElementById('status');
-            status.textContent = `🔍 فحص رقم ${checkCount}...`;
-            status.className = 'status';
+        if (prisoners.length === 0) {
+            list.innerHTML = '<div class="no-prisoners">لا يوجد سجناء</div>';
+            return;
+        }
+        
+        list.innerHTML = prisoners.map(prisoner => {
+            const isAdvanced = prisoner.criteria && prisoner.criteria.aiBehaviorAnalysis !== undefined;
+            const aiIcon = isAdvanced ? getAIIcon(prisoner.criteria.aiBehaviorAnalysis) : '📊';
+            const powerLevel = isAdvanced ? (prisoner.criteria.powerLevel/1000).toFixed(0) + 'K' : 'N/A';
+            const aiScore = isAdvanced ? (prisoner.criteria.aiBehaviorAnalysis * 100).toFixed(0) + '%' : 'N/A';
             
-            // Check if index-3d.html exists
-            fetch('index-3d.html', {method: 'HEAD'})
-                .then(response => {
-                    if (response.ok) {
-                        status.textContent = '✅ اللعبة تعمل بشكل طبيعي!';
-                        status.className = 'status';
-                    } else {
-                        status.textContent = '❌ اللعبة غير متاحة - تحقق من رفع الملفات';
-                        status.className = 'status error';
+            return `
+            <div class="prisoner-item ${prisoner.status || 'WEAK'} ${isAdvanced ? 'advanced-analysis' : ''}">
+                <div class="prisoner-info">
+                    <div class="prisoner-header">
+                        <h4>${prisoner.playerName || prisoner.name}</h4>
+                        <span class="prisoner-type">${prisoner.status === 'WEAK' ? 'قائد ضعيف' : 'سجين'}</span>
+                    </div>
+                    <div class="prisoner-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">المستوى:</span>
+                            <span class="stat-value">${prisoner.level}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">القوة:</span>
+                            <span class="stat-value">${powerLevel}</span>
+                        </div>
+                        ${isAdvanced ? `
+                        <div class="stat-item">
+                            <span class="stat-label">${aiIcon} تحليل AI:</span>
+                            <span class="stat-value ai-score">${aiScore}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="prisoner-reasons">
+                        <p class="reason-title">السبب: ${getPrisonerReason(prisoner)}</p>
+                        ${isAdvanced ? `
+                        <div class="advanced-categories">
+                            <div class="category-badge mobile-strike">موبايل ستريكس</div>
+                            <div class="category-badge war-sultans">حرب السلاطين</div>
+                            <div class="category-badge ai-system">${aiIcon} ذكاء اصطناعي</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <p class="prison-time">⏰ ${getPrisonTime(prisoner)}</p>
+                </div>
+                <div class="prisoner-actions">
+                    <button class="btn-bargain" onclick="showBargain('${prisoner.playerId || prisoner.id}')">
+                        💰 مقايضة
+                    </button>
+                    <button class="btn-release" onclick="releasePrisoner('${prisoner.playerId || prisoner.id}')">
+                        🗝️ إطلق سراح
+                    </button>
+                    ${isAdvanced ? `
+                    <button class="btn-analysis" onclick="showAdvancedAnalysis('${prisoner.playerId || prisoner.id}')">
+                        🔍 تحليل متقدم
+                    </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        }).join('');
+    }
+
+    function getAIIcon(score) {
+        if (score >= 0.8) return '🧠';
+        if (score >= 0.6) return '💡';
+        if (score >= 0.4) return '🤖';
+        return '🔴';
+    }
+
+    function showAdvancedAnalysis(playerId) {
+        const weakLeader = levelManagementSystem.weakLeaders.find(p => p.playerId === playerId);
+        if (!weakLeader || !weakLeader.criteria.aiBehaviorAnalysis) return;
+        
+        levelManagementSystem.showAdvancedPrisonerCaptureModal(
+            { name: weakLeader.playerName, level: weakLeader.level }, 
+            weakLeader.criteria
+        );
+    }
+    
+    function getPrisonerReason(prisoner) {
+        if (prisoner.reason) {
+            if (prisoner.reason === 'PRISONER_LEVEL_14_15') return 'مستوى 14-15';
+            if (prisoner.reason === 'WEAK_LEADER') return 'قائد ضعيف';
+        }
+        
+        if (prisoner.criteria) {
+            const reasons = [];
+            if (prisoner.criteria.failedFarms > 2) reasons.push('مزارع فاشلة');
+            if (prisoner.criteria.lowProductivity < 50) reasons.push('منخفضة الإنتاجية');
+            if (prisoner.criteria.recentLosses > 3) reasons.push('خسائر حديثة');
+            return reasons.length > 0 ? reasons.join(', ') : 'قائد ضعيف';
+        }
+        
+        return 'سبب غير محدد';
+    }
+    
+    function releasePrisoner(playerId) {
+        if (confirm('هل أنت متأكد من إطلاق سراح هذا السجين؟')) {
+            // إزالة من قائمة السجناء
+            levelManagementSystem.prisoners = levelManagementSystem.prisoners.filter(p => p.id !== playerId);
+            levelManagementSystem.weakLeaders = levelManagementSystem.weakLeaders.filter(p => p.playerId !== playerId);
+            
+            // تحديث الواجهة
+            levelManagementSystem.updatePrisonCount();
+            updatePrisonersList();
+            
+            // عرض رسالة تأكيد
+            if (game && game.showNotification) {
+                game.showNotification('تم إطلاق سراح السجين بنجاح! 🗝️', 'success');
+            }
+        }
+    }
+    
+    // وظيفة المقايضة
+    function showBargain(playerId) {
+        if (levelManagementSystem && levelManagementSystem.showBargainModal) {
+            levelManagementSystem.showBargainModal(playerId);
+        }
+    }
+    
+    // حساب وقت السجن
+    function getPrisonTime(prisoner) {
+        if (!prisoner.captureTime) return 'وقت غير محدد';
+        
+        const now = Date.now();
+        const timeInPrison = now - prisoner.captureTime;
+        const days = Math.floor(timeInPrison / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeInPrison % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        
+        if (days >= 3) {
+            return `⚠️ ${days} يوم - ${hours} ساعة (منتهي الصلاحية)`;
+        } else {
+            const remaining = 3 - days;
+            return `🕐 ${days} يوم - ${hours} ساعة (متبقي ${remaining} يوم)`;
+        }
+    }
+    
+    // ==========================================
+    // وظائف تطوير السجون
+    // ==========================================
+    
+    // عرض نافذة تطوير السجون
+    function showPrisonUpgradeModal() {
+        if (!levelManagementSystem) return;
+        
+        const modal = document.getElementById('prison-upgrade-modal');
+        if (!modal) return;
+        
+        // تحديث المعلومات
+        updatePrisonUpgradeInfo();
+        
+        modal.style.display = 'flex';
+    }
+    
+    // إغلاق نافذة تطوير السجون
+    function closePrisonUpgrade() {
+        const modal = document.getElementById('prison-upgrade-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // تحديث معلومات تطوير السجون
+    function updatePrisonUpgradeInfo() {
+        if (!levelManagementSystem) return;
+        
+        const currentLevel = levelManagementSystem.getPrisonLevel();
+        const currentCapacity = levelManagementSystem.getPrisonCapacity();
+        const currentPrisoners = levelManagementSystem.prisoners.length + levelManagementSystem.weakLeaders.length;
+        
+        // تحديث المعلومات الحالية
+        const levelEl = document.getElementById('current-level');
+        const capacityEl = document.getElementById('current-capacity');
+        const prisonersEl = document.getElementById('current-prisoners');
+        
+        if (levelEl) levelEl.textContent = currentLevel;
+        if (capacityEl) capacityEl.textContent = currentCapacity;
+        if (prisonersEl) prisonersEl.textContent = currentPrisoners;
+        
+        // تحديث متطلبات التطوير
+        const upgradeRequirements = document.getElementById('upgrade-requirements');
+        const upgradeBtn = document.getElementById('upgrade-btn');
+        
+        if (currentLevel >= 5) {
+            if (upgradeRequirements) {
+                upgradeRequirements.innerHTML = `
+                    <div class="max-level-message">
+                        <h3>🎉 السجون وصلت لأقصى مستوى!</h3>
+                        <p>لا يمكن تطوير السجون أكثر من ذلك</p>
+                    </div>
+                `;
+            }
+            if (upgradeBtn) {
+                upgradeBtn.style.display = 'none';
+            }
+            return;
+        }
+        
+        const nextLevel = currentLevel + 1;
+        const cost = levelManagementSystem.getUpgradeCost();
+        const newCapacity = levelManagementSystem.prisonSystem.capacities[nextLevel];
+        
+        if (upgradeRequirements && cost) {
+            const canUpgrade = levelManagementSystem.hasEnoughResourcesForUpgrade(cost);
+            
+            upgradeRequirements.innerHTML = `
+                <h3>متطلبات التطوير للمستوى ${nextLevel}</h3>
+                <div class="cost-grid">
+                    <div class="cost-item">
+                        <span class="cost-label">🎯 المستوى المطلوب:</span>
+                        <span class="cost-value">${cost.level}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">🪙 الذهب:</span>
+                        <span class="cost-value">${cost.gold.toLocaleString()}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">🪵 الخشب:</span>
+                        <span class="cost-value">${cost.wood}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">🪨 الحجارة:</span>
+                        <span class="cost-value">${cost.stone}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">🍖 الطعام:</span>
+                        <span class="cost-value">${cost.food}</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">📈 السعة الجديدة:</span>
+                        <span class="cost-value">${newCapacity}</span>
+                    </div>
+                </div>
+                <div class="upgrade-info">
+                    ${canUpgrade ? 
+                        '<p style="color: #28a745;">✓ لديك موارد كافية للتطوير</p>' : 
+                        '<p style="color: #dc3545;">✗ مواردك غير كافية</p>'
                     }
-                })
-                .catch(error => {
-                    status.textContent = '❌ خطأ في الاتصال - تحقق من الرابط';
-                    status.className = 'status error';
-                });
+                </div>
+            `;
         }
         
-        // Auto check on load
-        window.onload = function() {
-            setTimeout(checkGame, 2000);
-        };
+        if (upgradeBtn) {
+            upgradeBtn.style.display = cost ? 'block' : 'none';
+            upgradeBtn.disabled = cost ? !levelManagementSystem.hasEnoughResourcesForUpgrade(cost) : true;
+            
+            if (cost) {
+                const canUpgrade = levelManagementSystem.hasEnoughResourcesForUpgrade(cost);
+                upgradeBtn.textContent = canUpgrade ? `تطوير السجون (${cost.gold.toLocaleString()} 🪙)` : 'موارد غير كافية';
+            }
+        }
+    }
+    
+    // تطوير السجون
+    function upgradePrison() {
+        if (levelManagementSystem && levelManagementSystem.upgradePrison()) {
+            closePrisonUpgrade();
+            updatePrisonersList(); // تحديث القائمة
+        }
+    }
     </script>
 </body>
 </html>
