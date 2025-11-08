@@ -29,28 +29,82 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- شريط الموارد العلوي -->
+        <!-- شريط الموارد والقوات العلوي -->
         <header class="top-bar">
-            <div class="resources-bar">
-                <div class="resource-item" data-resource="gold">
-                    <div class="resource-icon gold-icon"></div>
-                    <span class="resource-value" id="gold-amount">2500</span>
+            <!-- الصف الأول: الموارد -->
+            <div class="top-bar-row">
+                <div class="resources-bar">
+                    <div class="resource-item" data-resource="gold">
+                        <div class="resource-icon gold-icon"></div>
+                        <span class="resource-value" id="gold-amount">2500</span>
+                    </div>
+                    <div class="resource-item" data-resource="food">
+                        <div class="resource-icon food-icon"></div>
+                        <span class="resource-value" id="food-amount">1500</span>
+                    </div>
+                    <div class="resource-item" data-resource="wood">
+                        <div class="resource-icon wood-icon"></div>
+                        <span class="resource-value" id="wood-amount">800</span>
+                    </div>
+                    <div class="resource-item" data-resource="stone">
+                        <div class="resource-icon stone-icon"></div>
+                        <span class="resource-value" id="stone-amount">600</span>
+                    </div>
+                    <div class="resource-item" data-resource="iron">
+                        <div class="resource-icon iron-icon"></div>
+                        <span class="resource-value" id="iron-amount">200</span>
+                    </div>
                 </div>
-                <div class="resource-item" data-resource="food">
-                    <div class="resource-icon food-icon"></div>
-                    <span class="resource-value" id="food-amount">1500</span>
+                
+                <div class="vip-section">
+                    <div class="vip-icon" id="vip-icon"></div>
+                    <span class="vip-level" id="vip-level">VIP أساسي</span>
                 </div>
-                <div class="resource-item" data-resource="wood">
-                    <div class="resource-icon wood-icon"></div>
-                    <span class="resource-value" id="wood-amount">800</span>
+            </div>
+            
+            <!-- الصف الثاني: القوات -->
+            <div class="top-bar-row">
+                <div class="troops-bar">
+                    <div class="troop-item" data-troop="infantry">
+                        <div class="troop-icon infantry-icon">👥</div>
+                        <span class="troop-value" id="infantry-count">150</span>
+                    </div>
+                    <div class="troop-item" data-troop="archers">
+                        <div class="troop-icon archers-icon">🏹</div>
+                        <span class="troop-value" id="archers-count">80</span>
+                    </div>
+                    <div class="troop-item" data-troop="cavalry">
+                        <div class="troop-icon cavalry-icon">🐎</div>
+                        <span class="troop-value" id="cavalry-count">40</span>
+                    </div>
+                    <div class="troop-item" data-troop="ranged">
+                        <div class="troop-icon ranged-icon">⚔️</div>
+                        <span class="troop-value" id="ranged-count">60</span>
+                    </div>
+                    <div class="troop-item" data-troop="heavy">
+                        <div class="troop-icon heavy-icon">🛡️</div>
+                        <span class="troop-value" id="heavy-count">25</span>
+                    </div>
                 </div>
-                <div class="resource-item" data-resource="stone">
-                    <div class="resource-icon stone-icon"></div>
-                    <span class="resource-value" id="stone-amount">600</span>
+                
+                <div class="population-info">
+                    <span>السكان: </span>
+                    <span id="population-count">500</span>
                 </div>
-                <div class="resource-item" data-resource="iron">
-                    <div class="resource-icon iron-icon"></div>
-                    <span class="resource-value" id="iron-amount">200</span>
+            </div>
+            
+            <!-- الصف الثالث: معلومات الوقت والترخيص -->
+            <div class="top-bar-row">
+                <div class="game-info">
+                    <div class="time-display">
+                        <span>🕐 </span>
+                        <span id="game-time">12:00</span>
+                    </div>
+                </div>
+                
+                <div class="license-status-bar" id="license-info">
+                    <span class="license-type">🆓 اللعبة المجانية</span>
+                    <span class="time-remaining">⏰ 30 دقيقة</span>
                 </div>
             </div>
             
