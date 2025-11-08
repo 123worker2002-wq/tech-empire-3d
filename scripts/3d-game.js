@@ -10045,9 +10045,314 @@ if ('serviceWorker' in navigator) {
         }
     }
     
+    // ==========================================
+    // نظام إدارة المستويات والسجون
+    // ==========================================
+    
+    class LevelManagementSystem {
+        constructor() {
+            this.prisoners = [];
+            this.weakLeaders = [];
+            this.levelThresholds = {
+                FREE_CITIZEN: 13,    // أقل من 14
+                PRISONER: 15,        // 14-15
+                LEADER: 16           // 16+ (قائد)
+            };
+        }
+        
+        // فحص حالة اللاعب حسب المستوى
+        checkPlayerStatus(player) {
+            const level = player.level || 0;
+            const playerId = player.id || player.name;
+            
+            if (level < this.levelThresholds.FREE_CITIZEN) {
+                return 'FREE_CITIZEN';
+            } else if (level >= 14 && level <= 15) {
+                return 'PRISONER';
+            } else if (level >= this.levelThresholds.LEADER) {
+                return 'LEADER';
+            }
+            return 'UNKNOWN';
+        }
+        
+        // تحديد القائد الضعيف
+        identifyWeakLeader(player) {
+            const playerStatus = this.checkPlayerStatus(player);
+            
+            if (playerStatus === 'LEADER') {
+                // معايير القائد الضعيف
+                const weaknessCriteria = {
+                    failedFarms: this.countFailedFarms(player),
+                    lowProductivity: this.calculateProductivity(player),
+                    recentLosses: this.getRecentLosses(player),
+                    idleTime: this.getIdleTime(player),
+                    complaints: this.getComplaintCount(player)
+                };
+                
+                // تحديد إذا كان القائد ضعيفاً
+                const isWeak = this.evaluateWeakness(weaknessCriteria);
+                if (isWeak) {
+                    this.addToWeakLeaders(player, weaknessCriteria);
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // عد المزارع الفاشلة
+        countFailedFarms(player) {
+            // البحث في المزارع المملوكة للاعب
+            return this.farms ? this.farms.filter(farm => 
+                farm.owner === player.id || farm.owner === player.name
+            ).filter(farm => farm.health < 20 || farm.waterLevel < 10).length : 0;
+        }
+        
+        // حساب الإنتاجية
+        calculateProductivity(player) {
+            const playerFarms = this.farms ? this.farms.filter(farm => 
+                farm.owner === player.id || farm.owner === player.name
+            ) : [];
+            
+            if (playerFarms.length === 0) return 0;
+            
+            const totalProductivity = playerFarms.reduce((sum, farm) => {
+                return sum + (farm.production || 0);
+            }, 0);
+            
+            return totalProductivity / playerFarms.length;
+        }
+        
+        // الحصول على الخسائر الحديثة
+        getRecentLosses(player, days = 7) {
+            // محاكاة الخسائر الحديثة
+            return Math.floor(Math.random() * 5) + 1; // 1-5 خسائر
+        }
+        
+        // وقت عدم النشاط
+        getIdleTime(player) {
+            const lastActivity = player.lastActivity || Date.now();
+            const now = Date.now();
+            return (now - lastActivity) / (1000 * 60 * 60); // بالساعات
+        }
+        
+        // عدد الشكاوى
+        getComplaintCount(player) {
+            return Math.floor(Math.random() * 10) + 1; // 1-10 شكاوى
+        }
+        
+        // تقييم الضعف
+        evaluateWeakness(criteria) {
+            const weights = {
+                failedFarms: 0.3,
+                lowProductivity: 0.25,
+                recentLosses: 0.2,
+                idleTime: 0.15,
+                complaints: 0.1
+            };
+            
+            const weaknessScore = (
+                (criteria.failedFarms > 2 ? 1 : 0) * weights.failedFarms +
+                (criteria.lowProductivity < 50 ? 1 : 0) * weights.lowProductivity +
+                (criteria.recentLosses > 3 ? 1 : 0) * weights.recentLosses +
+                (criteria.idleTime > 48 ? 1 : 0) * weights.idleTime +
+                (criteria.complaints > 5 ? 1 : 0) * weights.complaints
+            );
+            
+            return weaknessScore >= 0.4; // إذا كان 40% أو أكثر ضعيف
+        }
+        
+        // إضافة للقادة الضعفاء
+        addToWeakLeaders(player, criteria) {
+            const existingLeader = this.weakLeaders.find(l => l.playerId === (player.id || player.name));
+            if (existingLeader) {
+                existingLeader.criteria = criteria;
+                existingLeader.detectionTime = Date.now();
+            } else {
+                this.weakLeaders.push({
+                    playerId: player.id || player.name,
+                    playerName: player.name || 'Unknown',
+                    level: player.level,
+                    criteria: criteria,
+                    detectionTime: Date.now(),
+                    status: 'WEAK'
+                });
+            }
+            
+            // عرض تنبيه
+            this.showWeakLeaderAlert(player, criteria);
+        }
+        
+        // عرض تنبيه القائد الضعيف
+        showWeakLeaderAlert(player, criteria) {
+            if (game && game.showNotification) {
+                game.showNotification(
+                    `تنبيه: القائد ${player.name || 'Unknown'} ضعيف! يتم إتمام عملية الأسر...`, 
+                    'warning'
+                );
+            }
+            
+            // عرض نافذة تفاصيل السجين
+            this.showPrisonerCaptureModal(player, criteria);
+        }
+        
+        // عرض نافذة أسر السجين
+        showPrisonerCaptureModal(player, criteria) {
+            const modal = this.createPrisonerModal(player, criteria);
+            document.body.appendChild(modal);
+            
+            setTimeout(() => {
+                modal.style.display = 'flex';
+                // تشغيل صوت الأسر
+                if (audioSystem && audioSystem.playEffect) {
+                    audioSystem.playEffect('prisoner-capture');
+                }
+            }, 1000);
+        }
+        
+        // إنشاء نافذة تفاصيل السجين
+        createPrisonerModal(player, criteria) {
+            const modal = document.createElement('div');
+            modal.className = 'prisoner-capture-modal';
+            modal.style.cssText = `
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 10000;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            const weaknessReasons = this.getWeaknessReasons(criteria);
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #2c1810, #1a0f08);
+                    padding: 30px;
+                    border-radius: 15px;
+                    border: 3px solid #8B4513;
+                    color: #FFB6C1;
+                    text-align: center;
+                    max-width: 500px;
+                    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+                ">
+                    <h2 style="color: #FF6347; margin-bottom: 20px;">⚔️ القائد أُسر! ⚔️</h2>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #FFD700;">${player.name || 'Unknown'}</h3>
+                        <p style="color: #FFA500;">المستوى: ${player.level}</p>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                        <h4 style="color: #FF6347; margin-bottom: 10px;">أسباب الضعف:</h4>
+                        <ul style="text-align: left; color: #FFB6C1;">
+                            ${weaknessReasons}
+                        </ul>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p style="color: #FFA500;">⏰ سيبقى في السجن حتى يتم تحسين أداءه</p>
+                    </div>
+                    
+                    <button onclick="this.parentElement.parentElement.style.display='none'" 
+                            style="
+                                background: #8B4513;
+                                color: white;
+                                border: none;
+                                padding: 12px 25px;
+                                border-radius: 8px;
+                                cursor: pointer;
+                                font-weight: bold;
+                            ">
+                        إتمام
+                    </button>
+                </div>
+            `;
+            
+            return modal;
+        }
+        
+        // الحصول على أسباب الضعف
+        getWeaknessReasons(criteria) {
+            const reasons = [];
+            
+            if (criteria.failedFarms > 2) {
+                reasons.push(`<li>مزارع فاشلة: ${criteria.failedFarms} مزرعة</li>`);
+            }
+            if (criteria.lowProductivity < 50) {
+                reasons.push(`<li>منخفضة الإنتاجية: ${criteria.lowProductivity.toFixed(1)}%</li>`);
+            }
+            if (criteria.recentLosses > 3) {
+                reasons.push(`<li>خسائر حديثة: ${criteria.recentLosses} خسائر</li>`);
+            }
+            if (criteria.idleTime > 48) {
+                reasons.push(`<li>عدم نشاط: ${Math.floor(criteria.idleTime)} ساعة</li>`);
+            }
+            if (criteria.complaints > 5) {
+                reasons.push(`<li>شكاوى كثيرة: ${criteria.complaints} شكوى</li>`);
+            }
+            
+            return reasons.length > 0 ? reasons.join('') : '<li>أسباب أخرى</li>';
+        }
+        
+        // إضافة سجين جديد
+        addPrisoner(player) {
+            const prisoner = {
+                id: player.id || player.name,
+                name: player.name || 'Unknown',
+                level: player.level,
+                captureTime: Date.now(),
+                reason: 'PRISONER_LEVEL_14_15',
+                status: 'INCARCERATED'
+            };
+            
+            this.prisoners.push(prisoner);
+            this.updatePrisonCount();
+            
+            return prisoner;
+        }
+        
+        // تحديث عدد السجناء
+        updatePrisonCount() {
+            const count = this.prisoners.length;
+            const countElement = document.getElementById('prison-count');
+            if (countElement) {
+                countElement.textContent = count;
+            }
+        }
+        
+        // فحص جميع اللاعبين
+        checkAllPlayers() {
+            if (game && game.players) {
+                game.players.forEach(player => {
+                    const status = this.checkPlayerStatus(player);
+                    
+                    if (status === 'PRISONER') {
+                        // إضافة للسجن تلقائياً
+                        this.addPrisoner(player);
+                    } else if (status === 'LEADER') {
+                        // فحص إذا كان قائداً ضعيفاً
+                        this.identifyWeakLeader(player);
+                    }
+                });
+            }
+        }
+        
+        // بدء المراقبة الدورية
+        startMonitoring() {
+            setInterval(() => {
+                this.checkAllPlayers();
+            }, 60000); // كل دقيقة
+        }
+    }
+    
     // إنشاء الأنظمة
     const farmNotificationSystem = new FarmNotificationSystem();
     const fancyNameSystem = new FancyNameSystem();
+    const levelManagementSystem = new LevelManagementSystem();
     
     // ربط النظام الصوتي مع أحداث اللعبة
     window.addEventListener('load', () => {

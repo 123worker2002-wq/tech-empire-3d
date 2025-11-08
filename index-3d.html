@@ -2062,5 +2062,147 @@
     
     <!-- Main Game Script -->
     <script src="scripts/3d-game.js"></script>
+
+    <!-- نظام إدارة السجون -->
+    <div class="prison-management-system" id="prison-management-system">
+        <div class="prison-header">
+            <h3>⛓️ نظام إدارة السجون</h3>
+            <div class="prison-stats">
+                <span class="prison-count" id="prison-count">0</span>
+                <span class="prison-label">سجين</span>
+            </div>
+        </div>
+        
+        <div class="prison-controls">
+            <button class="btn btn-prison" onclick="levelManagementSystem.checkAllPlayers()">
+                🔍 فحص اللاعبين
+            </button>
+            <button class="btn btn-prison" onclick="levelManagementSystem.startMonitoring()">
+                ▶️ بدء المراقبة
+            </button>
+            <button class="btn btn-prison" onclick="openPrisonList()">
+                📋 قائمة السجناء
+            </button>
+        </div>
+        
+        <div class="prison-alerts" id="prison-alerts">
+            <!-- تنبيهات السجون -->
+        </div>
+    </div>
+
+    <!-- نافذة قائمة السجناء -->
+    <div class="prison-list-modal" id="prison-list-modal" style="display: none;">
+        <div class="prison-list-content">
+            <div class="prison-list-header">
+                <h2>📋 قائمة السجناء</h2>
+                <button class="close-btn" onclick="closePrisonList()">✕</button>
+            </div>
+            
+            <div class="prison-filters">
+                <button class="filter-btn active" onclick="filterPrisoners('ALL')">الكل</button>
+                <button class="filter-btn" onclick="filterPrisoners('LEVEL_14_15')">مستوى 14-15</button>
+                <button class="filter-btn" onclick="filterPrisoners('WEAK_LEADERS')">قادة ضعفاء</button>
+            </div>
+            
+            <div class="prisoners-list" id="prisoners-list">
+                <!-- قائمة السجناء -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // وظائف إدارة السجون
+    function openPrisonList() {
+        const modal = document.getElementById('prison-list-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            updatePrisonersList();
+        }
+    }
+    
+    function closePrisonList() {
+        const modal = document.getElementById('prison-list-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    function filterPrisoners(type) {
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        updatePrisonersList(type);
+    }
+    
+    function updatePrisonersList(filter = 'ALL') {
+        const list = document.getElementById('prisoners-list');
+        if (!list || !levelManagementSystem) return;
+        
+        let prisoners = [];
+        
+        if (filter === 'ALL') {
+            prisoners = [...levelManagementSystem.prisoners, ...levelManagementSystem.weakLeaders];
+        } else if (filter === 'LEVEL_14_15') {
+            prisoners = levelManagementSystem.prisoners;
+        } else if (filter === 'WEAK_LEADERS') {
+            prisoners = levelManagementSystem.weakLeaders;
+        }
+        
+        if (prisoners.length === 0) {
+            list.innerHTML = '<div class="no-prisoners">لا يوجد سجناء</div>';
+            return;
+        }
+        
+        list.innerHTML = prisoners.map(prisoner => `
+            <div class="prisoner-item ${prisoner.status || 'WEAK'}">
+                <div class="prisoner-info">
+                    <h4>${prisoner.playerName || prisoner.name}</h4>
+                    <p>المستوى: ${prisoner.level}</p>
+                    <p>السبب: ${getPrisonerReason(prisoner)}</p>
+                </div>
+                <div class="prisoner-actions">
+                    <button class="btn-release" onclick="releasePrisoner('${prisoner.playerId || prisoner.id}')">
+                        🗝️ إطلق سراح
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function getPrisonerReason(prisoner) {
+        if (prisoner.reason) {
+            if (prisoner.reason === 'PRISONER_LEVEL_14_15') return 'مستوى 14-15';
+            if (prisoner.reason === 'WEAK_LEADER') return 'قائد ضعيف';
+        }
+        
+        if (prisoner.criteria) {
+            const reasons = [];
+            if (prisoner.criteria.failedFarms > 2) reasons.push('مزارع فاشلة');
+            if (prisoner.criteria.lowProductivity < 50) reasons.push('منخفضة الإنتاجية');
+            if (prisoner.criteria.recentLosses > 3) reasons.push('خسائر حديثة');
+            return reasons.length > 0 ? reasons.join(', ') : 'قائد ضعيف';
+        }
+        
+        return 'سبب غير محدد';
+    }
+    
+    function releasePrisoner(playerId) {
+        if (confirm('هل أنت متأكد من إطلاق سراح هذا السجين؟')) {
+            // إزالة من قائمة السجناء
+            levelManagementSystem.prisoners = levelManagementSystem.prisoners.filter(p => p.id !== playerId);
+            levelManagementSystem.weakLeaders = levelManagementSystem.weakLeaders.filter(p => p.playerId !== playerId);
+            
+            // تحديث الواجهة
+            levelManagementSystem.updatePrisonCount();
+            updatePrisonersList();
+            
+            // عرض رسالة تأكيد
+            if (game && game.showNotification) {
+                game.showNotification('تم إطلاق سراح السجين بنجاح! 🗝️', 'success');
+            }
+        }
+    }
+    </script>
 </body>
 </html>
