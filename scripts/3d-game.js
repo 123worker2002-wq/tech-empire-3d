@@ -8778,4 +8778,425 @@ if ('serviceWorker' in navigator) {
                 console.log('SW registration failed: ', registrationError);
             });
     });
+
+    // نظام الإرشاد الشامل
+    const GuidanceSystem = {
+        showGuidance: function(title, content) {
+            const overlay = document.getElementById('guidance-overlay');
+            const titleEl = document.getElementById('guidance-title');
+            const bodyEl = document.getElementById('guidance-body');
+            
+            if (overlay && titleEl && bodyEl) {
+                titleEl.textContent = title;
+                bodyEl.innerHTML = content;
+                overlay.style.display = 'flex';
+            }
+        },
+
+        hideGuidance: function() {
+            const overlay = document.getElementById('guidance-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        },
+
+        getSectionGuidance: function(section) {
+            const guidance = {
+                'kingdoms': {
+                    title: '🏰 نظام الممالك',
+                    content: `
+                        <div class="guidance-section">
+                            <h4>ما هو نظام الممالك؟</h4>
+                            <p>نظام الممالك يتيح لك السفر بين ممالك مختلفة واستكشاف عوالم جديدة مع فرص جديدة للتوسع والنمو.</p>
+                            
+                            <div class="guidance-stats">
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">500-2100</span>
+                                    <div class="guidance-stat-label">تكلفة التنقل (ذهبية)</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">3 أيام</span>
+                                    <div class="guidance-stat-label">عمر حساب مطلوب</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">C8</span>
+                                    <div class="guidance-stat-label">مستوى مطلوب</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">∞</span>
+                                    <div class="guidance-stat-label">عدد التنقلات</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>فوائد السفر للممالك</h4>
+                            <ul>
+                                <li>موارد جديدة ونادرة</li>
+                                <li>مباني وتقنيات متقدمة</li>
+                                <li>فرص تجارية مربحة</li>
+                                <li>تحالفات جديدة</li>
+                                <li>معارك ومغامرات شيقة</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>نصائح مهمة</h4>
+                            <ul>
+                                <li>احتفظ بكمية كافية من الذهب قبل السفر</li>
+                                <li>استكشف المملكة الجديدة قبل اتخاذ قرارات مهمة</li>
+                                <li>تفقد المباني والمنتجات المتاحة</li>
+                                <li>احرص على الأمان أثناء التنقل</li>
+                            </ul>
+                        </div>
+                    `
+                },
+
+                'military': {
+                    title: '⚔️ النظام العسكري',
+                    content: `
+                        <div class="guidance-section">
+                            <h4>إدارة القوات</h4>
+                            <p>قم بتدريب وإدارة جيشك الروماني القوي لتعزيز قوتك العسكرية وحماية مملكتك.</p>
+                            
+                            <div class="guidance-stats">
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">5</span>
+                                    <div class="guidance-stat-label">أنواع الوحدات</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">24/7</span>
+                                    <div class="guidance-stat-label">التدريب</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">10x</span>
+                                    <div class="guidance-stat-label">سرعة VIP</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>أنواع الوحدات العسكرية</h4>
+                            <ul>
+                                <li><strong>المشاة:</strong> جنود أساسية بقوة متوسطة</li>
+                                <li><strong>الرماة:</strong> وحدات дальнего боя عالية الدقة</li>
+                                <li><strong>الفارس:</strong> وحدات سريعة للقتال المفتوح</li>
+                                <li><strong>الرماة الفرسان:</strong> مزيج من السرعة والقدرة النارية</li>
+                                <li><strong>الفرسان المختارون:</strong> وحدة النخبة الأقوى</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="guidance-steps">
+                            <h4>خطوات التدريب</h4>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">1</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">اختر نوع الوحدة</div>
+                                    <div class="guidance-step-text">حدد الوحدة التي تريد تدريبها من القائمة المتاحة</div>
+                                </div>
+                            </div>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">2</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">حدد العدد</div>
+                                    <div class="guidance-step-text">أدخل عدد الوحدات المراد تدريبها</div>
+                                </div>
+                            </div>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">3</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">تأكيد التدريب</div>
+                                    <div class="guidance-step-text">اضغط على زر التدريب وأدخل موارد كافية</div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+
+                'buildings': {
+                    title: '🏗️ نظام المباني',
+                    content: `
+                        <div class="guidance-section">
+                            <h4>بناء وتطوير المباني</h4>
+                            <p>قم ببناء وتطوير مباني متنوعة لتعزيز إنتاج مواردك وتطوير قوتك.</p>
+                            
+                            <div class="guidance-stats">
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">15+</span>
+                                    <div class="guidance-stat-label">نوع مبنى</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">5</span>
+                                    <div class="guidance-stat-label">مستويات تطورية</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">24/7</span>
+                                    <div class="guidance-stat-label">الإنتاج</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>أنواع المباني الرئيسية</h4>
+                            <ul>
+                                <li><strong>مبنى الذهب:</strong> إنتاج الذهب الأساسي</li>
+                                <li><strong>مبنى الطعام:</strong> إنتاج الطعام للقوات</li>
+                                <li><strong>الورش:</strong> إنتاج الحجر والحديد</li>
+                                <li><strong>القلعة:</strong> تعزيز الدفاع</li>
+                                <li><strong>الحرس:</strong> زيادة قوة الجيش</li>
+                                <li><strong>الأكاديمية:</strong> البحث والتطوير</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="guidance-steps">
+                            <h4>خطوات البناء</h4>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">1</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">اختر المبنى</div>
+                                    <div class="guidance-step-text">حدد نوع المبنى من اللوحة</div>
+                                </div>
+                            </div>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">2</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">اختر الموقع</div>
+                                    <div class="guidance-step-text">انقر على موقع فارغ في المدينة</div>
+                                </div>
+                            </div>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">3</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">تأكيد البناء</div>
+                                    <div class="guidance-step-text">تأكد من توفر الموارد واضغط البناء</div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+
+                'chat': {
+                    title: '💬 نظام المحادثة',
+                    content: `
+                        <div class="guidance-section">
+                            <h4>التواصل مع اللاعبين</h4>
+                            <p>استخدم نظام المحادثة للتواصل مع اللاعبين الآخرين وتنسيق التحالفات.</p>
+                            
+                            <div class="guidance-stats">
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">6</span>
+                                    <div class="guidance-stat-label">غرف محادثة</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">24/7</span>
+                                    <div class="guidance-stat-label">متاح</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">∞</span>
+                                    <div class="guidance-stat-label">رسائل</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>أنواع المحادثات</h4>
+                            <ul>
+                                <li><strong>المحادثة العامة:</strong> للجميع</li>
+                                <li><strong>غرفة المبتدئين:</strong> للاعبين الجدد</li>
+                                <li><strong>غرفة التحالف:</strong> لأعضاء التحالف</li>
+                                <li><strong>الرسائل الخاصة:</strong> محادثة مباشرة</li>
+                                <li><strong>غرفة التجارة:</strong> للتبادل</li>
+                                <li><strong>غرفة الحروب:</strong> لمناقشة الاستراتيجيات</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>ميزات متقدمة</h4>
+                            <ul>
+                                <li>الترجمة الفورية للرسائل</li>
+                                <li>الرموز التعبيرية والميمز</li>
+                                <li>إرسال الموارد والصور</li>
+                                <li>تنبيهات هامة</li>
+                            </ul>
+                        </div>
+                    `
+                },
+
+                'research': {
+                    title: '🔬 نظام الأبحاث',
+                    content: `
+                        <div class="guidance-section">
+                            <h4>تطوير التقنيات</h4>
+                            <p>ابحث عن تقنيات جديدة لتطوير قوتك وزيادة إنتاجيتك.</p>
+                            
+                            <div class="guidance-stats">
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">20+</span>
+                                    <div class="guidance-stat-label">تكنولوجيا</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">5</span>
+                                    <div class="guidance-stat-label">فئات رئيسية</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">10</span>
+                                    <div class="guidance-stat-label">مستويات</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>فئات التقنيات</h4>
+                            <ul>
+                                <li><strong>تقنيات الإنتاج:</strong> زيادة إنتاج الموارد</li>
+                                <li><strong>التقنيات العسكرية:</strong> تعزيز قوة الجيش</li>
+                                <li><strong>تقنيات البناء:</strong> تطوير المباني</li>
+                                <li><strong>التقنيات الدفاعية:</strong> تعزيز الحماية</li>
+                                <li><strong>التقنيات الخاصة:</strong> قدرات فريدة</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="guidance-steps">
+                            <h4>خطوات البحث</h4>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">1</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">اختر التقنية</div>
+                                    <div class="guidance-step-text">حدد التقنية المراد تطويرها</div>
+                                </div>
+                            </div>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">2</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">تأكد من الشروط</div>
+                                    <div class="guidance-step-text">تحقق من المتطلبات والمستوى المطلوب</div>
+                                </div>
+                            </div>
+                            <div class="guidance-step">
+                                <div class="guidance-step-number">3</div>
+                                <div class="guidance-step-content">
+                                    <div class="guidance-step-title">ابدأ البحث</div>
+                                    <div class="guidance-step-text">ادفع التكلفة وابدأ البحث</div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+
+                'alliances': {
+                    title: '🤝 نظام التحالفات',
+                    content: `
+                        <div class="guidance-section">
+                            <h4>التحالفات الاستراتيجية</h4>
+                            <p>انضم إلى تحالفات قوية للحصول على دعم ومساعدة من لاعبين آخرين.</p>
+                            
+                            <div class="guidance-stats">
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">3</span>
+                                    <div class="guidance-stat-label">تحالفات نشطة</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">50</span>
+                                    <div class="guidance-stat-label">أعضاء كحد أقصى</div>
+                                </div>
+                                <div class="guidance-stat">
+                                    <span class="guidance-stat-value">24/7</span>
+                                    <div class="guidance-stat-label">دعم مستمر</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>فوائد التحالف</h4>
+                            <ul>
+                                <li><strong>الدعم العسكري:</strong> زيادة قوة المعركة</li>
+                                <li><strong>المساعدة الاقتصادية:</strong> ذهب وطعام إضافي</li>
+                                <li><strong>الاستشارة:</strong> نصائح من لاعبين خبيرين</li>
+                                <li><strong>الأحداث الخاصة:</strong> فعاليات تحالفية حصرية</li>
+                                <li><strong>التبادل:</strong> تجارة مع أعضاء التحالف</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="guidance-section">
+                            <h4>قواعد التحالف</h4>
+                            <ul>
+                                <li>يمكن تفعيل تحالفين فقط في نفس الوقت</li>
+                                <li>مدة التحالف: 5 دقائق (قابلة للتجديد)</li>
+                                <li>لا يمكن إعادة تفعيل نفس التحالف فوراً</li>
+                                <li>يجب أن يكون المستفيدون في نفس المنطقة</li>
+                            </ul>
+                        </div>
+                    `
+                }
+            };
+
+            return guidance[section] || {
+                title: 'دليل اللعبة',
+                content: '<p>اختر قسم من القائمة لعرض دليله التفصيلي.</p>'
+            };
+        }
+    };
+
+    // ربط أحداث الإرشاد
+    document.addEventListener('DOMContentLoaded', function() {
+        // زر الإغلاق
+        const closeBtn = document.getElementById('close-guidance');
+        const understoodBtn = document.getElementById('guidance-understood');
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                GuidanceSystem.hideGuidance();
+            });
+        }
+        
+        if (understoodBtn) {
+            understoodBtn.addEventListener('click', () => {
+                GuidanceSystem.hideGuidance();
+            });
+        }
+        
+        // إغلاق النافذة عند النقر خارجها
+        const overlay = document.getElementById('guidance-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    GuidanceSystem.hideGuidance();
+                }
+            });
+        }
+    });
+
+    // دالة لعرض الإرشاد من أي مكان في الكود
+    window.showGuidance = function(section) {
+        const guidance = GuidanceSystem.getSectionGuidance(section);
+        GuidanceSystem.showGuidance(guidance.title, guidance.content);
+    };
+
+    // دالة لربط كل زر في الواجهة بالإرشاد
+    function bindGuidanceToButtons() {
+        const buttons = {
+            'kingdoms-btn': 'kingdoms',
+            'military-btn': 'military', 
+            'buildings-btn': 'buildings',
+            'chat-btn': 'chat',
+            'research-btn': 'research',
+            'alliances-btn': 'alliances'
+        };
+        
+        Object.entries(buttons).forEach(([btnId, section]) => {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                btn.addEventListener('click', function(e) {
+                    // عرض الإرشاد بعد لحظة قصيرة من فتح القسم
+                    setTimeout(() => {
+                        showGuidance(section);
+                    }, 800);
+                });
+            }
+        });
+    }
+
+    // تهيئة ربط الأزرار عند تحميل الصفحة
+    window.addEventListener('load', bindGuidanceToButtons);
+    });
 }

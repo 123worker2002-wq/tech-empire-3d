@@ -712,15 +712,15 @@
                 <div class="nav-icon warfare-icon"></div>
                 <span>حرب الممالك</span>
             </button>
-            <button class="nav-btn" data-section="troops">
+            <button class="nav-btn" data-section="troops" id="military-btn">
                 <div class="nav-icon troops-icon"></div>
                 <span>القوات</span>
             </button>
-            <button class="nav-btn" data-section="research">
+            <button class="nav-btn" data-section="research" id="research-btn">
                 <div class="nav-icon research-icon"></div>
                 <span>البحث</span>
             </button>
-            <button class="nav-btn" data-section="kingdoms">
+            <button class="nav-btn" data-section="kingdoms" id="kingdoms-btn">
                 <div class="nav-icon kingdoms-icon"></div>
                 <span>الممالك</span>
             </button>
@@ -736,7 +736,7 @@
                 <div class="nav-icon security-icon">🛡️</div>
                 <span>الأمان</span>
             </button>
-            <button class="nav-btn" data-section="alliances">
+            <button class="nav-btn" data-section="alliances" id="alliances-btn">
                 <div class="nav-icon alliance-icon"></div>
                 <span>التحالفات</span>
             </button>
@@ -752,7 +752,7 @@
                 <div class="nav-icon territories-icon">🗺️</div>
                 <span>أراضي التحالف</span>
             </button>
-            <button class="nav-btn" data-section="chat" onclick="game.openAllianceChat()">
+            <button class="nav-btn" data-section="chat" onclick="game.openAllianceChat()" id="chat-btn">
                 <div class="nav-icon chat-icon">💬</div>
                 <span>دردشة التحالف</span>
             </button>
@@ -912,6 +912,24 @@
             </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" id="close-vip">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نظام الإرشاد الشامل -->
+    <div class="guidance-overlay" id="guidance-overlay" style="display: none;">
+        <div class="guidance-content">
+            <div class="guidance-header">
+                <h3 id="guidance-title">دليل الممالك</h3>
+                <button class="guidance-close" id="close-guidance">✕</button>
+            </div>
+            
+            <div class="guidance-body" id="guidance-body">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+            
+            <div class="guidance-footer">
+                <button class="btn btn-primary" id="guidance-understood">فهمت</button>
             </div>
         </div>
     </div>
