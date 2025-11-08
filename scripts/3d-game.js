@@ -864,6 +864,108 @@ class TechEmpire3D {
                     crystalShard: { name: "شظية بلورية", tradeable: true, value: 5000 },
                     royalSeal: { name: "ختم ملكي", tradeable: true, value: 8000 },
                     empireRelic: { name: "أثر إمبراطوري", tradeable: true, value: 15000 }
+                },
+                // المتاجر من War and Order (أسماء معدلة)
+                availableStores: {
+                    "tech_market": {
+                        name: "سوق التقنية المتقدمة",
+                        description: "متجر متخصص في تقنيات الحماية والأسلحة المتطورة",
+                        location: "المقاطعة التقنية",
+                        specialItems: ["درع شفري", "قنبلة ذكية", "درع مغناطيسي", "سلاح ليزر"],
+                        tradeBonuses: { equipment: 15, tech: 20 },
+                        level: 1
+                    },
+                    "future_bazaar": {
+                        name: "بازار المستقبل",
+                        description: "متجر للآلات الميكانيكية والأدوات الذكية",
+                        location: "المدينة الذكية",
+                        specialItems: ["روبوت مساعد", "منصة تجارية", "نظام أتمتة", "شبكة ذكية"],
+                        tradeBonuses: { automation: 25, equipment: 10 },
+                        level: 2
+                    },
+                    "galaxy_emporium": {
+                        name: "محلات مجرة الطاقة",
+                        description: "متجر الطاقة الكونية والبلورات النادرة",
+                        location: "مركز الطاقة",
+                        specialItems: ["بلورة طاقة", "نواة مضيئة", "مولد كوني", "شعاع جاذبية"],
+                        tradeBonuses: { energy: 30, crystals: 25 },
+                        level: 3
+                    },
+                    "cyber_warfare": {
+                        name: "متجر الحرب السيبرانية",
+                        description: "أدوات التجسس الرقمي والأمن السيبراني",
+                        location: "الأمان الرقمي",
+                        specialItems: ["إصدار إلكتروني", "حاجز حماية", "برنامج اختراق", "كلمة مرور رئيسية"],
+                        tradeBonuses: { intelligence: 20, security: 15 },
+                        level: 4
+                    },
+                    "time_market": {
+                        name: "سوق الزمن المتقدم",
+                        description: "أدوات تسريع الوقت والوحدات الزمنية",
+                        location: "مختبر الزمن",
+                        specialItems: ["مؤقت متقدم", "إسريع زمني", "تلسكوب لعنق", "مقياس سببي"],
+                        tradeBonuses: { time: 35, research: 20 },
+                        level: 5
+                    },
+                    "quantum_trading": {
+                        name: "متجر التجارة الكمية",
+                        description: "نظام تداول يعتمد على مبادئ ميكانيكا الكم",
+                        location: "مختبر كموم",
+                        specialItems: ["نواة انكماش", "مضاد طاقة", "سهم كمي", "ناقلة فوتون"],
+                        tradeBonuses: { quantum: 40, speed: 30 },
+                        level: 6
+                    },
+                    "stellar_depot": {
+                        name: "مستودع النجوم",
+                        description: "متجر الأدوات الفضائية والمعدات النجمية",
+                        location: "محطة فضائية",
+                        specialItems: ["درع كوني", "محرك فخري", "سلاح كوازار", "درع مضاد جاذبية"],
+                        tradeBonuses: { space: 45, defense: 25 },
+                        level: 7
+                    },
+                    "void_market": {
+                        name: "سوق الفراغ المجهول",
+                        description: "متجر تقنيات السفر عبر البعد الفارغ",
+                        location: "بوابة أخرى",
+                        specialItems: ["بوابة زمانية", "مدمر فراغ", "درع أوميغا", "سلاح واقع"],
+                        tradeBonuses: { void: 50, power: 40 },
+                        level: 8
+                    }
+                },
+                // السوق السوداء من Mobile Strike (أسماء معدلة)
+                blackMarket: {
+                    name: "السوق المظلم السرية",
+                    description: "متجر مخفي للقطع النادرة والأدوات المحظورة",
+                    location: "منطقة سرية",
+                    unlockRequirement: "VIP 5 أو مستوى تحالف متقدم",
+                    specialDeals: {
+                        forbiddenArtifacts: {
+                            name: "الآثار المحرمة",
+                            description: "قطع نادرة محظورة الانتشار",
+                            priceMultiplier: 3.0,
+                            rarity: "أسطوري",
+                            items: ["تاج الظل", "سيف القدر", "نجمة الحقيقة", "خاتم اللانهاية"]
+                        },
+                        illegalTech: {
+                            name: "التقنيات المحظورة",
+                            description: "أدوات محدثة بشكل مخالف للقانون",
+                            priceMultiplier: 2.5,
+                            rarity: "نادر جداً",
+                            items: ["شبكة اختراق عالمية", "قنبلة كهرومغناطيسية", "درع اختفاء", "نظام تشغيل مجهول"]
+                        },
+                        rareMaterials: {
+                            name: "المواد النادرة",
+                            description: "مواد مستخرجة من مصادر سرية",
+                            priceMultiplier: 1.8,
+                            rarity: "نادر",
+                            items: ["كوارتزام سايبور", "بلورة اللانهاية", "نواة فسفورية", "معدن كوني"]
+                        }
+                    },
+                    accessLevel: 0, // 0 = غير متاح، 1 = متاح بمتطلبات، 2 = VIP
+                    specialEvents: {
+                        midnightDeal: { active: false, discount: 50, item: null },
+                        weeklyAuction: { active: false, topBid: 0, item: null }
+                    }
                 }
             },
             // مركز الاستثمار من Mobile Strike
@@ -9174,6 +9276,230 @@ class TechEmpire3D {
         `;
         
         container.innerHTML = html;
+    }
+
+    // دالة إنشاء واجهة المتاجر المتعددة
+    createAdvancedStoresInterface() {
+        const container = document.getElementById('advanced-stores-container') || this.createAdvancedStoresContainer();
+        const storesData = this.allianceSystem.tradeShip.availableStores;
+        
+        let html = `
+            <div class="elite-fields-modal">
+                <div class="elite-fields-panel">
+                    <h3>🛒 المتاجر المتقدمة - War & Order</h3>
+                    
+                    <div class="stores-grid">
+        `;
+        
+        Object.values(storesData).forEach(store => {
+            const isUnlocked = this.canAccessStore(store.level);
+            html += `
+                <div class="store-card ${isUnlocked ? 'unlocked' : 'locked'}">
+                    <div class="store-header">
+                        <h4>${store.name}</h4>
+                        <span class="store-level">مستوى ${store.level}</span>
+                    </div>
+                    
+                    <div class="store-description">
+                        <p>${store.description}</p>
+                        <div class="store-location">📍 ${store.location}</div>
+                    </div>
+                    
+                    <div class="store-items">
+                        <h5>العناصر الخاصة:</h5>
+                        <div class="items-list">
+                            ${store.specialItems.map(item => `<span class="item-tag">${item}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="store-bonuses">
+                        <h5>مكافآت التجارة:</h5>
+                        ${Object.entries(store.tradeBonuses).map(([type, bonus]) => 
+                            `<span class="bonus-tag">${type}: +${bonus}%</span>`
+                        ).join('')}
+                    </div>
+                    
+                    <div class="store-actions">
+                        ${isUnlocked ? 
+                            `<button onclick="game.visitStore('${Object.keys(storesData).find(key => storesData[key] === store)}')">زيارة المتجر</button>` :
+                            '<span class="level-locked">مستوى منخفض</span>'
+                        }
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `
+                    </div>
+                    
+                    <button onclick="document.getElementById('advanced-stores-container').remove()">إغلاق</button>
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+    }
+
+    // دالة إنشاء واجهة السوق السوداء
+    createBlackMarketInterface() {
+        const container = document.getElementById('black-market-container') || this.createBlackMarketContainer();
+        const blackMarket = this.allianceSystem.tradeShip.blackMarket;
+        
+        // التحقق من الوصول
+        const canAccess = this.canAccessBlackMarket();
+        
+        let html = `
+            <div class="elite-fields-modal">
+                <div class="elite-fields-panel">
+                    <h3>🕴️ السوق المظلم السرية - Mobile Strike</h3>
+                    
+                    <div class="black-market-header">
+                        <h4>${blackMarket.name}</h4>
+                        <p>${blackMarket.description}</p>
+                        <div class="access-info">📍 ${blackMarket.location}</div>
+                        <div class="unlock-requirement">${blackMarket.unlockRequirement}</div>
+                    </div>
+                    ${canAccess ? '' : '<div class="access-denied">🔒 الوصول محظور - يجب استيفاء المتطلبات</div>'}
+                    
+        `;
+        
+        if (canAccess) {
+            html += `
+                    <div class="black-market-content">
+            `;
+            
+            // عرض الصفقات الخاصة
+            Object.entries(blackMarket.specialDeals).forEach(([dealId, deal]) => {
+                html += `
+                    <div class="black-market-deal">
+                        <div class="deal-header">
+                            <h5>${deal.name}</h5>
+                            <span class="rarity-badge rarity-${deal.rarity.toLowerCase().replace(' ', '-')}">${deal.rarity}</span>
+                        </div>
+                        <div class="deal-description">
+                            <p>${deal.description}</p>
+                            <div class="price-multiplier">مضاعف السعر: ${deal.priceMultiplier}x</div>
+                        </div>
+                        <div class="deal-items">
+                            <h6>العناصر المتاحة:</h6>
+                            <div class="items-grid">
+                                ${deal.items.map(item => `
+                                    <div class="black-market-item">
+                                        <span class="item-name">${item}</span>
+                                        <button onclick="game.purchaseBlackMarketItem('${dealId}', '${item}')">شراء</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // عرض الأحداث الخاصة
+            if (blackMarket.specialEvents.midnightDeal.active || blackMarket.specialEvents.weeklyAuction.active) {
+                html += `
+                    <div class="special-events">
+                        <h5>الأحداث الخاصة</h5>
+                `;
+                
+                if (blackMarket.specialEvents.midnightDeal.active) {
+                    const deal = blackMarket.specialEvents.midnightDeal;
+                    html += `
+                        <div class="special-event">
+                            <h6>🔮 صفقة منتصف الليل</h6>
+                            <p>خصم ${deal.discount}% على: ${deal.item}</p>
+                            <button onclick="game.purchaseMidnightDeal()">شراء</button>
+                        </div>
+                    `;
+                }
+                
+                if (blackMarket.specialEvents.weeklyAuction.active) {
+                    const auction = blackMarket.specialEvents.weeklyAuction;
+                    html += `
+                        <div class="special-event">
+                            <h6>🏆 المزاد الأسبوعي</h6>
+                            <p>المضوع: ${auction.item}</p>
+                            <p>أعلى عرض: ${auction.topBid} ذهب</p>
+                            <input type="number" id="auction-bid" placeholder="عرضك">
+                            <button onclick="game.placeAuctionBid()">وضع عرض</button>
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+            }
+            
+            html += `</div>`;
+        }
+        
+        html += `
+                    <button onclick="document.getElementById('black-market-container').remove()">إغلاق</button>
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+    }
+
+    // دوال مساعدة للمتاجر
+    canAccessStore(storeLevel) {
+        // متطلبات الوصول: مستوى السفينة يجب أن يكون >= مستوى المتجر - 1
+        return this.allianceSystem.tradeShip.level >= (storeLevel - 1);
+    }
+
+    canAccessBlackMarket() {
+        // متطلبات الوصول: VIP 5 أو مستوى تحالف متقدم
+        return this.vipLevel >= 5 || this.allianceSystem.activeAlliances.length > 0;
+    }
+
+    visitStore(storeId) {
+        const store = this.allianceSystem.tradeShip.availableStores[storeId];
+        alert(`تم الوصول إلى ${store.name}\nستحصل على ${store.tradeBonuses.equipment || 0}% خصم على المعدات!`);
+    }
+
+    purchaseBlackMarketItem(dealId, itemName) {
+        const deal = this.allianceSystem.tradeShip.blackMarket.specialDeals[dealId];
+        const estimatedPrice = 10000 * deal.priceMultiplier; // سعر تقديري
+        
+        if (this.resources.gold >= estimatedPrice) {
+            this.resources.gold -= estimatedPrice;
+            alert(`تم شراء ${itemName} بنجاح!`);
+            this.updateResourceDisplay();
+        } else {
+            alert('ذهبك غير كافي لشراء هذا العنصر!');
+        }
+    }
+
+    purchaseMidnightDeal() {
+        // منطق شراء صفقة منتصف الليل
+        alert('تم شراء صفقة منتصف الليل!');
+    }
+
+    placeAuctionBid() {
+        const bid = parseInt(document.getElementById('auction-bid')?.value || 0);
+        if (this.resources.gold >= bid) {
+            this.allianceSystem.tradeShip.blackMarket.specialEvents.weeklyAuction.topBid = bid;
+            alert('تم وضع العرض بنجاح!');
+        } else {
+            alert('ذهبك غير كافي لوضع هذا العرض!');
+        }
+    }
+
+    // دوال إنشاء الحاويات
+    createAdvancedStoresContainer() {
+        const container = document.createElement('div');
+        container.id = 'advanced-stores-container';
+        container.className = 'elite-fields-modal';
+        document.body.appendChild(container);
+        return container;
+    }
+
+    createBlackMarketContainer() {
+        const container = document.createElement('div');
+        container.id = 'black-market-container';
+        container.className = 'elite-fields-modal';
+        document.body.appendChild(container);
+        return container;
     }
 
     // دوال مساعدة للواجهات
