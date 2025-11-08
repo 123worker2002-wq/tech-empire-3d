@@ -590,12 +590,13 @@ body {
 }
 
 .resource-icon {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  border: 2px solid var(--border-color);
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
   position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  margin-left: 4px;
 }
 
 .resource-item:hover .resource-icon {
@@ -7063,4 +7064,158 @@ body {
     .prison-filters {
         justify-content: center;
     }
+}
+
+/* ==========================================
+   إصلاحات الواجهة التلقائية
+   ========================================== */
+
+/* أيقونات المباني المحسّنة */
+.building-icon {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+/* تصحيح أيقونات الموارد المفقودة */
+.resource-item:empty::before,
+.resource-icon:empty::before {
+    content: '●';
+    color: var(--resource-gold);
+    font-size: 16px;
+    display: block;
+    text-align: center;
+    line-height: 20px;
+}
+
+/* إصلاح شريط التحميل المتضارب */
+.loading-bar,
+.progress-bar {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-bar::after,
+.progress-bar::after {
+    content: attr(data-percentage) '%';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+/* أزرار النظام المحسّنة */
+.elite-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-width: 120px;
+}
+
+.elite-btn .btn-icon {
+    font-size: 14px;
+    margin-left: 4px;
+}
+
+/* النصوص المقطوعة */
+.truncated-text,
+.text-cut {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+/* إصلاح عرض شريط الوقت */
+.remaining-time {
+    min-width: 100px;
+    text-align: center;
+}
+
+/* تحسين التباين العام */
+.high-contrast {
+    filter: contrast(1.2) brightness(1.1);
+}
+
+/* تخطيط محسّن للموبايل */
+@media (max-width: 768px) {
+    .resource-item {
+        min-width: 60px;
+        padding: 4px;
+    }
+    
+    .resource-value {
+        font-size: 12px;
+    }
+    
+    .building-card {
+        min-height: 80px;
+        padding: 8px;
+    }
+    
+    .building-icon {
+        font-size: 16px;
+    }
+}
+
+/* أنيميشن إشعارات الترجمة */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.translation-notification {
+    animation: slideIn 0.3s ease;
+}
+
+/* إصلاحات إضافية للواجهة */
+.building-card:empty,
+.card:empty {
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+}
+
+.building-card:empty::before,
+.card:empty::before {
+    content: '🏗️';
+    font-size: 24px;
+    color: #666;
+}
+
+/* تحسين عرض النصوص العربية */
+.arabic-text {
+    font-family: 'Noto Sans Arabic', 'Arial', sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+/* إصلاح التداخل في الواجهة */
+.z-index-fix {
+    z-index: 9999;
+    position: relative;
 }

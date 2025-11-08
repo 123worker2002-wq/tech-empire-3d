@@ -12830,8 +12830,635 @@ window.dev = {
     addFarm: addManualFarm
 };
 
+// ==========================================
+// إصلاح مشاكل الواجهة التلقائية
+// ==========================================
+
+// نظام الترجمة التلقائية
+const autoTranslationSystem = {
+    currentLanguage: 'ar',
+    supportedLanguages: {
+        'ar': 'العربية',
+        'en': 'English',
+        'fr': 'Français',
+        'es': 'Español',
+        'de': 'Deutsch',
+        'zh': '中文',
+        'ja': '日本語'
+    },
+    
+    // تخطيط النصوص حسب اللغة
+    translations: {
+        // أسماء المباني
+        buildingNames: {
+            'ar': {
+                'فيلا': 'فيلا',
+                'أعمدة': 'أعمدة تقنية',
+                'مسرح': 'مسرح النجوم',
+                'كولوسيوم': 'كولوسيوم المستقبل',
+                'ثكنات': 'ثكنات الطاقة'
+            },
+            'en': {
+                'فيلا': 'Villa',
+                'أعمدة': 'Tech Columns',
+                'مسرح': 'Star Theater',
+                'كولوسيوم': 'Future Colosseum',
+                'ثكنات': 'Energy Barracks'
+            }
+        },
+        
+        // الموارد
+        resources: {
+            'ar': {
+                'ذهب': 'ذهب',
+                'طعام': 'طعام',
+                'خشب': 'خشب',
+                'حجر': 'حجر',
+                'حديد': 'حديد'
+            },
+            'en': {
+                'ذهب': 'Gold',
+                'طعام': 'Food',
+                'خشب': 'Wood',
+                'حجر': 'Stone',
+                'حديد': 'Iron'
+            }
+        },
+        
+        // أزرار النظام
+        systemButtons: {
+            'ar': {
+                'اللعبة المجانية': 'اللعبة المجانية',
+                'الوقت المتبقي': 'الوقت المتبقي',
+                'متاجر متقدمة': 'متاجر متقدمة',
+                'سوق مظلم': 'سوق مظلم'
+            },
+            'en': {
+                'اللعبة المجانية': 'Free Game',
+                'الوقت المتبقي': 'Time Remaining',
+                'متاجر متقدمة': 'Advanced Stores',
+                'سوق مظلم': 'Dark Market'
+            }
+        }
+    },
+    
+    // كشف لغة المتصفح
+    detectBrowserLanguage() {
+        const browserLang = navigator.language || navigator.userLanguage || 'ar';
+        const langCode = browserLang.split('-')[0];
+        
+        // تحديد اللغة الافتراضية
+        if (this.supportedLanguages[langCode]) {
+            return langCode;
+        }
+        
+        // قواعد خاصة للغات محددة
+        if (browserLang.includes('ar')) return 'ar';
+        if (browserLang.includes('en')) return 'en';
+        if (browserLang.includes('fr')) return 'fr';
+        if (browserLang.includes('es')) return 'es';
+        if (browserLang.includes('de')) return 'de';
+        if (browserLang.includes('zh')) return 'zh';
+        if (browserLang.includes('ja')) return 'ja';
+        
+        return 'ar'; // افتراضي للعربية
+    },
+    
+    // تطبيق الترجمة التلقائية
+    applyAutoTranslation() {
+        const detectedLang = this.detectBrowserLanguage();
+        this.currentLanguage = detectedLang;
+        
+        // حفظ تفضيل اللغة
+        localStorage.setItem('techEmpireLanguage', detectedLang);
+        
+        // تطبيق الترجمة على الواجهة
+        this.translateAllElements();
+        
+        console.log(`🌐 تم تطبيق الترجمة التلقائية: ${this.supportedLanguages[detectedLang]}`);
+        
+        // إشعار الترجمة
+        if (typeof createFarmAlert === 'function') {
+            setTimeout(() => {
+                createFarmAlert('النظام', `تم التبديل للغة: ${this.supportedLanguages[detectedLang]} 🌍`, 'success');
+            }, 2000);
+        }
+    },
+    
+    // ترجمة العناصر
+    translateAllElements() {
+        // ترجمة أسماء المباني
+        this.translateBuildingCards();
+        
+        // ترجمة الموارد
+        this.translateResourceElements();
+        
+        // ترجمة الأزرار
+        this.translateSystemButtons();
+        
+        // ترجمة شريط التحميل
+        this.translateLoadingBar();
+    },
+    
+    // ترجمة بطاقات المباني
+    translateBuildingCards() {
+        const buildingCards = document.querySelectorAll('.building-card, .card');
+        const buildingNames = this.translations.buildingNames[this.currentLanguage];
+        
+        buildingCards.forEach(card => {
+            const nameElement = card.querySelector('.building-name, .card-title, h3, .name');
+            if (nameElement) {
+                const currentText = nameElement.textContent.trim();
+                
+                // البحث عن الترجمة المناسبة
+                for (const [arabic, translated] of Object.entries(buildingNames)) {
+                    if (currentText.includes(arabic) || currentText === arabic) {
+                        nameElement.textContent = translated;
+                        break;
+                    }
+                }
+            }
+        });
+    },
+    
+    // ترجمة عناصر الموارد
+    translateResourceElements() {
+        const resourceNames = this.translations.resources[this.currentLanguage];
+        const resourceItems = document.querySelectorAll('.resource-item');
+        
+        resourceItems.forEach(item => {
+            const titleElement = item.querySelector('title, [data-resource]');
+            if (titleElement) {
+                const resourceType = titleElement.getAttribute('data-resource') || 
+                                   titleElement.getAttribute('title');
+                
+                // إضافة tooltip مترجم
+                if (resourceType) {
+                    const translatedName = resourceNames[resourceType] || resourceType;
+                    item.setAttribute('title', translatedName);
+                }
+            }
+        });
+    },
+    
+    // ترجمة أزرار النظام
+    translateSystemButtons() {
+        const buttonNames = this.translations.systemButtons[this.currentLanguage];
+        const systemButtons = document.querySelectorAll('.elite-btn, .nav-btn, .top-bar button');
+        
+        systemButtons.forEach(button => {
+            const currentText = button.textContent.trim();
+            const translatedText = buttonNames[currentText] || currentText;
+            button.textContent = translatedText;
+        });
+    },
+    
+    // ترجمة شريط التحميل
+    translateLoadingBar() {
+        const loadingElements = document.querySelectorAll('.loading-text, .progress-text, [id*="loading"]');
+        const translated = {
+            'ar': 'جاري التحميل',
+            'en': 'Loading...',
+            'fr': 'Chargement...',
+            'es': 'Cargando...',
+            'de': 'Lädt...'
+        };
+        
+        loadingElements.forEach(element => {
+            element.textContent = translated[this.currentLanguage] || 'Loading...';
+        });
+    }
+};
+
+// دوال إصلاح أيقونات المباني
+function fixBuildingIcons() {
+    // أيقونات المباني المتقدمة
+    const buildingIcons = {
+        'فيلا': '🏠',
+        'أعمدة': '🏛️',
+        'مسرح': '🎭',
+        'كولوسيوم': '🏛️',
+        'ثكنات': '🏰'
+    };
+    
+    // تطبيق الأيقونات على بطاقات المباني
+    const buildingCards = document.querySelectorAll('.building-card, .card');
+    
+    buildingCards.forEach(card => {
+        const nameElement = card.querySelector('.building-name, .card-title, h3, .name');
+        if (nameElement) {
+            const buildingName = nameElement.textContent.trim();
+            const icon = buildingIcons[buildingName] || '🏢';
+            
+            // إضافة الأيقونة إذا لم تكن موجودة
+            if (!nameElement.querySelector('.building-icon')) {
+                const iconElement = document.createElement('span');
+                iconElement.className = 'building-icon';
+                iconElement.textContent = icon;
+                iconElement.style.cssText = `
+                    font-size: 24px;
+                    margin-left: 8px;
+                    display: inline-block;
+                `;
+                nameElement.insertBefore(iconElement, nameElement.firstChild);
+            }
+        }
+    });
+}
+
+// دوال إصلاح شريط التحميل
+function fixLoadingBar() {
+    // البحث عن جميع عناصر شريط التحميل
+    const loadingBars = document.querySelectorAll('.loading-bar, .progress-bar, .load-progress');
+    const loadingTexts = document.querySelectorAll('.loading-text, .progress-text, .load-percentage');
+    
+    loadingBars.forEach(bar => {
+        // إصلاح التطابق بين الشريط والنسبة
+        const percentageText = bar.getAttribute('data-percentage') || 
+                              bar.querySelector('.percentage')?.textContent || '0';
+        
+        const percentage = parseInt(percentageText);
+        if (!isNaN(percentage)) {
+            // تطبيق النسبة على عرض الشريط
+            bar.style.width = percentage + '%';
+            
+            // التأكد من أن الخلفية تتطابق
+            if (bar.classList.contains('progress-bar')) {
+                const fillElement = bar.querySelector('.progress-fill') || 
+                                  bar.querySelector('.loading-fill');
+                if (fillElement) {
+                    fillElement.style.width = percentage + '%';
+                }
+            }
+        }
+    });
+    
+    // مزامنة النصوص مع الشريط
+    loadingTexts.forEach(text => {
+        const parentBar = text.closest('.loading-bar, .progress-bar');
+        if (parentBar) {
+            const computedWidth = parseInt(window.getComputedStyle(parentBar).width);
+            const parentWidth = parentBar.parentElement ? 
+                              parseInt(window.getComputedStyle(parentBar.parentElement).width) : 100;
+            
+            const actualPercentage = Math.round((computedWidth / parentWidth) * 100);
+            text.textContent = actualPercentage + '%';
+        }
+    });
+}
+
+// دوال تصغير الأيقونات
+function resizeResourceIcons() {
+    const resourceIcons = document.querySelectorAll('.resource-icon');
+    
+    resourceIcons.forEach(icon => {
+        // تطبيق حجم أصغر للأيقونات
+        icon.style.cssText += `
+            width: 20px !important;
+            height: 20px !important;
+            font-size: 16px !important;
+            margin-left: 4px !important;
+        `;
+    });
+    
+    // تصغير أيقونات المباني أيضاً
+    const buildingIcons = document.querySelectorAll('.building-icon');
+    buildingIcons.forEach(icon => {
+        icon.style.cssText += `
+            font-size: 18px !important;
+            margin-left: 6px !important;
+        `;
+    });
+}
+
+// دالة البحث المتقدم عن بطاقات المباني
+function findBuildingCards() {
+    // البحث في جميع العناصر المحتملة
+    const selectors = [
+        '.building-card',
+        '.card',
+        '.building-item',
+        '[data-building]',
+        '.building-panel',
+        '.construction-card'
+    ];
+    
+    let allCards = [];
+    
+    selectors.forEach(selector => {
+        const cards = document.querySelectorAll(selector);
+        allCards = allCards.concat(Array.from(cards));
+    });
+    
+    return [...new Set(allCards)]; // إزالة التكرارات
+}
+
+// دالة إصلاح بطاقات المباني المحسّنة
+function enhancedFixBuildingIcons() {
+    const buildingCards = findBuildingCards();
+    
+    buildingCards.forEach(card => {
+        // البحث عن عنصر الاسم بطرق مختلفة
+        const nameElement = card.querySelector('.building-name, .card-title, h3, .name, .title, [data-name]');
+        
+        if (nameElement) {
+            const buildingName = nameElement.textContent.trim();
+            
+            // أيقونات المباني المحسّنة
+            const buildingIcons = {
+                'فيلا': '🏠',
+                'أعمدة': '🏛️', 
+                'مسرح': '🎭',
+                'كولوسيوم': '🏛️',
+                'ثكنات': '🏰',
+                'Villa': '🏠',
+                'Tech Columns': '🏛️',
+                'Star Theater': '🎭',
+                'Future Colosseum': '🏛️',
+                'Energy Barracks': '🏰'
+            };
+            
+            const icon = buildingIcons[buildingName] || '🏢';
+            
+            // التحقق من وجود الأيقونة مسبقاً
+            let iconElement = nameElement.querySelector('.building-icon');
+            
+            if (!iconElement) {
+                iconElement = document.createElement('span');
+                iconElement.className = 'building-icon';
+                iconElement.textContent = icon;
+                iconElement.setAttribute('data-building-icon', buildingName);
+                nameElement.insertBefore(iconElement, nameElement.firstChild);
+            } else {
+                // تحديث الأيقونة إذا كانت مختلفة
+                iconElement.textContent = icon;
+            }
+        }
+    });
+}
+
+// دالة إصلاح شريط التحميل المحسّنة
+function enhancedFixLoadingBar() {
+    // البحث عن عناصر شريط التحميل
+    const loadingBars = document.querySelectorAll('.loading-bar, .progress-bar, [data-progress]');
+    const loadingTexts = document.querySelectorAll('.loading-text, .progress-text, .load-percentage, [data-percentage]');
+    
+    // إصلاح الشريط أولاً
+    loadingBars.forEach((bar, index) => {
+        // استخراج النسبة من البيانات أو الحساب
+        let percentage = 0;
+        
+        // محاولة الحصول على النسبة من الخصائص المختلفة
+        const dataPercentage = bar.getAttribute('data-percentage') || 
+                              bar.getAttribute('data-progress');
+        
+        if (dataPercentage) {
+            percentage = parseInt(dataPercentage);
+        } else {
+            // حساب النسبة من عرض الشريط
+            const computedWidth = parseInt(window.getComputedStyle(bar).width);
+            const parentWidth = bar.parentElement ? 
+                              parseInt(window.getComputedStyle(bar.parentElement).width) : 100;
+            
+            percentage = Math.round((computedWidth / parentWidth) * 100);
+        }
+        
+        // تطبيق النسبة على عرض الشريط
+        if (!isNaN(percentage) && percentage >= 0 && percentage <= 100) {
+            bar.style.width = percentage + '%';
+            
+            // تطبيق على العنصر الداخلي إذا وجد
+            const fillElement = bar.querySelector('.progress-fill, .loading-fill, .bar-fill');
+            if (fillElement) {
+                fillElement.style.width = percentage + '%';
+            }
+        }
+    });
+    
+    // مزامنة النصوص
+    loadingTexts.forEach((text, index) => {
+        // البحث عن الشريط المرتبط
+        const bar = text.closest('.loading-container, .progress-container')?.querySelector('.loading-bar, .progress-bar') ||
+                   document.querySelectorAll('.loading-bar, .progress-bar')[index];
+        
+        if (bar) {
+            const computedWidth = parseInt(window.getComputedStyle(bar).width);
+            const parentWidth = bar.parentElement ? 
+                              parseInt(window.getComputedStyle(bar.parentElement).width) : 100;
+            
+            const actualPercentage = Math.round((computedWidth / parentWidth) * 100);
+            text.textContent = actualPercentage + '%';
+        }
+    });
+}
+
+// دالة تهيئة الإصلاحات المحسّنة
+function initializeUIFixes() {
+    // تطبيق الإصلاحات تدريجياً
+    setTimeout(() => {
+        enhancedFixBuildingIcons();
+    }, 1000);
+    
+    setTimeout(() => {
+        enhancedFixLoadingBar();
+    }, 1500);
+    
+    setTimeout(() => {
+        resizeResourceIcons();
+    }, 2000);
+    
+    // إعادة الإصلاح عند التفاعل مع الواجهة
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.building-card, .resource-item, .card')) {
+            setTimeout(() => {
+                enhancedFixBuildingIcons();
+                enhancedFixLoadingBar();
+            }, 300);
+        }
+    });
+    
+    // مراقب للتغييرات في DOM
+    const observer = new MutationObserver((mutations) => {
+        let shouldFix = false;
+        
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { // Element node
+                        if (node.classList.contains('building-card') || 
+                            node.classList.contains('card') ||
+                            node.querySelector('.building-card, .card')) {
+                            shouldFix = true;
+                        }
+                    }
+                });
+            }
+        });
+        
+        if (shouldFix) {
+            setTimeout(() => {
+                enhancedFixBuildingIcons();
+            }, 500);
+        }
+    });
+    
+    // بدء المراقبة
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    console.log('🔧 تم تفعيل إصلاحات الواجهة التلقائية المحسّنة');
+}
+
+// تفعيل نظام الترجمة التلقائية عند تسجيل الدخول
+function initializeAutoTranslation() {
+    // التحقق من اللغة المحفوظة
+    const savedLanguage = localStorage.getItem('techEmpireLanguage');
+    if (savedLanguage) {
+        autoTranslationSystem.currentLanguage = savedLanguage;
+    }
+    
+    // تطبيق الترجمة التلقائية
+    autoTranslationSystem.applyAutoTranslation();
+    
+    // حفظ الدالة للاستخدام العام
+    window.applyAutoTranslation = () => {
+        autoTranslationSystem.applyAutoTranslation();
+    };
+    
+    // نظام الترجمة الذكية - كشف تغيير اللغة
+    const detectLanguageChange = () => {
+        const currentLang = autoTranslationSystem.detectBrowserLanguage();
+        if (currentLang !== autoTranslationSystem.currentLanguage) {
+            autoTranslationSystem.currentLanguage = currentLang;
+            localStorage.setItem('techEmpireLanguage', currentLang);
+            
+            // إشعار تغيير اللغة
+            if (typeof createFarmAlert === 'function') {
+                createFarmAlert('النظام', `تم تبديل اللغة تلقائياً إلى: ${autoTranslationSystem.supportedLanguages[currentLang]} 🌐`, 'info');
+            }
+            
+            // إعادة تطبيق الترجمة
+            setTimeout(() => {
+                autoTranslationSystem.applyAutoTranslation();
+            }, 1000);
+        }
+    };
+    
+    // فحص دوري لتغيير اللغة
+    setInterval(detectLanguageChange, 30000); // كل 30 ثانية
+    
+    console.log('🌐 تم تفعيل نظام الترجمة التلقائية');
+}
+
+// دالة تطبيق الترجمة المباشرة (عند النقر)
+function applyInstantTranslation() {
+    const detectedLang = autoTranslationSystem.detectBrowserLanguage();
+    autoTranslationSystem.currentLanguage = detectedLang;
+    localStorage.setItem('techEmpireLanguage', detectedLang);
+    
+    // تطبيق فوري للترجمة
+    autoTranslationSystem.applyAutoTranslation();
+    
+    // إظهار إشعار
+    const notification = document.createElement('div');
+    notification.className = 'translation-notification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #00d4ff, #0099cc);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        font-size: 14px;
+        font-weight: bold;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    notification.innerHTML = `🌐 تم التبديل للغة: ${autoTranslationSystem.supportedLanguages[detectedLang]}`;
+    
+    document.body.appendChild(notification);
+    
+    // إزالة الإشعار بعد 3 ثوانٍ
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// تطبيق الإصلاحات عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        initializeUIFixes();
+        initializeAutoTranslation();
+    }, 500);
+});
+
+// إضافة زر ترجمة سريع (اختياري)
+function addQuickTranslationButton() {
+    const topBar = document.querySelector('.top-bar') || document.body;
+    
+    if (topBar) {
+        const translateBtn = document.createElement('button');
+        translateBtn.className = 'quick-translate-btn';
+        translateBtn.innerHTML = '🌐';
+        translateBtn.title = 'ترجمة سريعة';
+        translateBtn.onclick = applyInstantTranslation;
+        
+        translateBtn.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        `;
+        
+        translateBtn.addEventListener('mouseenter', () => {
+            translateBtn.style.transform = 'scale(1.1)';
+        });
+        
+        translateBtn.addEventListener('mouseleave', () => {
+            translateBtn.style.transform = 'scale(1)';
+        });
+        
+        document.body.appendChild(translateBtn);
+    }
+}
+
+// إضافة الزر بعد تحميل الصفحة
+setTimeout(addQuickTranslationButton, 3000);
+
+// دوال إعادة الإصلاح (يمكن استدعاؤها يدوياً)
+window.fixUI = {
+    icons: enhancedFixBuildingIcons,
+    loading: enhancedFixLoadingBar,
+    resizeIcons: resizeResourceIcons,
+    translation: () => autoTranslationSystem.applyAutoTranslation(),
+    all: initializeUIFixes,
+    quickTranslate: applyInstantTranslation,
+    addTranslateButton: addQuickTranslationButton
+};
+
 console.log('🚀 تم تحميل جميع الأنظمة بنجاح!');
 console.log('💡 استخدم dev.check() لفحص النظام');
 console.log('🌾 استخدم dev.test() لاختبار إشعارات المزارع');
 console.log('✨ استخدم dev.fancy.showStylePreview("اسمك") لمعاينة الأسماء المزخرفة');
+console.log('🔧 استخدم fixUI.all() لإصلاح جميع مشاكل الواجهة');
+console.log('🌐 تم تفعيل الترجمة التلقائية!');
+console.log('⚡ استخدم fixUI.quickTranslate() للترجمة السريعة');
 }
