@@ -169,15 +169,22 @@
     background: #2980b9;
 }
 
-/* رسائل الدردشة */
+/* رسائل الدردشة - محدث لتنظيم أفضل */
 .chat-message {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    padding: 8px 10px;
-    margin-bottom: 8px;
+    padding: 12px 15px;
+    margin-bottom: 12px;
     transition: all 0.2s ease;
     position: relative;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 1.5;
 }
 
 .chat-message:hover {
@@ -210,13 +217,17 @@
     border-color: var(--chat-error);
 }
 
-/* رأس الرسالة */
+/* رأس الرسالة - محدث لتنظيم أفضل */
 .message-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-size: 11px;
+    flex-wrap: wrap;
+    gap: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 4px;
 }
 
 .message-user {
@@ -234,10 +245,60 @@
     opacity: 0.7;
 }
 
-/* محتوى الرسالة */
+/* محتوى الرسالة - محدث لوضوح أفضل */
 .message-content {
     font-size: 12px;
-    line-height: 1.4;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    max-width: 100%;
+}
+
+/* تحسين عرض النص */
+.message-text {
+    color: var(--chat-text);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+/* تحسين النصوص الأصلية */
+.message-original {
+    margin-top: 8px;
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    font-size: 11px;
+    color: #95a5a6;
+    border-left: 3px solid var(--chat-accent);
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* تحسين رأس الرسالة للمستخدم */
+.message-user {
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-size: 12px;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+/* تحسين عرض الوقت */
+.message-time {
+    color: #bdc3c7;
+    font-size: 10px;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
+/* تحسين عرض اللغة */
+.message-language {
+    font-size: 10px;
+    opacity: 0.7;
+    white-space: nowrap;
 }
 
 .message-text {

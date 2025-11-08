@@ -302,10 +302,15 @@ class GameChatSystem {
         const channelColor = this.channels[messageData.channel]?.color || '#4CAF50';
         const timeString = messageData.timestamp.toLocaleTimeString();
         
+        // تحسين عرض الرسائل المنظمة
+        const originalMessage = this.escapeHtml(messageData.message);
+        const translatedMessage = this.escapeHtml(messageData.translatedMessage || messageData.message);
+        const hasTranslation = messageData.translatedMessage && this.showOriginalMessages;
+        
         messageEl.innerHTML = `
             <div class="message-header">
                 <div class="message-user" style="color: ${channelColor}">
-                    ${this.escapeHtml(messageData.user)}
+                    ${originalMessage.startsWith('[') ? '[نظام] ' : ''}${this.escapeHtml(messageData.user)}
                 </div>
                 <div class="message-time">${timeString}</div>
                 <div class="message-language" title="اللغة الأصلية">
@@ -315,13 +320,12 @@ class GameChatSystem {
             
             <div class="message-content">
                 <div class="message-text">
-                    ${this.escapeHtml(messageData.translatedMessage || messageData.message)}
+                    ${translatedMessage}
                 </div>
-                ${messageData.translatedMessage && this.showOriginalMessages ? 
+                ${hasTranslation ? 
                     `<div class="message-original">
-                        <small>الأصلية (${this.getLanguageName(messageData.language)}): 
-                            ${this.escapeHtml(messageData.message)}
-                        </small>
+                        <strong>الأصلية (${this.getLanguageName(messageData.language)}):</strong><br>
+                        ${originalMessage}
                     </div>` : ''}
             </div>
             
