@@ -1,0 +1,658 @@
+/* ==========================================
+   متغيرات CSS - نظام الألوان والتصميم
+   ========================================== */
+:root {
+  /* الألوان الأساسية - أحمر روماني */
+  --primary-500: #AE2012;
+  --primary-700: #9B2226;
+  
+  /* الألوان الثانوية - ذهبي */
+  --accent-500: #FFB627;
+  --accent-300: #FFD97D;
+  --gold-700: #D4A017;
+  
+  /* الألوان المحايدة - بيج حجري */
+  --bg-page: #4F443A;
+  --bg-surface: #DDCDBF;
+  --border-color: #A49789;
+  --text-primary: #F5F1ED;
+  --text-secondary: #BEB3A8;
+  
+  /* الألوان الدلالية */
+  --success: #52B788;
+  --warning: #FFB627;
+  --error: #AE2012;
+  --disabled: #6A6A6A;
+  
+  /* ألوان الموارد */
+  --resource-gold: #FFD700;
+  --resource-food: #A5693B;
+  --resource-wood: #8B5E3C;
+  --resource-stone: #8D99AE;
+  --resource-iron: #6A6A6A;
+  
+  /* الطباعة */
+  --font-title: 'Silkscreen', monospace;
+  --font-body: 'Roboto', sans-serif;
+  
+  /* التباعد */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+}
+
+/* ==========================================
+   إعادة التعيين الأساسية
+   ========================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ==========================================
+   التخطيط الأساسي
+   ========================================== */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ==========================================
+   شريط الموارد العلوي
+   ========================================== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-surface);
+  border-bottom: 2px solid var(--border-color);
+  height: 64px;
+  padding: 0 var(--spacing-lg);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.resources-bar {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.resource-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.resource-item:hover {
+  background-color: var(--border-color);
+  transform: translateY(-1px);
+}
+
+.resource-icon {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border-color);
+}
+
+/* أيقونات الموارد */
+.gold-icon {
+  background-color: var(--resource-gold);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.food-icon {
+  background-color: var(--resource-food);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.wood-icon {
+  background-color: var(--resource-wood);
+  border-radius: 2px;
+}
+
+.stone-icon {
+  background-color: var(--resource-stone);
+  border-radius: 50%;
+}
+
+.iron-icon {
+  background-color: var(--resource-iron);
+}
+
+.resource-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.vip-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background-color: var(--primary-500);
+  border: 2px solid var(--gold-700);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.vip-section:hover {
+  background-color: var(--primary-700);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.vip-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--gold-700);
+  border: 2px solid var(--accent-300);
+  box-shadow: 0 0 8px var(--accent-300);
+}
+
+.vip-level {
+  font-family: var(--font-title);
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+/* ==========================================
+   المحتوى الرئيسي
+   ========================================== */
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.city-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* منطقة عرض المدينة */
+.city-grid {
+  flex: 1;
+  background-color: var(--bg-page);
+  background-image: 
+    linear-gradient(var(--border-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+  position: relative;
+  overflow: auto;
+}
+
+/* ==========================================
+   لوحة أدوات المباني
+   ========================================== */
+.building-palette {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--bg-surface);
+  border-top: 2px solid var(--border-color);
+  overflow-x: auto;
+}
+
+.building-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 80px;
+  padding: var(--spacing-md);
+  background-color: var(--bg-page);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-align: center;
+}
+
+.building-item:hover {
+  background-color: var(--border-color);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.building-item:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.building-icon {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-surface);
+}
+
+.building-item span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* ==========================================
+   اللوحة الجانبية
+   ========================================== */
+.side-panel {
+  width: 360px;
+  background-color: var(--bg-surface);
+  border-right: 2px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.side-panel.hidden {
+  transform: translateX(100%);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  background-color: var(--primary-500);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.panel-header h1 {
+  font-family: var(--font-title);
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.close-panel {
+  width: 32px;
+  height: 32px;
+  background-color: var(--primary-700);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+}
+
+.close-panel:hover {
+  background-color: var(--error);
+  transform: scale(1.1);
+}
+
+.panel-content {
+  flex: 1;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+}
+
+/* ==========================================
+   أزرار البناء والترقية
+   ========================================== */
+.btn {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: 2px solid var(--border-color);
+  font-family: var(--font-title);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--primary-500);
+  color: var(--text-primary);
+  border-color: var(--primary-700);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-700);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border-color);
+}
+
+.btn-gold {
+  background-color: var(--accent-500);
+  color: var(--bg-page);
+  border-color: var(--gold-700);
+}
+
+.btn-gold:hover {
+  background-color: var(--accent-300);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================
+   النوافذ المنبثقة
+   ========================================== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--bg-surface);
+  border: 3px solid var(--border-color);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  font-family: var(--font-title);
+  font-size: 28px;
+  padding: var(--spacing-lg);
+  background-color: var(--primary-500);
+  border-bottom: 2px solid var(--border-color);
+  margin: 0;
+}
+
+.modal-content > *:not(h2) {
+  padding: var(--spacing-lg);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: var(--bg-page);
+  border-top: 2px solid var(--border-color);
+}
+
+/* ==========================================
+   حزم VIP
+   ========================================== */
+.vip-packages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.vip-package {
+  background-color: var(--bg-page);
+  border: 2px solid var(--border-color);
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.vip-package h3 {
+  font-family: var(--font-title);
+  font-size: 20px;
+  margin-bottom: var(--spacing-md);
+  color: var(--accent-500);
+}
+
+.benefits p {
+  margin: var(--spacing-sm) 0;
+  color: var(--text-secondary);
+}
+
+/* ==========================================
+   شريط التنقل السفلي
+   ========================================== */
+.bottom-nav {
+  display: flex;
+  background-color: var(--bg-surface);
+  border-top: 2px solid var(--border-color);
+  height: 72px;
+}
+
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  background-color: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  padding: var(--spacing-sm);
+}
+
+.nav-btn:hover {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+}
+
+.nav-btn.active {
+  background-color: var(--primary-500);
+  color: var(--text-primary);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  background-color: currentColor;
+}
+
+.nav-btn span {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ==========================================
+   مؤثرات بصرية للمباني
+   ========================================== */
+.building-placed {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-surface);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.building-placed:hover {
+  border-color: var(--accent-500);
+  transform: scale(1.05);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.building-placed.selected {
+  border-color: var(--accent-500);
+  background-color: var(--accent-500);
+  box-shadow: 0 0 8px var(--accent-500);
+}
+
+/* ==========================================
+   تحسينات للشاشات الصغيرة
+   ========================================== */
+@media (max-width: 768px) {
+  .side-panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 72px;
+    z-index: 100;
+    transform: translateX(100%);
+  }
+  
+  .side-panel.show {
+    transform: translateX(0);
+  }
+  
+  .resources-bar {
+    gap: var(--spacing-sm);
+  }
+  
+  .resource-item {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .resource-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .resource-value {
+    font-size: 12px;
+  }
+  
+  .building-palette {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+  }
+  
+  .building-item {
+    min-width: 60px;
+    padding: var(--spacing-sm);
+  }
+  
+  .building-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .building-item span {
+    font-size: 10px;
+  }
+}
+
+/* ==========================================
+   تأثيرات التحميل والانتقالات
+   ========================================== */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.loading {
+  animation: pulse 1s infinite;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ==========================================
+   تأثيرات الوهج للمباني المميزة
+   ========================================== */
+.building-placed.under-construction {
+  border-style: dashed;
+  animation: pulse 2s infinite;
+}
+
+.building-placed.vip-exclusive {
+  box-shadow: 0 0 12px var(--accent-500);
+}
+
+/* ==========================================
+   أسلوب الأعمدة التقنية
+   ========================================== */
+.tech-column {
+  background: linear-gradient(to bottom, 
+    var(--bg-page) 0%, 
+    var(--bg-surface) 20%, 
+    var(--bg-surface) 80%, 
+    var(--bg-page) 100%);
+  border: 2px solid var(--border-color);
+}
+
+.roman-column::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 8px;
+  background-color: var(--border-color);
+  border: 1px solid var(--bg-page);
+}
+
+/* ==========================================
+   تحسينات للقراءة والوضوح
+   ========================================== */
+.clear-text {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.small-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.large-text {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ==========================================
+   مؤثرات الحركة الناعمة
+   ========================================== */
+.smooth-transition {
+  transition: all 0.2s ease;
+}
+
+/* ==========================================
+   إخفاء شريط التمرير مع الحفاظ على الوظيفة
+   ========================================== */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
