@@ -1452,12 +1452,20 @@ class TechEmpire3D {
         const aspect = window.innerWidth / window.innerHeight;
         this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
         
-        // Initial camera position optimized for mobile
+        // Camera smoothing properties
+        this.cameraTargetPosition = new THREE.Vector3();
+        this.currentCameraPosition = new THREE.Vector3();
+        this.smoothFactor = 0.05; // Reduced for smoother movement
+        
+        // Improved initial camera position for better readability
         if (this.isMobile) {
-            this.camera.position.set(15, 12, 15);
+            this.camera.position.set(12, 10, 12);
         } else {
-            this.camera.position.set(20, 15, 20);
+            this.camera.position.set(15, 12, 15);
         }
+        
+        this.cameraTargetPosition.copy(this.camera.position);
+        this.currentCameraPosition.copy(this.camera.position);
         this.camera.lookAt(0, 0, 0);
     }
 
@@ -2882,19 +2890,22 @@ class TechEmpire3D {
             event.preventDefault();
             if (isDragging && event.touches.length === 1) {
                 const deltaMove = {
-                    x: event.touches[0].clientX - previousMousePosition.x,
-                    y: event.touches[0].clientY - previousMobilePosition.y
+                    x: (event.touches[0].clientX - previousMousePosition.x) * 0.5, // Reduced sensitivity
+                    y: (event.touches[0].clientY - previousMousePosition.y) * 0.5
                 };
 
-                // Rotate camera around the scene
+                // Use spherical coordinates for smoother rotation
                 const spherical = new THREE.Spherical();
-                spherical.setFromVector3(this.camera.position);
-                spherical.theta -= deltaMove.x * 0.01;
-                spherical.phi += deltaMove.y * 0.01;
-                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+                spherical.setFromVector3(this.cameraTargetPosition);
+                
+                // More conservative rotation limits for better readability
+                const newTheta = spherical.theta - deltaMove.x * 0.003; // Reduced rotation speed
+                const newPhi = spherical.phi + deltaMove.y * 0.003;
+                spherical.theta = newTheta;
+                spherical.phi = Math.max(0.2, Math.min(Math.PI - 0.2, newPhi)); // Wider angle range
 
-                this.camera.position.setFromSpherical(spherical);
-                this.camera.lookAt(0, 0, 0);
+                this.cameraTargetPosition.setFromSpherical(spherical);
+                this.cameraTargetPosition.lookAt(0, 0, 0);
 
                 previousMousePosition = {
                     x: event.touches[0].clientX,
@@ -2907,14 +2918,18 @@ class TechEmpire3D {
             isDragging = false;
         });
 
-        // Pinch to zoom
+        // Improved pinch to zoom
         let initialDistance = 0;
+        let initialZoomLevel = 1;
+        
         canvas.addEventListener('touchstart', (event) => {
             if (event.touches.length === 2) {
+                event.preventDefault();
                 initialDistance = Math.sqrt(
                     Math.pow(event.touches[0].clientX - event.touches[1].clientX, 2) +
                     Math.pow(event.touches[0].clientY - event.touches[1].clientY, 2)
                 );
+                initialZoomLevel = zoomLevel;
             }
         });
 
@@ -2926,13 +2941,17 @@ class TechEmpire3D {
                     Math.pow(event.touches[0].clientY - event.touches[1].clientY, 2)
                 );
                 
-                const delta = currentDistance - initialDistance;
-                zoomLevel = Math.max(0.5, Math.min(3, zoomLevel - delta * 0.01));
+                // Smoother zoom calculation
+                const zoomFactor = 0.0008; // Smoother zoom
+                const newZoomLevel = Math.max(0.6, Math.min(2.5, initialZoomLevel + (initialDistance - currentDistance) * zoomFactor));
                 
+                // Smoothly move to new position
                 const direction = new THREE.Vector3();
-                direction.copy(this.camera.position).normalize();
-                this.camera.position.copy(direction.multiplyScalar(20 * zoomLevel));
+                direction.copy(this.cameraTargetPosition).normalize();
+                const targetDistance = 15 * newZoomLevel;
+                this.cameraTargetPosition.copy(direction.multiplyScalar(targetDistance));
                 
+                zoomLevel = newZoomLevel;
                 initialDistance = currentDistance;
             }
         });
@@ -2952,19 +2971,22 @@ class TechEmpire3D {
         canvas.addEventListener('mousemove', (event) => {
             if (isDragging) {
                 const deltaMove = {
-                    x: event.clientX - previousMousePosition.x,
-                    y: event.clientY - previousMousePosition.y
+                    x: (event.clientX - previousMousePosition.x) * 0.5, // Reduced sensitivity
+                    y: (event.clientY - previousMousePosition.y) * 0.5
                 };
 
-                // Rotate camera
+                // Smoother camera rotation
                 const spherical = new THREE.Spherical();
-                spherical.setFromVector3(this.camera.position);
-                spherical.theta -= deltaMove.x * 0.01;
-                spherical.phi += deltaMove.y * 0.01;
-                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+                spherical.setFromVector3(this.cameraTargetPosition);
+                
+                // More conservative rotation for better readability
+                const newTheta = spherical.theta - deltaMove.x * 0.003;
+                const newPhi = spherical.phi + deltaMove.y * 0.003;
+                spherical.theta = newTheta;
+                spherical.phi = Math.max(0.2, Math.min(Math.PI - 0.2, newPhi));
 
-                this.camera.position.setFromSpherical(spherical);
-                this.camera.lookAt(0, 0, 0);
+                this.cameraTargetPosition.setFromSpherical(spherical);
+                this.cameraTargetPosition.lookAt(0, 0, 0);
 
                 previousMousePosition = { x: event.clientX, y: event.clientY };
             }
@@ -2974,14 +2996,20 @@ class TechEmpire3D {
             isDragging = false;
         });
 
-        // Scroll to zoom
+        // Improved scroll to zoom
         canvas.addEventListener('wheel', (event) => {
             event.preventDefault();
             const direction = new THREE.Vector3();
-            direction.copy(this.camera.position).normalize();
-            const distance = this.camera.position.length();
-            const newDistance = Math.max(5, Math.min(50, distance + event.deltaY * 0.01));
-            this.camera.position.copy(direction.multiplyScalar(newDistance));
+            direction.copy(this.cameraTargetPosition).normalize();
+            const distance = this.cameraTargetPosition.length();
+            
+            // Smoother zoom with better limits
+            const zoomSpeed = 0.3; // Smoother zoom
+            const newDistance = Math.max(8, Math.min(30, distance + event.deltaY * zoomSpeed));
+            this.cameraTargetPosition.copy(direction.multiplyScalar(newDistance));
+            
+            // Update zoom level for consistency
+            zoomLevel = newDistance / 15; // Normalize to base distance
         });
     }
 
@@ -3514,7 +3542,23 @@ class TechEmpire3D {
             this.optimizeForMobile();
         }
         
+        // Smooth camera movement update
+        this.updateCamera();
+        
         this.renderer.render(this.scene, this.camera);
+    }
+
+    // دالة تحديث الكاميرا السلس
+    updateCamera() {
+        // Smoothly interpolate camera position to target
+        if (this.currentCameraPosition && this.cameraTargetPosition) {
+            this.currentCameraPosition.lerp(this.cameraTargetPosition, this.smoothFactor);
+            this.camera.position.copy(this.currentCameraPosition);
+            
+            // Smoothly look at the target
+            const lookAtTarget = new THREE.Vector3(0, 0, 0);
+            this.camera.lookAt(lookAtTarget);
+        }
     }
 
     // تحديث أنيميشن كهف الغموض
